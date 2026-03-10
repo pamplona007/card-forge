@@ -1,0 +1,235 @@
+{
+  "app": {
+    "title": "Card Forge",
+    "language": "Language",
+    "languages": {
+      "en": "English",
+      "pt-BR": "Portuguese (Brazil)"
+    }
+  },
+  "auth": {
+    "signOut": "Sign Out",
+    "signIn": "Sign In",
+    "dialog": {
+      "createAccount": "Create Account",
+      "signIn": "Sign In",
+      "createDescription": "Create a new account to save your projects.",
+      "signInDescription": "Sign in to access your saved projects."
+    },
+    "label": {
+      "email": "Email",
+      "password": "Password"
+    },
+    "placeholder": {
+      "email": "your@email.com",
+      "password": "Enter your password"
+    },
+    "loading": "Please wait...",
+    "link": {
+      "alreadyHaveAccount": "Already have an account?",
+      "dontHaveAccount": "Don't have an account?"
+    },
+    "error": {
+      "invalidEmail": "Invalid email address",
+      "userDisabled": "User account has been disabled",
+      "userNotFound": "No user found with this email",
+      "wrongPassword": "Incorrect password",
+      "emailInUse": "Email already in use",
+      "weakPassword": "Password should be at least 6 characters",
+      "invalidCredential": "Invalid email or password",
+      "networkFailed": "Network error. Please check your connection",
+      "generic": "Authentication failed. Please try again"
+    }
+  },
+  "editor": {
+    "defaultProjectName": "Untitled Project",
+    "prompt": { "signInToSave": "Sign in to save cards" },
+    "toolbar": { "newCard": "New Card" },
+    "button": {
+      "addToProject": "Add to Project",
+      "saveCard": "Save Card",
+      "export": "Export",
+      "exporting": "Exporting...",
+      "exportPdf": "Export PDF"
+    },
+    "section": { "projectCards": "Project Cards ({{count}})" },
+    "label": {
+      "unnamed": "Unnamed",
+      "cardImage": "Card Image",
+      "abilities": "Abilities",
+      "abilityName": "Ability name",
+      "name": "Name",
+      "health": "Health",
+      "tags": "Tags",
+      "side": "Side",
+      "blueAbility": "Blue Ability (Start of Game)",
+      "yellowAbility": "Yellow Ability (Start of Game)",
+      "orangeAbilities": "Orange Abilities (Level Up)",
+      "redAbilities": "Red Abilities (Level Up)",
+      "flavorText": "Flavor Text",
+      "copyright": "Copyright",
+      "equipmentDescription": "Description",
+      "slot": "Slot",
+      "rarity": "Rarity",
+      "damage": "Damage",
+      "range": "Range",
+      "type": "Type",
+      "speed": "Speed",
+      "attack": "Attack",
+      "defense": "Defense",
+      "spawnZone": "Spawn Zone",
+      "xpValue": "XP Value"
+    },
+    "placeholder": {
+      "flavorTextOptional": "Optional flavor text",
+      "copyright": "© Publisher",
+      "equipmentName": "Equipment name",
+      "equipmentDescription": "Equipment description",
+      "weaponName": "Weapon name",
+      "zombieName": "Zombie name",
+      "abominationName": "Abomination name",
+      "abilityName": "Ability name",
+      "description": "Description"
+    },
+    "checkbox": {
+      "uniqueItem": "Unique Item",
+      "twoHanded": "Two-Handed Weapon",
+      "elite": "Elite",
+      "special": "Special"
+    },
+    "buttonAdd": {
+      "addAbility": "+ Add",
+      "addBlueAbility": "+ Add Blue Ability",
+      "addYellowAbility": "+ Add Yellow Ability"
+    },
+    "alt": { "cardPreview": "Card preview" },
+    "status": { "uploading": "Uploading..." },
+    "buttonUpload": { "uploadImage": "Upload Image" },
+    "buttonRemove": { "removeImage": "Remove Image" },
+    "preview": { "title": "Preview" },
+    "specialAbilities": "Special Abilities",
+    "alert": {
+      "cardSaved": "Card \"{{name}}\" saved!",
+      "cardExported": "Card \"{{name}}\" exported!"
+    },
+    "error": {
+      "notAuthenticated": "User not authenticated",
+      "noCardsToExport": "No cards in project to export",
+      "exportFailed": "Failed to export PDF"
+    }
+  },
+  "color": {
+    "blue": "Blue",
+    "yellow": "Yellow",
+    "orange": "Orange",
+    "red": "Red"
+  },
+  "slot": {
+    "hand": "Hand",
+    "body": "Body",
+    "small": "Small",
+    "big": "Big",
+    "any": "Any"
+  },
+  "rarity": {
+    "common": "Common",
+    "uncommon": "Uncommon",
+    "rare": "Rare",
+    "epic": "Epic",
+    "legendary": "Legendary"
+  },
+  "projects": {
+    "error": {
+      "gameNotFound": "Game Not Found",
+      "gameNotFoundDescription": "The requested game could not be found."
+    },
+    "label": {
+      "publishedBy": "Published by {{publisher}}",
+      "projectName": "Project Name"
+    },
+    "placeholder": {
+      "projectName": "My Awesome Project"
+    },
+    "button": {
+      "createNew": "+ Create New Project",
+      "cancel": "Cancel",
+      "createProject": "Create Project"
+    },
+    "dialog": {
+      "createTitle": "Create New Project",
+      "createDescription": "Give your new project a name to get started."
+    },
+    "status": {
+      "creating": "Creating...",
+      "loading": "Loading projects..."
+    },
+    "section": {
+      "myProjects": "My Projects",
+      "publicProjects": "Public Projects"
+    },
+    "empty": {
+      "noPublicProjects": "No Public Projects Yet",
+      "publicProjectsPrompt": "Be the first to create a public project for this game!",
+      "noProjects": "No Projects Yet",
+      "createFirstPrompt": "Create your first project to start designing cards!"
+    },
+    "prompt": {
+      "signIn": "Sign in to create your own projects and save your cards."
+    },
+    "card": {
+      "updated": "Updated {{date}}",
+      "yours": "Yours"
+    },
+    "buttonRemove": { "remove": "Remove" }
+  },
+  "games": {
+    "title": "Choose a Game",
+    "description": "Select a game to start creating custom cards for your tabletop collection.",
+    "button": { "viewProjects": "View Projects" },
+    "empty": {
+      "title": "No Games Available",
+      "description": "Check back later for supported games."
+    }
+  },
+  "zombicide": {
+    "editor": {
+      "subtitle": "Zombicide 2nd Edition Card Editor",
+      "button": {
+        "survivor": "Survivor",
+        "equipment": "Equipment",
+        "weapon": "Weapon",
+        "zombie": "Zombie",
+        "abomination": "Abomination",
+        "showBack": "Show Back",
+        "showFront": "Show Front"
+      },
+      "label": {
+        "front": "Front",
+        "back": "Back",
+        "backDescription": "Card Back Settings",
+        "backInfo": "The back of the card displays abilities pulled from the front side. Only the card image can be customized here."
+      }
+    },
+    "card": {
+      "type": {
+        "survivor": "Survivor",
+        "equipment": "Equipment",
+        "pimpWeapon": "Pimp Weapon",
+        "zombieSpawn": "Zombie Spawn",
+        "abomination": "Abomination"
+      }
+    },
+    "weaponType": {
+      "melee": "Melee",
+      "ranged": "Ranged",
+      "explosive": "Explosive",
+      "fire": "Fire"
+    },
+    "spawnZone": {
+      "blueEasy": "Blue (Easy)",
+      "yellow": "Yellow",
+      "orange": "Orange",
+      "redHard": "Red (Hard)"
+    }
+  }
+}

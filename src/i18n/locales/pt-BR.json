@@ -1,0 +1,228 @@
+{
+  "app": {
+    "title": "Card Forge",
+    "language": "Idioma",
+    "languages": {
+      "en": "Inglês",
+      "pt-BR": "Português (Brasil)"
+    }
+  },
+  "auth": {
+    "signOut": "Sair",
+    "signIn": "Entrar",
+    "dialog": {
+      "createAccount": "Criar Conta",
+      "signIn": "Entrar",
+      "createDescription": "Crie uma nova conta para salvar seus projetos.",
+      "signInDescription": "Entre para acessar seus projetos salvos."
+    },
+    "label": {
+      "email": "E-mail",
+      "password": "Senha"
+    },
+    "placeholder": {
+      "email": "seu@email.com",
+      "password": "Digite sua senha"
+    },
+    "loading": "Por favor, aguarde...",
+    "link": {
+      "alreadyHaveAccount": "Já tem uma conta?",
+      "dontHaveAccount": "Não tem uma conta?"
+    },
+    "error": {
+      "invalidEmail": "Endereço de e-mail inválido",
+      "userDisabled": "Conta de usuário foi desativada",
+      "userNotFound": "Nenhum usuário encontrado com este e-mail",
+      "wrongPassword": "Senha incorreta",
+      "emailInUse": "E-mail já está em uso",
+      "weakPassword": "A senha deve ter pelo menos 6 caracteres",
+      "invalidCredential": "E-mail ou senha inválidos",
+      "networkFailed": "Erro de rede. Verifique sua conexão",
+      "generic": "Falha na autenticação. Tente novamente"
+    }
+  },
+  "editor": {
+    "defaultProjectName": "Projeto Sem Título",
+    "prompt": { "signInToSave": "Entre para salvar cartas" },
+    "toolbar": { "newCard": "Nova Carta" },
+    "button": {
+      "addToProject": "Adicionar ao Projeto",
+      "saveCard": "Salvar Carta",
+      "export": "Exportar",
+      "exporting": "Exportando...",
+      "exportPdf": "Exportar PDF"
+    },
+    "section": { "projectCards": "Cartas do Projeto ({{count}})" },
+    "label": {
+      "unnamed": "Sem Nome",
+      "cardImage": "Imagem da Carta",
+      "abilities": "Habilidades",
+      "abilityName": "Nome da Habilidade",
+      "name": "Nome",
+      "health": "Pontos de Vida",
+      "tags": "Tags",
+      "blueAbility": "Habilidade Azul (Início do Jogo)",
+      "yellowAbility": "Habilidade Amarela (Início do Jogo)",
+      "orangeAbilities": "Habilidades Laranja (Subida de Nível)",
+      "redAbilities": "Habilidades Vermelhas (Subida de Nível)",
+      "flavorText": "Texto de Sabor",
+      "copyright": "Direitos Autorais",
+      "equipmentDescription": "Descrição",
+      "slot": "Slot",
+      "rarity": "Raridade",
+      "damage": "Dano",
+      "range": "Alcance",
+      "type": "Tipo",
+      "speed": "Velocidade",
+      "attack": "Ataque",
+      "defense": "Defesa",
+      "spawnZone": "Zona de Spawn",
+      "xpValue": "Valor de XP"
+    },
+    "placeholder": {
+      "flavorTextOptional": "Texto de sabor opcional",
+      "copyright": "© Editora",
+      "equipmentName": "Nome do equipamento",
+      "equipmentDescription": "Descrição do equipamento",
+      "weaponName": "Nome da arma",
+      "zombieName": "Nome do zumbi",
+      "abominationName": "Nome da abominação",
+      "abilityName": "Nome da habilidade",
+      "description": "Descrição"
+    },
+    "checkbox": {
+      "uniqueItem": "Item Único",
+      "twoHanded": "Arma de Duas Mãos",
+      "elite": "Elite",
+      "special": "Especial"
+    },
+    "buttonAdd": {
+      "addAbility": "+ Adicionar",
+      "addBlueAbility": "+ Adicionar Habilidade Azul",
+      "addYellowAbility": "+ Adicionar Habilidade Amarela"
+    },
+    "alt": { "cardPreview": "Pré-visualização da carta" },
+    "status": { "uploading": "Enviando..." },
+    "buttonUpload": { "uploadImage": "Enviar Imagem" },
+    "buttonRemove": { "removeImage": "Remover Imagem" },
+    "preview": { "title": "Pré-visualização" },
+    "specialAbilities": "Habilidades Especiais",
+    "alert": {
+      "cardSaved": "Carta \"{{name}}\" salva!",
+      "cardExported": "Carta \"{{name}}\" exportada!"
+    },
+    "error": {
+      "notAuthenticated": "Usuário não autenticado",
+      "noCardsToExport": "Não há cartas no projeto para exportar",
+      "exportFailed": "Falha ao exportar PDF"
+    }
+  },
+  "color": {
+    "blue": "Azul",
+    "yellow": "Amarelo",
+    "orange": "Laranja",
+    "red": "Vermelho"
+  },
+  "slot": {
+    "hand": "Mão",
+    "body": "Corpo",
+    "small": "Pequeno",
+    "big": "Grande",
+    "any": "Qualquer"
+  },
+  "rarity": {
+    "common": "Comum",
+    "uncommon": "Incomum",
+    "rare": "Raro",
+    "epic": "Épico",
+    "legendary": "Lendário"
+  },
+  "projects": {
+    "error": {
+      "gameNotFound": "Jogo Não Encontrado",
+      "gameNotFoundDescription": "O jogo solicitado não pôde ser encontrado."
+    },
+    "label": {
+      "publishedBy": "Publicado por {{publisher}}",
+      "projectName": "Nome do Projeto"
+    },
+    "placeholder": {
+      "projectName": "Meu Projeto Incrível"
+    },
+    "button": {
+      "createNew": "+ Criar Novo Projeto",
+      "cancel": "Cancelar",
+      "createProject": "Criar Projeto"
+    },
+    "dialog": {
+      "createTitle": "Criar Novo Projeto",
+      "createDescription": "Dê um nome ao seu novo projeto para começar."
+    },
+    "status": {
+      "creating": "Criando...",
+      "loading": "Carregando projetos..."
+    },
+    "section": {
+      "myProjects": "Meus Projetos",
+      "publicProjects": "Projetos Públicos"
+    },
+    "empty": {
+      "noPublicProjects": "Nenhum Projeto Público Ainda",
+      "publicProjectsPrompt": "Seja o primeiro a criar um projeto público para este jogo!",
+      "noProjects": "Nenhum Projeto Ainda",
+      "createFirstPrompt": "Crie seu primeiro projeto para começar a criar cartas!"
+    },
+    "prompt": {
+      "signIn": "Entre para criar seus próprios projetos e salvar suas cartas."
+    },
+    "card": {
+      "updated": "Atualizado {{date}}",
+      "yours": "Seu"
+    },
+    "buttonRemove": { "remove": "Remover" }
+  },
+  "games": {
+    "title": "Escolha um Jogo",
+    "description": "Selecione um jogo para começar a criar cartas personalizadas para sua coleção de jogos de tabuleiro.",
+    "button": { "viewProjects": "Ver Projetos" },
+    "empty": {
+      "title": "Nenhum Jogo Disponível",
+      "description": "Volte mais tarde para ver os jogos suportados."
+    }
+  },
+  "zombicide": {
+    "editor": {
+      "subtitle": "Editor de Cartas Zombicide 2ª Edição",
+      "button": {
+        "survivor": "Sobrevivente",
+        "equipment": "Equipamento",
+        "weapon": "Arma",
+        "zombie": "Zumbi",
+        "abomination": "Abominação",
+        "showBack": "Mostrar Verso",
+        "showFront": "Mostrar Frente"
+      }
+    },
+    "card": {
+      "type": {
+        "survivor": "Sobrevivente",
+        "equipment": "Equipamento",
+        "pimpWeapon": "Arma Pimp",
+        "zombieSpawn": "Spawn de Zumbi",
+        "abomination": "Abominação"
+      }
+    },
+    "weaponType": {
+      "melee": "Corpo a Corpo",
+      "ranged": "À Distância",
+      "explosive": "Explosivo",
+      "fire": "Fogo"
+    },
+    "spawnZone": {
+      "blueEasy": "Azul (Fácil)",
+      "yellow": "Amarelo",
+      "orange": "Laranja",
+      "redHard": "Vermelho (Difícil)"
+    }
+  }
+}
