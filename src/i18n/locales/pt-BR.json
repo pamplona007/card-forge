@@ -294,6 +294,10 @@
       "likedProjects": "Projetos Curtidos"
     }
   },
+  "viewer": {
+    "selectCard": "Selecione um card para visualizar",
+    "noCards": "Este projeto ainda não tem cards."
+  },
   "games": {
     "description": "Selecione um jogo para começar a criar cartas personalizadas para sua coleção de jogos de tabuleiro.",
     "button": { "viewProjects": "Ver Projetos" },

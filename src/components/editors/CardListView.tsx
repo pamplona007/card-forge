@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next';
 
 interface CardListViewProps {
     cards: ZombicideCardData[];
-    onCardClick: (card: ZombicideCardData) => void;
-    onDeleteCard: (index: number) => void;
+    onCardClick?: (card: ZombicideCardData) => void;
+    onDeleteCard?: (index: number) => void;
 }
 
 const TYPE_BACKGROUNDS: Record<ZombicideCardType, { color: string; image?: string }> = {
@@ -16,12 +16,6 @@ const TYPE_BACKGROUNDS: Record<ZombicideCardType, { color: string; image?: strin
     'survivor': { color: '#1a2e1a', image: '/zombicide-2nd/survivor/card-background.png' },
     'zombie-spawn': { color: '#1f2d1a' },
 };
-
-interface CardListViewProps {
-    cards: ZombicideCardData[];
-    onCardClick: (card: ZombicideCardData) => void;
-    onDeleteCard: (index: number) => void;
-}
 
 export default function CardListView({
     cards,
@@ -59,9 +53,9 @@ export default function CardListView({
                 {cards.map((card, index) => (
                     <Box
                         key={card.id || index}
-                        onClick={() => onCardClick(card)}
+                        onClick={() => onCardClick?.(card)}
                         style={{
-                            cursor: 'pointer',
+                            cursor: onCardClick ? 'pointer' : 'default',
                         }}
                     >
                         <Box
@@ -139,19 +133,21 @@ export default function CardListView({
                             <Text color="gray" size="1">
                                 {card.name || t('editor.label.unnamed')}
                             </Text>
-                            <Flex gap="1">
-                                <Button
-                                    color="red"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onDeleteCard(index);
-                                    }}
-                                    size="1"
-                                    variant="soft"
-                                >
-                                    {t('projects.buttonRemove.remove')}
-                                </Button>
-                            </Flex>
+                            {onDeleteCard && (
+                                <Flex gap="1">
+                                    <Button
+                                        color="red"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onDeleteCard(index);
+                                        }}
+                                        size="1"
+                                        variant="soft"
+                                    >
+                                        {t('projects.buttonRemove.remove')}
+                                    </Button>
+                                </Flex>
+                            )}
                         </Flex>
                     </Box>
                 ))}

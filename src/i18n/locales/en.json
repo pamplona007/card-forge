@@ -295,6 +295,10 @@
       "likedProjects": "Liked Projects"
     }
   },
+  "viewer": {
+    "selectCard": "Select a card to preview",
+    "noCards": "This project has no cards yet."
+  },
   "games": {
     "description": "Select a game to start creating custom cards for your tabletop collection.",
     "button": { "viewProjects": "View Projects" },
