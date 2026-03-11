@@ -215,8 +215,87 @@
     },
     "buttonRemove": { "remove": "Remove" }
   },
+  "profile": {
+    "title": "My Profile",
+    "description": "Manage your account settings",
+    "section": {
+      "identity": "Profile",
+      "email": "Email Address",
+      "password": "Change Password"
+    },
+    "label": {
+      "displayName": "Display Name",
+      "currentPassword": "Current Password",
+      "newEmail": "New Email",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm New Password",
+      "pictureHint": "JPG or PNG, will be resized to 128×128"
+    },
+    "placeholder": {
+      "displayName": "Your name",
+      "currentPassword": "Enter your current password",
+      "email": "new@email.com",
+      "newPassword": "New password (min 6 characters)",
+      "confirmPassword": "Confirm new password"
+    },
+    "button": {
+      "uploadPicture": "Upload Picture",
+      "saveProfile": "Save Profile",
+      "saveEmail": "Update Email",
+      "savePassword": "Update Password"
+    },
+    "success": {
+      "profileUpdated": "Profile updated successfully",
+      "emailUpdated": "Email updated successfully",
+      "passwordUpdated": "Password updated successfully"
+    },
+    "error": {
+      "passwordMismatch": "Passwords do not match",
+      "generic": "An error occurred. Please try again"
+    },
+    "nav": {
+      "myProfile": "My Profile"
+    }
+  },
+  "likes": {
+    "page": {
+      "title": "Liked Projects",
+      "description": "Projects you've saved as favourites",
+      "loading": "Loading liked projects...",
+      "signInTitle": "Sign In to See Liked Projects",
+      "signInDescription": "Create an account or sign in to like and save your favourite projects."
+    },
+    "filter": {
+      "game": "Game",
+      "allGames": "All Games",
+      "sortBy": "Sort by",
+      "showing": "{{count}} of {{total}}",
+      "sort": {
+        "likedDate": "Liked Date",
+        "name": "Name",
+        "updatedDate": "Updated Date"
+      }
+    },
+    "empty": {
+      "title": "No Liked Projects Yet",
+      "description": "Browse public projects and click the heart icon to save your favourites here.",
+      "noResults": "No projects match the selected filter."
+    },
+    "card": {
+      "liked": "Liked {{date}}"
+    },
+    "badge": {
+      "public": "Public"
+    },
+    "button": {
+      "like": "Like project",
+      "unlike": "Unlike project"
+    },
+    "nav": {
+      "likedProjects": "Liked Projects"
+    }
+  },
   "games": {
-    "title": "Choose a Game",
     "description": "Select a game to start creating custom cards for your tabletop collection.",
     "button": { "viewProjects": "View Projects" },
     "empty": {

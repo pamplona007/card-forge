@@ -6,6 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import type { Project } from '../contexts/FirebaseContext';
 
 import AppLayout from '../components/AppLayout';
+import LikeButton from '../components/LikeButton';
 import { useCreateProject } from '../hooks/useCreateProject';
 import { useFirebase } from '../hooks/useFirebase';
 import { useProjects } from '../hooks/useProjects';
@@ -287,11 +288,14 @@ function ProjectCard({ isOwner, onClick, project }: ProjectCardProps) {
                 <Heading size="3" trim="both">
                     {project.name}
                 </Heading>
-                {isOwner && (
-                    <Text color="blue" size="1">
-                        {t('projects.card.yours')}
-                    </Text>
-                )}
+                <Flex align="center" gap="1">
+                    {isOwner && (
+                        <Text color="blue" size="1">
+                            {t('projects.card.yours')}
+                        </Text>
+                    )}
+                    <LikeButton project={project} size="1" />
+                </Flex>
             </Flex>
             {project.description && (
                 <Text color="gray" mb="2" size="2" style={{ display: 'block', lineHeight: 1.4 }}>

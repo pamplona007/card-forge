@@ -1,6 +1,7 @@
-import { Box, Button, Container, Dialog, Flex, Heading, Text, TextField } from '@radix-ui/themes';
+import { Avatar, Box, Button, Container, Dialog, DropdownMenu, Flex, Heading, Text, TextField } from '@radix-ui/themes';
 import { type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import { useFirebase } from '../hooks/useFirebase';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -18,14 +19,20 @@ export default function AppLayout({ children }: AppLayoutProps) {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const { t } = useTranslation();
+    const navigate = useNavigate();
 
     const handleAuth = async () => {
-        if (user) {
-            await logOut();
-        } else {
-            setIsAuthDialogOpen(true);
-        }
+        setIsAuthDialogOpen(true);
     };
+
+    const userInitials = user
+        ? (user.displayName || user.email || 'U')
+            .split(/[\s@]/)
+            .filter(Boolean)
+            .slice(0, 2)
+            .map((s) => s[0].toUpperCase())
+            .join('')
+        : '';
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -104,13 +111,45 @@ export default function AppLayout({ children }: AppLayoutProps) {
                         </Heading>
                         <Flex align="center" gap="4">
                             <LanguageSwitcher />
-                            <Button
-                                color={user ? undefined : 'blue'}
-                                onClick={handleAuth}
-                                variant={user ? 'soft' : 'solid'}
-                            >
-                                {user ? `${t('auth.signOut')} (${user.displayName || user.email || 'User'})` : t('auth.signIn')}
-                            </Button>
+                            {user
+                                ? (
+                                    <DropdownMenu.Root>
+                                        <DropdownMenu.Trigger>
+                                            <Button style={{ gap: '8px', paddingInline: '8px' }} variant="ghost">
+                                                <Avatar
+                                                    fallback={userInitials}
+                                                    radius="full"
+                                                    size="2"
+                                                    src={user.photoURL ?? undefined}
+                                                />
+                                                <Text size="2" weight="medium">
+                                                    {user.displayName || user.email}
+                                                </Text>
+                                            </Button>
+                                        </DropdownMenu.Trigger>
+                                        <DropdownMenu.Content align="end">
+                                            <DropdownMenu.Label>
+                                                <Text color="gray" size="1">{user.email}</Text>
+                                            </DropdownMenu.Label>
+                                            <DropdownMenu.Separator />
+                                            <DropdownMenu.Item onClick={() => navigate('/liked')}>
+                                                {t('likes.nav.likedProjects')}
+                                            </DropdownMenu.Item>
+                                            <DropdownMenu.Item onClick={() => navigate('/profile')}>
+                                                {t('profile.nav.myProfile')}
+                                            </DropdownMenu.Item>
+                                            <DropdownMenu.Separator />
+                                            <DropdownMenu.Item color="red" onClick={logOut}>
+                                                {t('auth.signOut')}
+                                            </DropdownMenu.Item>
+                                        </DropdownMenu.Content>
+                                    </DropdownMenu.Root>
+                                )
+                                : (
+                                    <Button color="blue" onClick={handleAuth} variant="solid">
+                                        {t('auth.signIn')}
+                                    </Button>
+                                )}
                         </Flex>
                     </Flex>
                 </Container>

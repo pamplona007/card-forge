@@ -14,20 +14,28 @@ import {
     getDoc,
     getDocs,
     query,
+    serverTimestamp,
+    setDoc,
     updateDoc,
     where,
+    writeBatch,
 } from 'firebase/firestore';
-import {
-    deleteObject,
-    getDownloadURL,
-    ref,
-    uploadBytes,
-} from 'firebase/storage';
 import { createContext, type ReactNode, useCallback, useEffect, useState } from 'react';
 
 import type { ZombicideCardData } from '../components/editors/zombicide/ZombicideCardEditor';
 
-import { auth, db, storage } from '../firebase/config';
+import { auth, db } from '../firebase/config';
+
+export type LikedProject = {
+  description: string;
+  gameId: string;
+  isPublic: boolean;
+  likedAt: Date;
+  name: string;
+  projectId: string;
+  updatedAt: Date;
+  userId: string;
+};
 
 export type Project = {
   cards: ZombicideCardData[];
@@ -43,33 +51,37 @@ export type Project = {
 
 type FirebaseContextType = {
   createProject: (project: Omit<Project, 'createdAt' | 'id' | 'updatedAt'>) => Promise<string>;
-  deleteImage: (path: string) => Promise<void>;
   deleteProject: (projectId: string) => Promise<void>;
+  fetchLikedProjects: () => Promise<LikedProject[]>;
   fetchProjectById: (projectId: string) => Promise<null | Project>;
   fetchPublicProjectsByGame: (gameId: string) => Promise<Project[]>;
   fetchUserProjectsByGame: (gameId: string) => Promise<Project[]>;
+  likeProject: (project: Project) => Promise<void>;
   loading: boolean;
   logOut: () => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
+  unlikeProject: (projectId: string) => Promise<void>;
+  updateCard: (projectId: string, card: ZombicideCardData) => Promise<void>;
   updateProject: (project: Project) => Promise<void>;
-  uploadImage: (file: File, path: string) => Promise<string>;
   user: null | User;
 };
 
 export const FirebaseContext = createContext<FirebaseContextType>({
     createProject: async () => '',
-    deleteImage: async () => {},
     deleteProject: async () => {},
+    fetchLikedProjects: async () => [],
     fetchProjectById: async () => null,
     fetchPublicProjectsByGame: async () => [],
     fetchUserProjectsByGame: async () => [],
+    likeProject: async () => {},
     loading: true,
     logOut: async () => {},
     signIn: async () => {},
     signUp: async () => {},
+    unlikeProject: async () => {},
+    updateCard: async () => {},
     updateProject: async () => {},
-    uploadImage: async () => '',
     user: null,
 });
 
@@ -136,20 +148,47 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
 
         try {
             const now = new Date();
-            const projectData = {
-                ...project,
-                cards: project.cards || [],
-                createdAt: now,
-                updatedAt: now,
-            };
+            const { cards, ...projectMetadata } = project;
             const docRef = await addDoc(
-                collection(db, 'users', user.uid, 'projects'),
-                projectData,
+                collection(db, 'projects'),
+                { ...projectMetadata, createdAt: now, updatedAt: now, userId: user.uid },
             );
+
+            if (cards && 0 < cards.length) {
+                const batch = writeBatch(db);
+                for (const card of cards) {
+                    const cardRef = doc(db, 'projects', docRef.id, 'cards', card.id);
+                    batch.set(cardRef, card);
+                }
+                await batch.commit();
+            }
+
             queryClient.invalidateQueries({ queryKey: ['projects'] });
             return docRef.id;
         } catch (error) {
             console.error('Error creating project:', error);
+            throw error;
+        }
+    };
+
+    const updateCard = async (projectId: string, card: ZombicideCardData): Promise<void> => {
+        if (!user) {
+            throw new Error('User not authenticated');
+        }
+
+        try {
+            const batch = writeBatch(db);
+            batch.set(
+                doc(db, 'projects', projectId, 'cards', card.id),
+                card,
+            );
+            batch.update(
+                doc(db, 'projects', projectId),
+                { updatedAt: new Date() },
+            );
+            await batch.commit();
+        } catch (error) {
+            console.error('Error updating card:', error);
             throw error;
         }
     };
@@ -160,16 +199,92 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
         }
 
         try {
-            const projectRef = doc(db, 'users', user.uid, 'projects', project.id);
-            const updatedData = {
-                ...project,
-                updatedAt: new Date(),
-            };
-            await updateDoc(projectRef, updatedData);
+            const { cards, ...projectMetadata } = project;
+            const projectRef = doc(db, 'projects', project.id);
+            await updateDoc(projectRef, { ...projectMetadata, updatedAt: new Date() });
+
+            const cardsRef = collection(db, 'projects', project.id, 'cards');
+            const existingSnap = await getDocs(cardsRef);
+            const existingIds = new Set(existingSnap.docs.map((d) => d.id));
+            const currentIds = new Set(cards.map((c) => c.id));
+
+            const batch = writeBatch(db);
+            for (const card of cards) {
+                const cardRef = doc(db, 'projects', project.id, 'cards', card.id);
+                batch.set(cardRef, card);
+            }
+            for (const existingId of existingIds) {
+                if (!currentIds.has(existingId)) {
+                    batch.delete(doc(db, 'projects', project.id, 'cards', existingId));
+                }
+            }
+            await batch.commit();
+
             queryClient.invalidateQueries({ queryKey: ['projects'] });
         } catch (error) {
             console.error('Error updating project:', error);
             throw error;
+        }
+    };
+
+    const likeProject = async (project: Project): Promise<void> => {
+        if (!user) {
+            throw new Error('User not authenticated');
+        }
+        try {
+            const likeRef = doc(db, 'users', user.uid, 'likes', project.id);
+            await setDoc(likeRef, {
+                description: project.description,
+                gameId: project.gameId,
+                isPublic: project.isPublic,
+                likedAt: serverTimestamp(),
+                name: project.name,
+                projectId: project.id,
+                updatedAt: project.updatedAt,
+                userId: project.userId,
+            });
+            queryClient.invalidateQueries({ queryKey: ['likes'] });
+        } catch (error) {
+            console.error('Error liking project:', error);
+            throw error;
+        }
+    };
+
+    const unlikeProject = async (projectId: string): Promise<void> => {
+        if (!user) {
+            throw new Error('User not authenticated');
+        }
+        try {
+            await deleteDoc(doc(db, 'users', user.uid, 'likes', projectId));
+            queryClient.invalidateQueries({ queryKey: ['likes'] });
+        } catch (error) {
+            console.error('Error unliking project:', error);
+            throw error;
+        }
+    };
+
+    const fetchLikedProjects = async (): Promise<LikedProject[]> => {
+        if (!user) {
+            return [];
+        }
+        try {
+            const snap = await getDocs(collection(db, 'users', user.uid, 'likes'));
+            return snap.docs.map((d) => {
+                const data = d.data();
+                return {
+                    description: data.description ?? '',
+                    gameId: data.gameId ?? '',
+                    isPublic: data.isPublic ?? true,
+                    likedAt: data.likedAt?.toDate ? data.likedAt.toDate() : new Date(),
+                    name: data.name ?? '',
+                    projectId: d.id,
+                    updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(),
+                    userId: data.userId ?? '',
+                };
+            });
+        } catch (error) {
+            console.error('Error fetching liked projects:', error);
+            return [];
         }
     };
 
@@ -179,33 +294,19 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
         }
 
         try {
-            const projectRef = doc(db, 'users', user.uid, 'projects', projectId);
+            const cardsRef = collection(db, 'projects', projectId, 'cards');
+            const cardsSnap = await getDocs(cardsRef);
+            if (0 < cardsSnap.size) {
+                const batch = writeBatch(db);
+                cardsSnap.docs.forEach((d) => batch.delete(d.ref));
+                await batch.commit();
+            }
+
+            const projectRef = doc(db, 'projects', projectId);
             await deleteDoc(projectRef);
             queryClient.invalidateQueries({ queryKey: ['projects'] });
         } catch (error) {
             console.error('Error deleting project:', error);
-            throw error;
-        }
-    };
-
-    const uploadImage = async (file: File, path: string): Promise<string> => {
-        try {
-            const storageRef = ref(storage, path);
-            await uploadBytes(storageRef, file);
-            const downloadURL = await getDownloadURL(storageRef);
-            return downloadURL;
-        } catch (error) {
-            console.error('Error uploading image:', error);
-            throw error;
-        }
-    };
-
-    const deleteImage = async (path: string): Promise<void> => {
-        try {
-            const storageRef = ref(storage, path);
-            await deleteObject(storageRef);
-        } catch (error) {
-            console.error('Error deleting image:', error);
             throw error;
         }
     };
@@ -218,7 +319,7 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
             const projectsData: Project[] = querySnapshot.docs.map((doc) => {
                 const data = doc.data();
                 return {
-                    cards: data.cards || [],
+                    cards: [],
                     createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(),
                     description: data.description,
                     gameId: data.gameId || gameId,
@@ -242,13 +343,13 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
         }
 
         try {
-            const projectsRef = collection(db, 'users', user.uid, 'projects');
-            const q = query(projectsRef, where('gameId', '==', gameId));
+            const projectsRef = collection(db, 'projects');
+            const q = query(projectsRef, where('gameId', '==', gameId), where('userId', '==', user.uid));
             const querySnapshot = await getDocs(q);
             const projectsData: Project[] = querySnapshot.docs.map((doc) => {
                 const data = doc.data();
                 return {
-                    cards: data.cards || [],
+                    cards: [],
                     createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(),
                     description: data.description,
                     gameId: data.gameId || gameId,
@@ -272,43 +373,28 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
         }
 
         try {
-            const userProjectRef = doc(db, 'users', user.uid, 'projects', projectId);
-            const userProjectSnap = await getDoc(userProjectRef);
+            const projectRef = doc(db, 'projects', projectId);
+            const projectSnap = await getDoc(projectRef);
 
-            if (userProjectSnap.exists()) {
-                const data = userProjectSnap.data();
-                return {
-                    cards: data.cards || [],
-                    createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(),
-                    description: data.description,
-                    gameId: data.gameId || '',
-                    id: userProjectSnap.id,
-                    isPublic: data.isPublic ?? false,
-                    name: data.name,
-                    updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(),
-                    userId: user.uid,
-                };
+            if (!projectSnap.exists()) {
+                return null;
             }
 
-            const publicProjectRef = doc(db, 'projects', projectId);
-            const publicProjectSnap = await getDoc(publicProjectRef);
+            const data = projectSnap.data();
+            const cardsSnap = await getDocs(collection(db, 'projects', projectId, 'cards'));
+            const cards = cardsSnap.docs.map((d) => d.data() as ZombicideCardData);
 
-            if (publicProjectSnap.exists()) {
-                const data = publicProjectSnap.data();
-                return {
-                    cards: data.cards || [],
-                    createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(),
-                    description: data.description,
-                    gameId: data.gameId || '',
-                    id: publicProjectSnap.id,
-                    isPublic: data.isPublic ?? true,
-                    name: data.name,
-                    updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(),
-                    userId: data.userId || '',
-                };
-            }
-
-            return null;
+            return {
+                cards,
+                createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(),
+                description: data.description,
+                gameId: data.gameId || '',
+                id: projectSnap.id,
+                isPublic: data.isPublic ?? false,
+                name: data.name,
+                updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(),
+                userId: data.userId || '',
+            };
         } catch (error) {
             console.error('Error fetching project:', error);
             return null;
@@ -317,17 +403,19 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
 
     const contextValue: FirebaseContextType = {
         createProject,
-        deleteImage,
         deleteProject,
+        fetchLikedProjects,
         fetchProjectById,
         fetchPublicProjectsByGame,
         fetchUserProjectsByGame,
+        likeProject,
         loading,
         logOut,
         signIn,
         signUp,
+        unlikeProject,
+        updateCard,
         updateProject,
-        uploadImage,
         user,
     };
 

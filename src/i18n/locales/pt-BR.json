@@ -214,8 +214,87 @@
     },
     "buttonRemove": { "remove": "Remover" }
   },
+  "profile": {
+    "title": "Meu Perfil",
+    "description": "Gerencie as configurações da sua conta",
+    "section": {
+      "identity": "Perfil",
+      "email": "Endereço de E-mail",
+      "password": "Alterar Senha"
+    },
+    "label": {
+      "displayName": "Nome de Exibição",
+      "currentPassword": "Senha Atual",
+      "newEmail": "Novo E-mail",
+      "newPassword": "Nova Senha",
+      "confirmPassword": "Confirmar Nova Senha",
+      "pictureHint": "JPG ou PNG, será redimensionado para 128×128"
+    },
+    "placeholder": {
+      "displayName": "Seu nome",
+      "currentPassword": "Digite sua senha atual",
+      "email": "novo@email.com",
+      "newPassword": "Nova senha (mínimo 6 caracteres)",
+      "confirmPassword": "Confirme a nova senha"
+    },
+    "button": {
+      "uploadPicture": "Enviar Foto",
+      "saveProfile": "Salvar Perfil",
+      "saveEmail": "Atualizar E-mail",
+      "savePassword": "Atualizar Senha"
+    },
+    "success": {
+      "profileUpdated": "Perfil atualizado com sucesso",
+      "emailUpdated": "E-mail atualizado com sucesso",
+      "passwordUpdated": "Senha atualizada com sucesso"
+    },
+    "error": {
+      "passwordMismatch": "As senhas não coincidem",
+      "generic": "Ocorreu um erro. Tente novamente"
+    },
+    "nav": {
+      "myProfile": "Meu Perfil"
+    }
+  },
+  "likes": {
+    "page": {
+      "title": "Projetos Curtidos",
+      "description": "Projetos que você salvou como favoritos",
+      "loading": "Carregando projetos curtidos...",
+      "signInTitle": "Entre para Ver Projetos Curtidos",
+      "signInDescription": "Crie uma conta ou entre para curtir e salvar seus projetos favoritos."
+    },
+    "filter": {
+      "game": "Jogo",
+      "allGames": "Todos os Jogos",
+      "sortBy": "Ordenar por",
+      "showing": "{{count}} de {{total}}",
+      "sort": {
+        "likedDate": "Data de Curtida",
+        "name": "Nome",
+        "updatedDate": "Data de Atualização"
+      }
+    },
+    "empty": {
+      "title": "Nenhum Projeto Curtido Ainda",
+      "description": "Navegue pelos projetos públicos e clique no ícone de coração para salvar seus favoritos aqui.",
+      "noResults": "Nenhum projeto corresponde ao filtro selecionado."
+    },
+    "card": {
+      "liked": "Curtido {{date}}"
+    },
+    "badge": {
+      "public": "Público"
+    },
+    "button": {
+      "like": "Curtir projeto",
+      "unlike": "Descurtir projeto"
+    },
+    "nav": {
+      "likedProjects": "Projetos Curtidos"
+    }
+  },
   "games": {
-    "title": "Escolha um Jogo",
     "description": "Selecione um jogo para começar a criar cartas personalizadas para sua coleção de jogos de tabuleiro.",
     "button": { "viewProjects": "Ver Projetos" },
     "empty": {
