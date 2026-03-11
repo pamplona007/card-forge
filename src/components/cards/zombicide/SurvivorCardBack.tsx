@@ -13,7 +13,7 @@ interface SurvivorCardProps extends CardProps {
     onChangeImagePosition?: (offsetX: number, offsetY: number) => void;
 }
 
-const BACKGROUND_NAME_MIN_FONT_SIZE = 4;
+const BACKGROUND_NAME_MIN_FONT_SIZE = 3;
 const BACKGROUND_NAME_MAX_FONT_SIZE = 10;
 const BACKGROUND_NAME_GAP_X = 0;
 const BACKGROUND_NAME_GAP_Y = 0;
@@ -138,87 +138,307 @@ const createClipWithBleed = (ctx: CanvasRenderingContext2D, scale: number, paddi
     ctx.clip();
 };
 
-function drawBackgroundName(scale: number, ctx: CanvasRenderingContext2D, card: SurvivorCardData) {
+const generateBackgroundNamePlacements = (
+    scale: number,
+    card: SurvivorCardData,
+    width: number,
+    height: number,
+    ctx: CanvasRenderingContext2D,
+): Array<{ fontSize: number; rotation: number; x: number; y: number }> => {
     const text = (card.name || '').toLocaleUpperCase().trim() || 'SURVIVOR';
-    const color = card.color;
-    const width = ctx.canvas.width;
-    const height = ctx.canvas.height;
-
-    let state = 1;
-    const seedSource = `${card.id}-${text}-${color}`;
-    for (let i = 0; i < seedSource.length; i++) {
-        state = ((state * 31) + seedSource.charCodeAt(i)) % 2147483647;
-    }
-    if (0 === state) {
-        state = 1;
-    }
-
     const minFontSize = BACKGROUND_NAME_MIN_FONT_SIZE * scale;
     const maxFontSize = BACKGROUND_NAME_MAX_FONT_SIZE * scale;
-    const gapX = BACKGROUND_NAME_GAP_X * scale;
-    const gapY = BACKGROUND_NAME_GAP_Y * scale;
-    const gap = Math.max(gapX, gapY);
+    const padding = Math.max(1, BACKGROUND_NAME_GAP_X * scale, BACKGROUND_NAME_GAP_Y * scale);
+    const margin = Math.max(4, padding * 2);
 
-    ctx.save();
-    ctx.font = `900 ${maxFontSize}px 'Piklet Caps', sans-serif`;
-    ctx.restore();
+    const hash = (s: string) => {
+        let h = 2166136261;
+        for (let i = 0; s.length > i; i++) {
+            h ^= s.charCodeAt(i);
+            h = Math.imul(h, 16777619) >>> 0;
+        }
+        return h >>> 0;
+    };
 
-    const placedRects: Array<{ bottom: number; left: number; right: number; top: number }> = [];
+    const seedValue = (
+        (hash(card.id) ^ Math.imul(Math.round(minFontSize), 1597334677)) ^
+        (hash(text) ^ Math.imul(Math.round(maxFontSize), 2654435761)) ^
+        (hash(card.color) ^ Math.imul(width >>> 0, 3812015801))
+    ) >>> 0;
 
-    const overlaps = (left: number, top: number, right: number, bottom: number) => {
-        for (const placed of placedRects) {
-            if (left < placed.right && right > placed.left && top < placed.bottom && bottom > placed.top) {
-                return true;
+    const mulberry32 = (seed: number) => {
+        let t = seed >>> 0;
+        return () => {
+            t += 0x6D2B79F5;
+            let r = t;
+            r = Math.imul(r ^ (r >>> 15), r | 1);
+            r ^= r + Math.imul(r ^ (r >>> 7), r | 61);
+            return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+        };
+    };
+
+    const rand = mulberry32(seedValue);
+    const rotations = [0, Math.PI / 2];
+
+    const boxes: Array<{ bottom: number; left: number; right: number; top: number }> = [];
+    const placements: Array<{ fontSize: number; rotation: number; x: number; y: number }> = [];
+
+    const cellSize = Math.max(20, Math.round(maxFontSize * 0.3));
+    const grid = new Map<string, number[]>();
+    const cellKey = (cx: number, cy: number) => `${cx},${cy}`;
+
+    const getCellRange = (box: { bottom: number; left: number; right: number; top: number }) => ({
+        cx0: Math.floor(box.left / cellSize),
+        cx1: Math.floor(box.right / cellSize),
+        cy0: Math.floor(box.top / cellSize),
+        cy1: Math.floor(box.bottom / cellSize),
+    });
+
+    const addToGrid = (box: { bottom: number; left: number; right: number; top: number }, index: number) => {
+        const { cx0, cx1, cy0, cy1 } = getCellRange(box);
+        for (let cy = cy0; cy1 >= cy; cy++) {
+            for (let cx = cx0; cx1 >= cx; cx++) {
+                const key = cellKey(cx, cy);
+                const list = grid.get(key);
+                if (list) {
+                    list.push(index);
+                } else {
+                    grid.set(key, [index]);
+                }
+            }
+        }
+    };
+
+    let gridMark = 0;
+    const gridSeen: number[] = [];
+
+    const collides = (box: { bottom: number; left: number; right: number; top: number }) => {
+        const { cx0, cx1, cy0, cy1 } = getCellRange(box);
+        gridMark++;
+        for (let cy = cy0; cy1 >= cy; cy++) {
+            for (let cx = cx0; cx1 >= cx; cx++) {
+                const list = grid.get(cellKey(cx, cy));
+                if (!list) {
+                    continue;
+                }
+                for (const idx of list) {
+                    if (gridSeen[idx] === gridMark) {
+                        continue;
+                    }
+                    gridSeen[idx] = gridMark;
+                    const other = boxes[idx];
+                    if (!(
+                        box.right < other.left ||
+                        box.left > other.right ||
+                        box.bottom < other.top ||
+                        box.top > other.bottom
+                    )) {
+                        return true;
+                    }
+                }
             }
         }
         return false;
     };
 
-    let availableCoordinates: Array<[number, number]> = [[0, 0]];
+    const withinCanvas = (box: { bottom: number; left: number; right: number; top: number }) => (
+        box.left >= -margin && box.top >= -margin && box.right <= (width + margin) && box.bottom <= (height + margin)
+    );
 
-    const sanitizeCoodinates = () => {
-        availableCoordinates = availableCoordinates.filter(([x, y]) => {
-            return x < width || y < height;
-        });
+    const measureAabb = (fontSize: number, rotationRad: number, x: number, y: number) => {
+        ctx.font = `900 ${fontSize}px 'Piklet Caps', sans-serif`;
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'alphabetic';
+
+        const metrics = ctx.measureText(text);
+        const left = -(metrics.actualBoundingBoxLeft ?? 0);
+        const right = metrics.actualBoundingBoxRight ?? metrics.width;
+        const ascent = metrics.actualBoundingBoxAscent ?? fontSize;
+        const descent = metrics.actualBoundingBoxDescent ?? (fontSize * 0.2);
+        const top = -ascent;
+        const bottom = descent;
+
+        const sin = Math.sin(rotationRad);
+        const cos = Math.cos(rotationRad);
+        const corners = [
+            { x: left, y: top },
+            { x: right, y: top },
+            { x: right, y: bottom },
+            { x: left, y: bottom },
+        ];
+
+        let minX = Infinity;
+        let maxX = -Infinity;
+        let minY = Infinity;
+        let maxY = -Infinity;
+        for (const p of corners) {
+            const rx = (p.x * cos) - (p.y * sin);
+            const ry = (p.x * sin) + (p.y * cos);
+            minX = Math.min(minX, rx);
+            maxX = Math.max(maxX, rx);
+            minY = Math.min(minY, ry);
+            maxY = Math.max(maxY, ry);
+        }
+
+        return { bottom: y + maxY, left: x + minX, right: x + maxX, top: y + minY };
     };
 
-    while (0 < availableCoordinates.length) {
-        const index = Math.floor(state / 31) % availableCoordinates.length;
-        const [x, y] = availableCoordinates[index];
-        availableCoordinates.splice(index, 1);
+    let remainingAttempts = Math.max(20000, Math.round((height * width) / 400));
 
-        ctx.font = `900 ${maxFontSize}px 'Piklet Caps', sans-serif`;
-        const textMetrics = ctx.measureText(text);
-        const textWidth = textMetrics.width;
-        const textHeight = textMetrics.actualBoundingBoxAscent + textMetrics.actualBoundingBoxDescent;
+    while (0 < remainingAttempts) {
+        remainingAttempts--;
 
-        if (textWidth > width || textHeight > height) {
-            continue;
+        const rotation = rotations[0.3 > rand() ? 1 : 0];
+        const x = (rand() * width);
+        const y = (rand() * height);
+
+        let fontSize = minFontSize + (rand() * (maxFontSize - minFontSize));
+        let shrinkSteps = 0;
+
+        let placed = false;
+        while (!placed && 15 > shrinkSteps && minFontSize <= fontSize) {
+            const rawBox = measureAabb(fontSize, rotation, x, y);
+            const box = {
+                bottom: (rawBox.bottom + padding),
+                left: (rawBox.left - padding),
+                right: (rawBox.right + padding),
+                top: (rawBox.top - padding),
+            };
+
+            if (withinCanvas(box) && !collides(box)) {
+                const index = boxes.length;
+                boxes.push(box);
+                addToGrid(box, index);
+                placements.push({ fontSize, rotation, x, y });
+                placed = true;
+            } else {
+                fontSize *= 0.65;
+                shrinkSteps++;
+            }
         }
-
-        const left = x;
-        const top = y;
-        const right = left + textWidth;
-        const bottom = top + textHeight;
-
-        if (0 > left || right > width || 0 > top || bottom > height) {
-            continue;
-        }
-
-        if (overlaps(left - gap, top - gap, right + gap, bottom + gap)) {
-            continue;
-        }
-
-        ctx.fillStyle = hexToRgba(color, BACKGROUND_NAME_ALPHA);
-        ctx.fillText(text, x, bottom);
-
-        placedRects.push({ bottom, left, right, top });
-
-        availableCoordinates.push([right, top]);
-        availableCoordinates.push([left, bottom]);
-
-        sanitizeCoodinates();
     }
+
+    return placements;
+};
+
+function drawBackgroundName(
+    ctx: CanvasRenderingContext2D,
+    card: SurvivorCardData,
+    placements: Array<{ fontSize: number; rotation: number; x: number; y: number }>,
+) {
+    const text = (card.name || '').toLocaleUpperCase().trim() || 'SURVIVOR';
+
+    ctx.save();
+    ctx.fillStyle = hexToRgba(card.color, BACKGROUND_NAME_ALPHA);
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+
+    for (const p of placements) {
+        ctx.save();
+        ctx.font = `900 ${p.fontSize}px 'Piklet Caps', sans-serif`;
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation);
+        ctx.fillText(text, 0, 0);
+        ctx.restore();
+    }
+
+    ctx.restore();
+}
+
+function drawDescriptions(
+    scale: number,
+    ctx: CanvasRenderingContext2D,
+    card: SurvivorCardData,
+    width: number,
+    height: number,
+) {
+    if (!card.descriptions || 0 === card.descriptions.length) {
+        return;
+    }
+
+    const descriptionBoxX = width * 0.525;
+    const descriptionBoxY = height * 0.12;
+    const descriptionBoxWidth = width * 0.34;
+    // Angle of the background image diagonal
+    const skewAngle = -0.3;
+
+    ctx.save();
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+
+    // Calculate line heights based on fonts
+    ctx.font = `bold ${3 * scale}px 'Titling Gothic', sans-serif`;
+    const titleMetrics = ctx.measureText('A');
+    const titleLineHeight = (titleMetrics.actualBoundingBoxAscent ?? 3 * scale) + (titleMetrics.actualBoundingBoxDescent ?? 0) + (1 * scale);
+
+    ctx.font = `400 ${2 * scale}px 'Titling Gothic', sans-serif`;
+    const bodyMetrics = ctx.measureText('A');
+    const bodyLineHeight = (bodyMetrics.actualBoundingBoxAscent ?? 2 * scale) + (bodyMetrics.actualBoundingBoxDescent ?? 0) + (1 * scale);
+
+    const descPadding = 4 * scale;
+    let currentY = descriptionBoxY;
+    const descriptionLines: Array<{ text: string; type: 'body' | 'title'; x: number; y: number; }> = [];
+
+    for (const desc of card.descriptions) {
+        if (desc.title) {
+            ctx.font = `bold ${3 * scale}px 'Titling Gothic', sans-serif`;
+            const distanceFromTop = currentY - descriptionBoxY;
+            const angledOffset = distanceFromTop * Math.tan(skewAngle);
+            const adjustedX = descriptionBoxX + angledOffset + descPadding;
+            descriptionLines.push({ text: desc.title, type: 'title', x: adjustedX, y: currentY });
+            currentY += titleLineHeight;
+        }
+
+        if (desc.text) {
+            ctx.font = `400 ${2 * scale}px 'Titling Gothic', sans-serif`;
+            const words = desc.text.split(' ');
+            let line = '';
+            let lineX = descriptionBoxX;
+
+            for (const word of words) {
+                const testLine = line ? `${line} ${word}` : word;
+                const metrics = ctx.measureText(testLine);
+                const availableWidth = (descriptionBoxX + descriptionBoxWidth) - lineX;
+
+                // Calculate the angled boundary at the current Y position
+                const distanceFromTop = currentY - descriptionBoxY;
+                const angledOffset = distanceFromTop * Math.tan(skewAngle);
+                const adjustedX = descriptionBoxX + angledOffset + descPadding;
+
+                if (metrics.width > availableWidth && line) {
+                    descriptionLines.push({ text: line, type: 'body', x: adjustedX, y: currentY });
+                    currentY += bodyLineHeight * 0.8;
+                    lineX = adjustedX;
+                    line = word;
+                } else {
+                    line = testLine;
+                }
+            }
+
+            if (line) {
+                const distanceFromTop = currentY - descriptionBoxY;
+                const angledOffset = distanceFromTop * Math.tan(skewAngle);
+                const adjustedX = descriptionBoxX + angledOffset + descPadding;
+                descriptionLines.push({ text: line, type: 'body', x: adjustedX, y: currentY });
+                currentY += bodyLineHeight;
+            }
+
+            currentY += bodyLineHeight * 0.5;
+        }
+    }
+
+    // Draw all lines
+    for (const lineObj of descriptionLines) {
+        if ('title' === lineObj.type) {
+            ctx.font = `bold ${3 * scale}px 'Titling Gothic', sans-serif`;
+        } else {
+            ctx.font = `400 ${2 * scale}px 'Titling Gothic', sans-serif`;
+        }
+        ctx.fillText(lineObj.text, lineObj.x, lineObj.y);
+    }
+
+    ctx.restore();
 }
 
 const SurvivorCardBack: React.FC<SurvivorCardProps> = ({ bleed, card, exportMode = false, onChangeImagePosition }) => {
@@ -251,6 +471,10 @@ const SurvivorCardBack: React.FC<SurvivorCardProps> = ({ bleed, card, exportMode
     const { images, loaded: loadedImages } = useImages(imageUrls);
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const placementsRef = useRef<{
+        cache: Array<{ fontSize: number; rotation: number; x: number; y: number }> | null;
+        cacheKey: null | string;
+    }>({ cache: null, cacheKey: null });
 
     const padding = dimensions.width * 0.05;
     const availableWidth = dimensions.width - (padding * 2);
@@ -258,6 +482,10 @@ const SurvivorCardBack: React.FC<SurvivorCardProps> = ({ bleed, card, exportMode
     const scale = useMemo(() => {
         return availableWidth / (SURVIVOR_CARD_DIMENSIONS.width + (SURVIVOR_CARD_DIMENSIONS.bleed * 2));
     }, [availableWidth]);
+
+    const backgroundNameCacheKey = useMemo(() => {
+        return `${card.id}|${card.name}|${card.color}|${scale}|${dimensions.width}|${dimensions.height}`;
+    }, [card.id, card.name, card.color, scale, dimensions.width, dimensions.height]);
 
     const updateCard = useCallback(() => {
         const canvas = canvasRef.current;
@@ -269,6 +497,19 @@ const SurvivorCardBack: React.FC<SurvivorCardProps> = ({ bleed, card, exportMode
         if (!ctx) {
             return;
         }
+
+        if (placementsRef.current.cacheKey !== backgroundNameCacheKey) {
+            placementsRef.current.cache = generateBackgroundNamePlacements(
+                scale,
+                card,
+                canvas.width,
+                canvas.height,
+                ctx,
+            );
+            placementsRef.current.cacheKey = backgroundNameCacheKey;
+        }
+        const placements = placementsRef.current.cache || [];
+
         const availableHeight = (SURVIVOR_CARD_DIMENSIONS.height + (SURVIVOR_CARD_DIMENSIONS.bleed * 2)) * scale;
         const availableWidth = (SURVIVOR_CARD_DIMENSIONS.width + (SURVIVOR_CARD_DIMENSIONS.bleed * 2)) * scale;
 
@@ -288,7 +529,7 @@ const SurvivorCardBack: React.FC<SurvivorCardProps> = ({ bleed, card, exportMode
             images.background.height * (dimensions.width / images.background.width),
         );
 
-        drawBackgroundName(scale, ctx, card);
+        drawBackgroundName(ctx, card, placements);
 
         if (images.character) {
             const characterAspectRatio = images.character.width / images.character.height;
@@ -335,7 +576,9 @@ const SurvivorCardBack: React.FC<SurvivorCardProps> = ({ bleed, card, exportMode
                 ctx.drawImage(tagIcon, tagIconLeft, tagIconTop, tagIconWidth, tagIcon.height * (tagIconWidth / tagIcon.width));
             }
         }
-    }, [dimensions, loadedImages, images, card, bleed, scale, padding]);
+
+        drawDescriptions(scale, ctx, card, dimensions.width, dimensions.height);
+    }, [dimensions, loadedImages, images, card, bleed, scale, padding, backgroundNameCacheKey]);
 
     useEffect(() => {
         if (exportMode) {

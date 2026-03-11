@@ -116,7 +116,11 @@ export const createDefaultSurvivorCard = (): SurvivorCardData => ({
         yellow: { color: 'yellow', id: crypto.randomUUID(), name: '+1 Ação' },
     },
     color: '#3B82F6',
-    descriptions: [],
+    descriptions: [
+        { text: '', title: 'Habilidade 1' },
+        { text: '', title: 'Habilidade 2' },
+        { text: '', title: 'Habilidade 3' },
+    ],
     health: 3,
     id: crypto.randomUUID(),
     name: 'New Survivor',
