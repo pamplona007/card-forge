@@ -1,12 +1,14 @@
 import { Box, Button, Card, Dialog, Flex, Grid, Heading, Spinner, Text, TextField } from '@radix-ui/themes';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import type { Project } from '../contexts/FirebaseContext';
 
 import AppLayout from '../components/AppLayout';
+import { useCreateProject } from '../hooks/useCreateProject';
 import { useFirebase } from '../hooks/useFirebase';
+import { useProjects } from '../hooks/useProjects';
 import { getGameById } from '../types/game';
 
 interface ProjectCardProps {
@@ -18,52 +20,26 @@ interface ProjectCardProps {
 export default function GameProjectsPage() {
     const { gameId } = useParams<{ gameId: string }>();
     const navigate = useNavigate();
-    const { createProject, fetchPublicProjectsByGame, fetchUserProjectsByGame, user } = useFirebase();
+    const { user } = useFirebase();
+    const { data: projectsData, isLoading } = useProjects(gameId);
+    const createProjectMutation = useCreateProject();
     const { t } = useTranslation();
 
     const [game] = useState(getGameById(gameId || ''));
-    const [publicProjects, setPublicProjects] = useState<Project[]>([]);
-    const [userProjects, setUserProjects] = useState<Project[]>([]);
-    const [loading, setLoading] = useState(true);
     const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
     const [newProjectName, setNewProjectName] = useState('');
-    const [isCreating, setIsCreating] = useState(false);
 
-    useEffect(() => {
-        const fetchProjects = async () => {
-            if (!gameId) {
-                return;
-            }
-
-            setLoading(true);
-            try {
-                const publicData = await fetchPublicProjectsByGame(gameId);
-                setPublicProjects(publicData);
-
-                if (user) {
-                    const userData = await fetchUserProjectsByGame(gameId);
-                    setUserProjects(userData);
-                } else {
-                    setUserProjects([]);
-                }
-            } catch (error) {
-                console.error('Error fetching projects:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchProjects();
-    }, [gameId, user, fetchPublicProjectsByGame, fetchUserProjectsByGame]);
+    const publicProjects = projectsData?.publicProjects || [];
+    const userProjects = projectsData?.userProjects || [];
 
     const handleCreateProject = async () => {
         if (!newProjectName.trim() || !user || !gameId) {
             return;
         }
 
-        setIsCreating(true);
         try {
-            const projectId = await createProject({
+            const projectId = await createProjectMutation.mutateAsync({
+                cards: [],
                 description: '',
                 gameId,
                 isPublic: false,
@@ -75,7 +51,6 @@ export default function GameProjectsPage() {
         } catch (error) {
             console.error('Error creating project:', error);
         } finally {
-            setIsCreating(false);
             setIsCreateDialogOpen(false);
             setNewProjectName('');
         }
@@ -150,10 +125,10 @@ export default function GameProjectsPage() {
                                     </Dialog.Close>
                                     <Button
                                         color="blue"
-                                        disabled={!newProjectName.trim() || isCreating}
+                                        disabled={!newProjectName.trim() || createProjectMutation.isPending}
                                         onClick={handleCreateProject}
                                     >
-                                        {isCreating ? t('projects.status.creating') : t('projects.button.createProject')}
+                                        {createProjectMutation.isPending ? t('projects.status.creating') : t('projects.button.createProject')}
                                     </Button>
                                 </Flex>
                             </Dialog.Content>
@@ -165,14 +140,14 @@ export default function GameProjectsPage() {
                 </Text>
             </Box>
 
-            {loading && (
+            {isLoading && (
                 <Box py="9" style={{ textAlign: 'center' }}>
                     <Spinner size="3" />
                     <Text color="gray" ml="3">{t('projects.status.loading')}</Text>
                 </Box>
             )}
 
-            {!loading && (
+            {!isLoading && (
                 <>
 
                     {user && 0 < userProjects.length && (

@@ -2,302 +2,313 @@
  * PDF Generator Utility for Zombicide Cards
  *
  * Generates printable PDFs with:
- * - Standard poker card dimensions (63.5mm x 88.9mm)
- * - 3mm bleed on all sides (69.5mm x 94.9mm total)
- * - 3x3 grid layout (9 cards per page for A4/Letter)
- * - Visible bleed marks/cut lines
+ * - Standard poker card dimensions
+ * - 3mm bleed on all sides
+ * - Grid layout calculated dynamically based on card size
+ *
+ * Note: Cut lines are already drawn on the canvas, so no additional processing needed
  */
 
-import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 
-import type { ZombicideCardData } from '../components/editors/ZombicideCardEditor';
+import type { ZombicideCardData } from '../components/editors/zombicide/ZombicideCardEditor';
 
-import { CARD_DIMENSIONS } from '../types/zombicide-card';
+import { CARD_DIMENSIONS, type CardDimensions, SURVIVOR_CARD_DIMENSIONS } from '../types/zombicide-card';
+import { captureSurvivorCard } from './captureSurvivorCard';
 
-const CARD_WIDTH = CARD_DIMENSIONS.width;
-const CARD_HEIGHT = CARD_DIMENSIONS.height;
-const BLEED = CARD_DIMENSIONS.bleed;
-const CARD_TOTAL_WIDTH = CARD_DIMENSIONS.totalWidth;
-const CARD_TOTAL_HEIGHT = CARD_DIMENSIONS.totalHeight;
+/**
+ * Available paper sizes for PDF export
+ */
+export type PaperSize = 'a3' | 'a4' | 'a5' | 'legal' | 'letter';
 
-const PAGE_WIDTH = 210;
-const PAGE_HEIGHT = 297;
+/**
+ * Paper size dimensions in mm (width, height)
+ */
+export const PAPER_SIZES: Record<PaperSize, { height: number; id: string; width: number; }> = {
+    a3: { height: 420, id: 'a3', width: 297 },
+    a4: { height: 297, id: 'a4', width: 210 },
+    a5: { height: 210, id: 'a5', width: 148 },
+    legal: { height: 355.6, id: 'legal', width: 215.9 },
+    letter: { height: 279.4, id: 'letter', width: 215.9 },
+};
+
 const MARGIN = 5;
 
-const CARDS_PER_ROW = 3;
-const CARDS_PER_COL = 3;
-const CARDS_PER_PAGE = CARDS_PER_ROW * CARDS_PER_COL;
+const MIN_SPACING = 3;
 
-const AVAILABLE_WIDTH = PAGE_WIDTH - (2 * MARGIN);
-const AVAILABLE_HEIGHT = PAGE_HEIGHT - (2 * MARGIN);
-const GRID_WIDTH = CARDS_PER_ROW * CARD_TOTAL_WIDTH;
-const GRID_HEIGHT = CARDS_PER_COL * CARD_TOTAL_HEIGHT;
-const EXTRA_WIDTH = AVAILABLE_WIDTH - GRID_WIDTH;
-const EXTRA_HEIGHT = AVAILABLE_HEIGHT - GRID_HEIGHT;
-const SPACING_X = EXTRA_WIDTH / (CARDS_PER_ROW + 1);
-const SPACING_Y = EXTRA_HEIGHT / (CARDS_PER_COL + 1);
+/**
+ * Get card dimensions based on card type
+ */
+const getCardDimensions = (card: ZombicideCardData): CardDimensions => {
+    switch (card.type) {
+        case 'survivor':
+            return SURVIVOR_CARD_DIMENSIONS;
+        default:
+            return CARD_DIMENSIONS;
+    }
+};
 
-const getCardPosition = (index: number): { x: number; y: number } => {
-    const row = Math.floor(index / CARDS_PER_ROW);
-    const col = index % CARDS_PER_ROW;
+/**
+ * Calculate how many cards fit per row based on card dimensions
+ * Returns both horizontal and rotated options, picks the one that fits more cards
+ */
+const calculateGridConfig = (cardDims: CardDimensions, pageWidth: number, pageHeight: number): {
+    cardsPerCol: number;
+    cardsPerRow: number;
+    rotated: boolean;
+} => {
+    const availableWidth = pageWidth - (2 * MARGIN);
+    const availableHeight = pageHeight - (2 * MARGIN);
+
+    const hCardWidth = cardDims.totalCanvasWidth + MIN_SPACING;
+    const hCardHeight = cardDims.totalCanvasHeight + MIN_SPACING;
+    const hCardsPerRow = Math.floor(availableWidth / hCardWidth);
+    const hCardsPerCol = Math.floor(availableHeight / hCardHeight);
+    const hTotal = hCardsPerRow * hCardsPerCol;
+
+    const vCardWidth = cardDims.totalCanvasHeight + MIN_SPACING;
+    const vCardHeight = cardDims.totalCanvasWidth + MIN_SPACING;
+    const vCardsPerRow = Math.floor(availableWidth / vCardWidth);
+    const vCardsPerCol = Math.floor(availableHeight / vCardHeight);
+    const vTotal = vCardsPerRow * vCardsPerCol;
+
+    console.log(`Grid config: horizontal=${hCardsPerRow}x${hCardsPerCol}=${hTotal}, vertical=${vCardsPerRow}x${vCardsPerCol}=${vTotal}`);
+
+    if (vTotal > hTotal) {
+        return { cardsPerCol: vCardsPerCol, cardsPerRow: vCardsPerRow, rotated: true };
+    }
+    return { cardsPerCol: hCardsPerCol, cardsPerRow: hCardsPerRow, rotated: false };
+};
+
+/**
+ * Calculate grid layout for specific card dimensions
+ */
+const calculateGridLayout = (
+    cardDims: CardDimensions,
+    gridConfig: { cardsPerCol: number; cardsPerRow: number; rotated: boolean },
+    pageWidth: number,
+    pageHeight: number,
+) => {
+    const availableWidth = pageWidth - (2 * MARGIN);
+    const availableHeight = pageHeight - (2 * MARGIN);
+
+    const cardWidth = gridConfig.rotated ? cardDims.totalCanvasHeight : cardDims.totalCanvasWidth;
+    const cardHeight = gridConfig.rotated ? cardDims.totalCanvasWidth : cardDims.totalCanvasHeight;
+
+    const gridWidth = gridConfig.cardsPerRow * cardWidth;
+    const gridHeight = gridConfig.cardsPerCol * cardHeight;
+
+    const extraWidth = availableWidth - gridWidth;
+    const extraHeight = availableHeight - gridHeight;
+
+    const spacingX = extraWidth / (gridConfig.cardsPerRow + 1);
+    const spacingY = extraHeight / (gridConfig.cardsPerCol + 1);
 
     return {
-        x: MARGIN + SPACING_X + (col * (CARD_TOTAL_WIDTH + SPACING_X)),
-        y: MARGIN + SPACING_Y + (row * (CARD_TOTAL_HEIGHT + SPACING_Y)),
+        ...gridConfig,
+        cardHeight,
+        cardWidth,
+        spacingX,
+        spacingY,
     };
 };
 
 /**
- * Card element reference with optional ID
+ * Get card position in the grid
  */
-export interface CardElement {
-  card: ZombicideCardData;
-  element?: HTMLElement | null;
-}
+const getCardPosition = (
+    index: number,
+    layout: {
+        cardHeight: number;
+        cardsPerRow: number;
+        cardWidth: number;
+        rotated: boolean;
+        spacingX: number;
+        spacingY: number;
+    },
+    cardDims: CardDimensions,
+    invertedRotation: boolean = false,
+): { x: number; y: number } => {
+    const {
+        cardHeight,
+        cardsPerRow,
+        cardWidth,
+        rotated,
+        spacingX,
+        spacingY,
+    } = layout;
+    const row = Math.floor(index / cardsPerRow);
+    const col = index % cardsPerRow;
+
+    const baseX = MARGIN + spacingX + (col * (cardWidth + spacingX));
+    const baseY = MARGIN + spacingY + (row * (cardHeight + spacingY));
+
+    if (!rotated) {
+        return {
+            x: baseX,
+            y: baseY,
+        };
+    }
+
+    if (invertedRotation) {
+        return {
+            x: baseX - layout.cardHeight,
+            y: baseY - layout.cardWidth + cardDims.totalCanvasWidth,
+        };
+    }
+
+    return {
+        x: baseX,
+        y: baseY - cardDims.totalCanvasHeight,
+    };
+};
 
 /**
  * Options for PDF generation
  */
 export interface PDFGeneratorOptions {
-  /** Background color for the bleed area */
-  backgroundColor?: string;
-  /** File name for the downloaded PDF */
-  fileName?: string;
-  /** Quality of the card capture (higher = better quality but slower) */
-  scale?: number;
-  /** Include bleed marks/cut lines */
-  showCutLines?: boolean;
+    /** File name for the downloaded PDF */
+    fileName?: string;
+    /** Include backs in a second page */
+    includeBacks?: boolean;
+    /** Paper size for the PDF */
+    paperSize?: PaperSize;
 }
 
 /**
- * Generates a PDF with multiple cards in a 3x3 grid
- *
- * @param cards - Array of cards to include in the PDF
- * @param cardElements - Array of DOM elements corresponding to each card
- * @param options - PDF generation options
- * @returns Promise that resolves when the PDF is generated and downloaded
+ * Capture a card as an image data URL
  */
-export const generateCardPDF = async (
+async function captureCard(
+    card: ZombicideCardData,
+    side: 'back' | 'front' = 'front',
+): Promise<string> {
+    if ('survivor' === card.type) {
+        return captureSurvivorCard(card, { showBleed: true, side });
+    }
+
+    throw new Error(`Card type "${card.type}" capture not yet implemented`);
+}
+
+/**
+ * Generates a PDF from card elements by capturing them
+ *
+ * Groups cards by type (dimensions) and creates interleaved front/back pages:
+ * - Page 1: Fronts (type A)
+ * - Page 2: Backs (type A)
+ * - Page 3: Fronts (type B)
+ * - Page 4: Backs (type B)
+ * etc.
+ */
+export const generatePDFFromElements = async (
     cards: ZombicideCardData[],
-    cardElements: CardElement[],
     options: PDFGeneratorOptions = {},
 ): Promise<void> => {
     const {
-        backgroundColor = '#ffffff',
         fileName = 'zombicide-cards.pdf',
-        scale = 3,
-        showCutLines = true,
+        includeBacks = true,
+        paperSize = 'a4',
     } = options;
 
-    if (0 === cards.length || 0 === cardElements.length) {
+    if (0 === cards.length) {
         console.warn('No cards to export');
         return;
     }
 
-    // eslint-disable-next-line new-cap
+    const pageWidth = PAPER_SIZES[paperSize].width;
+    const pageHeight = PAPER_SIZES[paperSize].height;
+
     const pdf = new jsPDF({
-        format: 'a4',
+        format: paperSize,
         orientation: 'portrait',
         unit: 'mm',
     });
 
-    let currentPage = 0;
+    const cardsByType = new Map<string, ZombicideCardData[]>();
+    for (const card of cards) {
+        const existing = cardsByType.get(card.type) || [];
+        existing.push(card);
+        cardsByType.set(card.type, existing);
+    }
 
-    for (let i = 0; i < cards.length; i++) {
-        const cardIndex = i % CARDS_PER_PAGE;
-        const pageIndex = Math.floor(i / CARDS_PER_PAGE);
+    console.log(`Card types: ${Array.from(cardsByType.keys()).join(', ')}`);
 
-        if (pageIndex > currentPage) {
-            pdf.addPage();
-            currentPage = pageIndex;
-        }
+    for (const [cardType, typeCards] of cardsByType) {
+        console.log(`Processing ${typeCards.length} ${cardType} cards`);
 
-        const cardElement = cardElements[i];
-        if (!cardElement?.element) {
-            console.warn(`Card element not found for index ${i}`);
-            continue;
-        }
+        const cardDims = getCardDimensions(typeCards[0]);
+        const gridConfig = calculateGridConfig(cardDims, pageWidth, pageHeight);
+        const gridLayout = calculateGridLayout(cardDims, gridConfig, pageWidth, pageHeight);
 
-        try {
-            const canvas = await html2canvas(cardElement.element, {
-                allowTaint: true,
-                backgroundColor,
-                logging: false,
-                scale,
-                useCORS: true,
-            });
+        console.log(`Grid layout for ${cardType}: ${gridConfig.cardsPerRow}x${gridConfig.cardsPerCol}, rotated=${gridConfig.rotated}`);
 
-            const pos = getCardPosition(cardIndex);
+        const cardsPerPage = gridLayout.cardsPerRow * gridLayout.cardsPerCol;
+        const numPages = Math.ceil(typeCards.length / cardsPerPage);
 
-            const imgData = canvas.toDataURL('image/png');
+        for (let pageIdx = 0; pageIdx < numPages; pageIdx++) {
+            const startIdx = pageIdx * cardsPerPage;
+            const endIdx = Math.min(startIdx + cardsPerPage, typeCards.length);
+            const pageCards = typeCards.slice(startIdx, endIdx);
 
-            pdf.addImage(
-                imgData,
-                'PNG',
-                pos.x,
-                pos.y,
-                CARD_TOTAL_WIDTH,
-                CARD_TOTAL_HEIGHT,
-            );
+            for (let i = 0; i < pageCards.length; i++) {
+                const cardIndex = i;
+                const card = pageCards[i];
 
-            if (showCutLines) {
-                drawCutLines(pdf, pos.x, pos.y);
+                try {
+                    const imageData = await captureCard(card, 'front');
+                    const pos = getCardPosition(cardIndex, gridLayout, cardDims);
+
+                    pdf.addImage(
+                        imageData,
+                        'PNG',
+                        pos.x,
+                        pos.y,
+                        cardDims.totalCanvasWidth,
+                        cardDims.totalCanvasHeight,
+                        undefined,
+                        undefined,
+                        gridLayout.rotated ? -90 : 0,
+                    );
+                } catch (error) {
+                    console.error(`Error processing ${cardType} front card ${startIdx + i}:`, error);
+                }
             }
 
-            console.log(`Card ${i + 1}/${cards.length} added to PDF (page ${currentPage + 1})`);
-        } catch (error) {
-            console.error(`Error processing card ${i}:`, error);
+            if (includeBacks) {
+                pdf.addPage();
+
+                for (let i = 0; i < pageCards.length; i++) {
+                    const cardIndex = i;
+                    const card = pageCards[i];
+
+                    try {
+                        const imageData = await captureCard(card, 'back');
+                        const pos = getCardPosition(cardIndex, gridLayout, cardDims, true);
+
+                        const mirroredX = pageWidth - pos.x - cardDims.totalCanvasWidth;
+
+                        pdf.addImage(
+                            imageData,
+                            'PNG',
+                            mirroredX,
+                            pos.y,
+                            cardDims.totalCanvasWidth,
+                            cardDims.totalCanvasHeight,
+                            undefined,
+                            undefined,
+                            gridLayout.rotated ? 90 : 0,
+                        );
+                    } catch (error) {
+                        console.error(`Error processing ${cardType} back card ${startIdx + i}:`, error);
+                    }
+                }
+            }
+
+            if (pageIdx < numPages - 1 || Array.from(cardsByType.keys()).indexOf(cardType) < cardsByType.size - 1) {
+                pdf.addPage();
+            }
         }
     }
 
     pdf.save(fileName);
     console.log(`PDF generated: ${fileName}`);
-};
-
-/**
- * Draws cut lines around a card
- */
-const drawCutLines = (
-    pdf: jsPDF,
-    x: number,
-    y: number,
-): void => {
-    pdf.setLineDashPattern([2, 2], 0);
-    pdf.setLineWidth(0.1);
-    pdf.setDrawColor(128, 128, 128);
-
-    pdf.rect(x, y, CARD_TOTAL_WIDTH, CARD_TOTAL_HEIGHT);
-
-    pdf.setLineDashPattern([], 0);
-    pdf.setLineWidth(0.05);
-    pdf.setDrawColor(0, 0, 0);
-    pdf.rect(x + BLEED, y + BLEED, CARD_WIDTH, CARD_HEIGHT);
-
-    pdf.setLineDashPattern([], 0);
-};
-
-/**
- * Generates a PDF from card elements by capturing them directly
- *
- * @param cardElements - Array of DOM elements to capture
- * @param options - PDF generation options
- * @returns Promise that resolves when the PDF is generated
- */
-export const generatePDFFromElements = async (
-    cardElements: HTMLElement[],
-    options: PDFGeneratorOptions = {},
-): Promise<void> => {
-    const {
-        backgroundColor = '#ffffff',
-        fileName = 'zombicide-cards.pdf',
-        scale = 3,
-        showCutLines = true,
-    } = options;
-
-    if (0 === cardElements.length) {
-        console.warn('No card elements to export');
-        return;
-    }
-
-    // eslint-disable-next-line new-cap
-    const pdf = new jsPDF({
-        format: 'a4',
-        orientation: 'portrait',
-        unit: 'mm',
-    });
-
-    let currentPage = 0;
-
-    for (let i = 0; i < cardElements.length; i++) {
-        const cardIndex = i % CARDS_PER_PAGE;
-        const pageIndex = Math.floor(i / CARDS_PER_PAGE);
-
-        if (pageIndex > currentPage) {
-            pdf.addPage();
-            currentPage = pageIndex;
-        }
-
-        const element = cardElements[i];
-
-        try {
-            const canvas = await html2canvas(element, {
-                allowTaint: true,
-                backgroundColor,
-                logging: false,
-                scale,
-                useCORS: true,
-            });
-
-            const pos = getCardPosition(cardIndex);
-            const imgData = canvas.toDataURL('image/png');
-
-            pdf.addImage(
-                imgData,
-                'PNG',
-                pos.x,
-                pos.y,
-                CARD_TOTAL_WIDTH,
-                CARD_TOTAL_HEIGHT,
-            );
-
-            if (showCutLines) {
-                drawCutLines(pdf, pos.x, pos.y);
-            }
-
-            console.log(`Card ${i + 1}/${cardElements.length} added to PDF`);
-        } catch (error) {
-            console.error(`Error processing card element ${i}:`, error);
-        }
-    }
-
-    pdf.save(fileName);
-};
-
-/**
- * Creates a temporary card element for capturing
- * This is useful when you need to render cards specifically for PDF export
- */
-export const createCardElementForCapture = async (
-    card: ZombicideCardData,
-    renderFunction: (card: ZombicideCardData) => HTMLElement,
-): Promise<HTMLElement> => {
-    const container = document.createElement('div');
-    container.style.position = 'absolute';
-    container.style.left = '-9999px';
-    container.style.top = '-9999px';
-
-    container.style.width = `${CARD_TOTAL_WIDTH}mm`;
-    container.style.height = `${CARD_TOTAL_HEIGHT}mm`;
-
-    const cardElement = renderFunction(card);
-    container.appendChild(cardElement);
-    document.body.appendChild(container);
-
-    return container;
-};
-
-/**
- * Cleanup function for temporary card elements
- */
-export const cleanupCardElements = (elements: HTMLElement[]): void => {
-    elements.forEach((element) => {
-        if (element.parentNode) {
-            element.parentNode.removeChild(element);
-        }
-    });
-};
-
-export const PDF_CONSTANTS = {
-    BLEED,
-    CARD_HEIGHT,
-    CARD_TOTAL_HEIGHT,
-    CARD_TOTAL_WIDTH,
-    CARD_WIDTH,
-    CARDS_PER_COL,
-    CARDS_PER_PAGE,
-    CARDS_PER_ROW,
-    MARGIN,
-    PAGE_HEIGHT,
-    PAGE_WIDTH,
 };

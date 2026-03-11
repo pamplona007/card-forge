@@ -1,6 +1,7 @@
 import { Theme } from '@radix-ui/themes/components/index';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
+import ToastProvider from './components/ToastProvider';
 import { FirebaseProvider } from './contexts/FirebaseContext';
 import CardEditorPage from './pages/CardEditorPage';
 import GameProjectsPage from './pages/GameProjectsPage';
@@ -11,6 +12,7 @@ function App() {
         <Theme>
             <FirebaseProvider>
                 <BrowserRouter>
+                    <ToastProvider />
                     <AppContent />
                 </BrowserRouter>
             </FirebaseProvider>

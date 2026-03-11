@@ -42,15 +42,30 @@
     }
   },
   "editor": {
+    "createNewCard": "Create New Card",
+    "selectCardType": "Select Card Type",
+    "noCards": "No cards yet. Click \"Create New Card\" to add your first card!",
+    "cardsCount": "{{count}} card",
+    "cardsCount_plural": "{{count}} cards",
+    "backToList": "Back to List",
     "defaultProjectName": "Untitled Project",
     "prompt": { "signInToSave": "Sign in to save cards" },
     "toolbar": { "newCard": "New Card" },
     "button": {
       "addToProject": "Add to Project",
-      "saveCard": "Save Card",
+      "saveProject": "Save Project",
+      "saving": "Saving...",
       "export": "Export",
       "exporting": "Exporting...",
       "exportPdf": "Export PDF"
+    },
+    "exportOptions": {
+      "title": "Export Options",
+      "description": "Select paper size and export settings",
+      "paperSize": "Paper Size",
+      "includeBacks": "Include Card Backs",
+      "withBacks": "With Backs",
+      "frontsOnly": "Fronts Only"
     },
     "section": { "projectCards": "Project Cards ({{count}})" },
     "label": {
@@ -103,19 +118,27 @@
       "addYellowAbility": "+ Add Yellow Ability"
     },
     "alt": { "cardPreview": "Card preview" },
-    "status": { "uploading": "Uploading..." },
+    "status": {
+      "uploading": "Uploading...",
+      "saving": "Saving...",
+      "lastSaved": "Last updated: {{time}}",
+      "never": "Never"
+    },
     "buttonUpload": { "uploadImage": "Upload Image" },
     "buttonRemove": { "removeImage": "Remove Image" },
     "preview": { "title": "Preview" },
     "specialAbilities": "Special Abilities",
     "alert": {
       "cardSaved": "Card \"{{name}}\" saved!",
-      "cardExported": "Card \"{{name}}\" exported!"
+      "cardExported": "Card \"{{name}}\" exported!",
+      "projectSaved": "Project \"{{name}}\" saved!",
+      "projectCreated": "Project \"{{name}}\" created!"
     },
     "error": {
       "notAuthenticated": "User not authenticated",
       "noCardsToExport": "No cards in project to export",
-      "exportFailed": "Failed to export PDF"
+      "exportFailed": "Failed to export PDF",
+      "saveFailed": "Failed to save project"
     }
   },
   "color": {

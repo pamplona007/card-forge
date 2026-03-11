@@ -179,8 +179,19 @@ const calculateTrackX = (trackWidth: number, scale: number, abilityName: string,
     return baseX + textMetrics.width + padding;
 };
 
-const SurvivorCardFront: React.FC<SurvivorCardProps> = ({ bleed, card, onChangeImagePosition }) => {
-    const [dimensions, setDimensions] = useState({ height: 0, width: 0 });
+const SurvivorCardFront: React.FC<SurvivorCardProps> = ({ bleed, card, exportMode = false, onChangeImagePosition }) => {
+    const [dimensions, setDimensions] = useState(() => {
+        if (exportMode) {
+            const { height, width } = SURVIVOR_CARD_DIMENSIONS.pxCanvasDimensions(12);
+
+            return {
+                height,
+                width,
+            };
+        }
+        return { height: 0, width: 0 };
+    });
+
     const [dragging, setDragging] = useState(false);
     const [dragStart, setDragStart] = useState<null | { x: number; y: number }>(null);
     const imageUrls = useMemo(() => ({
@@ -338,6 +349,10 @@ const SurvivorCardFront: React.FC<SurvivorCardProps> = ({ bleed, card, onChangeI
     }, [dimensions, loadedImages, images, card, bleed, scale, padding]);
 
     useEffect(() => {
+        if (exportMode) {
+            return;
+        }
+
         const updateDimensions = () => {
             if (!canvasRef.current) {
                 return;
@@ -352,7 +367,7 @@ const SurvivorCardFront: React.FC<SurvivorCardProps> = ({ bleed, card, onChangeI
         updateDimensions();
 
         return () => window.removeEventListener('resize', updateDimensions);
-    }, []);
+    }, [exportMode]);
 
     useEffect(() => {
         updateCard();

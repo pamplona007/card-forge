@@ -4,7 +4,7 @@ import type {
     PimpWeaponCardData,
     SurvivorCardData,
     ZombieSpawnCardData,
-} from '../../types/zombicide-card';
+} from 'types/zombicide-card';
 
 export interface ZombicideCardBase {
   type: ZombicideCardType;

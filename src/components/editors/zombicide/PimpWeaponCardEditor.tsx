@@ -1,12 +1,11 @@
-import { Box, Button, Flex, Select, Text, TextField } from '@radix-ui/themes';
-import React from 'react';
-import { useTranslation } from 'react-i18next';
-
 import type {
     PimpWeaponCardData,
-} from '../../types/zombicide-card';
+} from 'types/zombicide-card';
 
-import PimpWeaponCard from '../cards/zombicide/PimpWeaponCard';
+import { Box, Button, Flex, Select, Text, TextField } from '@radix-ui/themes';
+import PimpWeaponCard from 'components/cards/zombicide/PimpWeaponCard';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface PimpWeaponCardEditorProps {
   card: PimpWeaponCardData;

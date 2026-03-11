@@ -1,19 +1,18 @@
-import { Box, Button, Flex, Select, Text, TextField } from '@radix-ui/themes';
+import type {
+    EquipmentCardData,
+    EquipmentSlot,
+    SurvivorAbility,
+} from 'types/zombicide-card';
+
+import { Box, Button, Flex, Select, Text, TextArea, TextField } from '@radix-ui/themes';
+import EquipmentCard from 'components/cards/zombicide/EquipmentCard';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { ABILITY_COLORS } from 'types/zombicide-card';
 
-import type {
-    SurvivorAbility,
-    ZombieSpawnCardData,
-    ZoneType,
-} from '../../types/zombicide-card';
-
-import { ABILITY_COLORS } from '../../types/zombicide-card';
-import ZombieSpawnCard from '../cards/zombicide/ZombieSpawnCard';
-
-interface ZombieSpawnCardEditorProps {
-  card: ZombieSpawnCardData;
-  onChange: (card: ZombieSpawnCardData) => void;
+interface EquipmentCardEditorProps {
+  card: EquipmentCardData;
+  onChange: (card: EquipmentCardData) => void;
   onImageUpload?: (file: File) => Promise<string>;
 }
 
@@ -154,7 +153,7 @@ const CheckboxField: React.FC<{
     </label>
 );
 
-const ZombieSpawnCardEditor: React.FC<ZombieSpawnCardEditorProps> = ({
+const EquipmentCardEditor: React.FC<EquipmentCardEditorProps> = ({
     card,
     onChange,
     onImageUpload,
@@ -182,7 +181,7 @@ const ZombieSpawnCardEditor: React.FC<ZombieSpawnCardEditorProps> = ({
                         <Text as="p" mb="2" size="2" style={{ color: 'var(--gray-11)' }}>{t('editor.label.name')}</Text>
                         <TextField.Root
                             onChange={(e) => onChange({ ...card, name: e.target.value })}
-                            placeholder={t('editor.placeholder.zombieName')}
+                            placeholder={t('editor.placeholder.equipmentName')}
                             value={card.name}
                         />
                     </Box>
@@ -193,77 +192,55 @@ const ZombieSpawnCardEditor: React.FC<ZombieSpawnCardEditorProps> = ({
                         value={card.image}
                     />
 
-                    <Flex gap="4">
-                        <Box style={{ flex: 1 }}>
-                            <Text as="p" mb="2" size="2" style={{ color: 'var(--gray-11)' }}>{t('editor.label.speed')}</Text>
-                            <TextField.Root
-                                max="5"
-                                min="0"
-                                onChange={(e) => onChange({ ...card, speed: parseInt(e.target.value) || 0 })}
-                                type="number"
-                                value={card.speed}
-                            />
-                        </Box>
-                        <Box style={{ flex: 1 }}>
-                            <Text as="p" mb="2" size="2" style={{ color: 'var(--gray-11)' }}>{t('editor.label.attack')}</Text>
-                            <TextField.Root
-                                max="5"
-                                min="0"
-                                onChange={(e) => onChange({ ...card, attack: parseInt(e.target.value) || 0 })}
-                                type="number"
-                                value={card.attack}
-                            />
-                        </Box>
-                        <Box style={{ flex: 1 }}>
-                            <Text as="p" mb="2" size="2" style={{ color: 'var(--gray-11)' }}>{t('editor.label.defense')}</Text>
-                            <TextField.Root
-                                max="5"
-                                min="0"
-                                onChange={(e) => onChange({ ...card, defense: parseInt(e.target.value) || 0 })}
-                                type="number"
-                                value={card.defense}
-                            />
-                        </Box>
-                    </Flex>
+                    <Box>
+                        <Text as="p" mb="2" size="2" style={{ color: 'var(--gray-11)' }}>{t('editor.label.equipmentDescription')}</Text>
+                        <TextArea
+                            onChange={(e) => onChange({ ...card, description: e.target.value })}
+                            placeholder={t('editor.placeholder.equipmentDescription')}
+                            rows={3}
+                            value={card.description}
+                        />
+                    </Box>
 
                     <Box>
-                        <Text as="p" mb="2" size="2" style={{ color: 'var(--gray-11)' }}>{t('editor.label.spawnZone')}</Text>
+                        <Text as="p" mb="2" size="2" style={{ color: 'var(--gray-11)' }}>{t('editor.label.slot')}</Text>
                         <Select.Root
-                            onValueChange={(value) => onChange({ ...card, spawnZone: value as ZoneType })}
-                            value={card.spawnZone}
+                            onValueChange={(value) => onChange({ ...card, slot: value as EquipmentSlot })}
+                            value={card.slot}
                         >
                             <Select.Trigger />
                             <Select.Content>
-                                <Select.Item value="blue">{t('spawnZone.blueEasy')}</Select.Item>
-                                <Select.Item value="yellow">{t('spawnZone.yellow')}</Select.Item>
-                                <Select.Item value="orange">{t('spawnZone.orange')}</Select.Item>
-                                <Select.Item value="red">{t('spawnZone.redHard')}</Select.Item>
+                                <Select.Item value="hand">{t('slot.hand')}</Select.Item>
+                                <Select.Item value="body">{t('slot.body')}</Select.Item>
+                                <Select.Item value="small">{t('slot.small')}</Select.Item>
+                                <Select.Item value="big">{t('slot.big')}</Select.Item>
+                                <Select.Item value="any">{t('slot.any')}</Select.Item>
                             </Select.Content>
                         </Select.Root>
                     </Box>
 
                     <Box>
-                        <Text as="p" mb="2" size="2" style={{ color: 'var(--gray-11)' }}>{t('editor.label.xpValue')}</Text>
-                        <TextField.Root
-                            min="0"
-                            onChange={(e) => onChange({ ...card, xpValue: parseInt(e.target.value) || 0 })}
-                            type="number"
-                            value={card.xpValue || 0}
-                        />
+                        <Text as="p" mb="2" size="2" style={{ color: 'var(--gray-11)' }}>{t('editor.label.rarity')}</Text>
+                        <Select.Root
+                            onValueChange={(value) => onChange({ ...card, rarity: parseInt(value) })}
+                            value={card.rarity.toString()}
+                        >
+                            <Select.Trigger />
+                            <Select.Content>
+                                <Select.Item value="1">{t('rarity.common')}</Select.Item>
+                                <Select.Item value="2">{t('rarity.uncommon')}</Select.Item>
+                                <Select.Item value="3">{t('rarity.rare')}</Select.Item>
+                                <Select.Item value="4">{t('rarity.epic')}</Select.Item>
+                                <Select.Item value="5">{t('rarity.legendary')}</Select.Item>
+                            </Select.Content>
+                        </Select.Root>
                     </Box>
 
-                    <Flex gap="4">
-                        <CheckboxField
-                            checked={card.isElite || false}
-                            label={t('editor.checkbox.elite')}
-                            onChange={(checked) => onChange({ ...card, isElite: checked })}
-                        />
-                        <CheckboxField
-                            checked={card.isSpecial || false}
-                            label={t('editor.checkbox.special')}
-                            onChange={(checked) => onChange({ ...card, isSpecial: checked })}
-                        />
-                    </Flex>
+                    <CheckboxField
+                        checked={card.isUnique || false}
+                        label={t('editor.checkbox.uniqueItem')}
+                        onChange={(checked) => onChange({ ...card, isUnique: checked })}
+                    />
 
                     <AbilityEditor
                         abilities={card.abilities || []}
@@ -312,7 +289,7 @@ const ZombieSpawnCardEditor: React.FC<ZombieSpawnCardEditorProps> = ({
                             transformOrigin: 'center center',
                         }}
                     >
-                        <ZombieSpawnCard card={card} />
+                        <EquipmentCard card={card} />
                     </Box>
                 </Box>
             </Box>
@@ -320,4 +297,4 @@ const ZombieSpawnCardEditor: React.FC<ZombieSpawnCardEditorProps> = ({
     );
 };
 
-export default ZombieSpawnCardEditor;
+export default EquipmentCardEditor;

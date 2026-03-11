@@ -1,14 +1,13 @@
-import { Box, Button, Flex, Select, Text, TextField } from '@radix-ui/themes';
-import React from 'react';
-import { useTranslation } from 'react-i18next';
-
 import type {
     AbominationCardData,
     SurvivorAbility,
-} from '../../types/zombicide-card';
+} from 'types/zombicide-card';
 
-import { ABILITY_COLORS } from '../../types/zombicide-card';
-import AbominationCard from '../cards/zombicide/AbominationCard';
+import { Box, Button, Flex, Select, Text, TextField } from '@radix-ui/themes';
+import AbominationCard from 'components/cards/zombicide/AbominationCard';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { ABILITY_COLORS } from 'types/zombicide-card';
 
 interface AbominationCardEditorProps {
   card: AbominationCardData;

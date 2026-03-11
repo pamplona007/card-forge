@@ -42,15 +42,30 @@
     }
   },
   "editor": {
+    "createNewCard": "Criar Nova Carta",
+    "selectCardType": "Selecionar Tipo de Carta",
+    "noCards": "Nenhuma carta ainda. Clique em \"Criar Nova Carta\" para adicionar sua primeira carta!",
+    "cardsCount": "{{count}} carta",
+    "cardsCount_plural": "{{count}} cartas",
+    "backToList": "Voltar à Lista",
     "defaultProjectName": "Projeto Sem Título",
     "prompt": { "signInToSave": "Entre para salvar cartas" },
     "toolbar": { "newCard": "Nova Carta" },
     "button": {
       "addToProject": "Adicionar ao Projeto",
-      "saveCard": "Salvar Carta",
+      "saveProject": "Salvar Projeto",
+      "saving": "Salvando...",
       "export": "Exportar",
       "exporting": "Exportando...",
       "exportPdf": "Exportar PDF"
+    },
+    "exportOptions": {
+      "title": "Opções de Exportação",
+      "description": "Selecione o tamanho do papel e configurações de exportação",
+      "paperSize": "Tamanho do Papel",
+      "includeBacks": "Incluir Verso das Cartas",
+      "withBacks": "Com Verso",
+      "frontsOnly": "Apenas Frente"
     },
     "section": { "projectCards": "Cartas do Projeto ({{count}})" },
     "label": {
@@ -102,19 +117,27 @@
       "addYellowAbility": "+ Adicionar Habilidade Amarela"
     },
     "alt": { "cardPreview": "Pré-visualização da carta" },
-    "status": { "uploading": "Enviando..." },
+    "status": {
+      "uploading": "Enviando...",
+      "saving": "Salvando...",
+      "lastSaved": "Última atualização: {{time}}",
+      "never": "Nunca"
+    },
     "buttonUpload": { "uploadImage": "Enviar Imagem" },
     "buttonRemove": { "removeImage": "Remover Imagem" },
     "preview": { "title": "Pré-visualização" },
     "specialAbilities": "Habilidades Especiais",
     "alert": {
       "cardSaved": "Carta \"{{name}}\" salva!",
-      "cardExported": "Carta \"{{name}}\" exportada!"
+      "cardExported": "Carta \"{{name}}\" exportada!",
+      "projectSaved": "Projeto \"{{name}}\" salvo!",
+      "projectCreated": "Projeto \"{{name}}\" criado!"
     },
     "error": {
       "notAuthenticated": "Usuário não autenticado",
       "noCardsToExport": "Não há cartas no projeto para exportar",
-      "exportFailed": "Falha ao exportar PDF"
+      "exportFailed": "Falha ao exportar PDF",
+      "saveFailed": "Falha ao salvar projeto"
     }
   },
   "color": {

@@ -1,22 +1,56 @@
-export const CARD_DIMENSIONS = {
-    bleed: 3,
-    height: 88.9,
-    pxBleed: 35,
-    pxHeight: 1047,
+class CardDimensions {
+    bleed: number;
+    borderRadius: number;
+    canvasPaddingPercent: number;
+    height: number;
+    width: number;
 
-    pxWidth: 821,
-    totalHeight: 94.9,
-    totalWidth: 69.5,
-    width: 63.5,
-};
+    get actualPadding() {
+        const widthPercent = 1 - (this.canvasPaddingPercent * 2);
+        const paddingValue = this.totalWidth * (1 - widthPercent) / 2;
+        return Math.round(paddingValue * 100) / 100;
+    }
 
-export const SURVIVOR_CARD_DIMENSIONS = {
-    ...CARD_DIMENSIONS,
-    bleed: 3,
-    borderRadius: 2,
-    height: 76,
-    width: 88,
-};
+    get totalCanvasHeight() {
+        return this.totalHeight + (2 * this.actualPadding);
+    }
+
+    get totalCanvasWidth() {
+        return this.totalWidth + (2 * this.actualPadding);
+    }
+
+    get totalHeight() {
+        return this.height + (2 * this.bleed);
+    }
+
+    get totalWidth() {
+        return this.width + (2 * this.bleed);
+    }
+
+    constructor(bleed: number, height: number, width: number, canvasPaddingPercent: number = 0.05, borderRadius: number = 5) {
+        this.bleed = bleed;
+        this.height = height;
+        this.width = width;
+        this.canvasPaddingPercent = canvasPaddingPercent;
+        this.borderRadius = borderRadius;
+    }
+
+    pxCanvasDimensions(dpi = 300) {
+        const pxHeight = Math.round(this.totalCanvasHeight * dpi);
+        const pxWidth = Math.round(this.totalCanvasWidth * dpi);
+
+        return {
+            height: pxHeight,
+            width: pxWidth,
+        };
+    }
+}
+
+export { CardDimensions };
+
+export const CARD_DIMENSIONS = new CardDimensions(3, 88.9, 63.5);
+export const SURVIVOR_CARD_DIMENSIONS = new CardDimensions(3, 76, 88, 0.05, 2);
+export const MINI_USA_CARD_DIMENSIONS = new CardDimensions(3, 63.5, 44.45);
 
 export type AbilityColor = 'blue' | 'orange' | 'red' | 'yellow';
 

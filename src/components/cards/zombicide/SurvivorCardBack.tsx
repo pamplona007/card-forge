@@ -13,6 +13,12 @@ interface SurvivorCardProps extends CardProps {
     onChangeImagePosition?: (offsetX: number, offsetY: number) => void;
 }
 
+const BACKGROUND_NAME_MIN_FONT_SIZE = 4;
+const BACKGROUND_NAME_MAX_FONT_SIZE = 10;
+const BACKGROUND_NAME_GAP_X = 0;
+const BACKGROUND_NAME_GAP_Y = 0;
+const BACKGROUND_NAME_ALPHA = 0.2;
+
 const loadSingleFont = async (family: string, url: string, descriptors: object, weightCheck: string) => {
     let loaded = false;
     try {
@@ -133,26 +139,100 @@ const createClipWithBleed = (ctx: CanvasRenderingContext2D, scale: number, paddi
 };
 
 function drawBackgroundName(scale: number, ctx: CanvasRenderingContext2D, card: SurvivorCardData) {
-    const fontSize = 19 * scale;
-    const x = 8 * scale;
-    const y = 24.5 * scale;
-    const stretch = 1.1;
-    const topOffset = 0;
+    const text = (card.name || '').toLocaleUpperCase().trim() || 'SURVIVOR';
     const color = card.color;
+    const width = ctx.canvas.width;
+    const height = ctx.canvas.height;
+
+    let state = 1;
+    const seedSource = `${card.id}-${text}-${color}`;
+    for (let i = 0; i < seedSource.length; i++) {
+        state = ((state * 31) + seedSource.charCodeAt(i)) % 2147483647;
+    }
+    if (0 === state) {
+        state = 1;
+    }
+
+    const minFontSize = BACKGROUND_NAME_MIN_FONT_SIZE * scale;
+    const maxFontSize = BACKGROUND_NAME_MAX_FONT_SIZE * scale;
+    const gapX = BACKGROUND_NAME_GAP_X * scale;
+    const gapY = BACKGROUND_NAME_GAP_Y * scale;
+    const gap = Math.max(gapX, gapY);
 
     ctx.save();
-    ctx.font = `900 ${fontSize}px 'Piklet Caps', sans-serif`;
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'alphabetic';
-    ctx.translate(x, y);
-    ctx.scale(stretch, 1);
-    ctx.fillStyle = hexToRgba(color, 0.3);
-    ctx.fillText(card.name.toLocaleUpperCase(), 0, topOffset);
+    ctx.font = `900 ${maxFontSize}px 'Piklet Caps', sans-serif`;
     ctx.restore();
+
+    const placedRects: Array<{ bottom: number; left: number; right: number; top: number }> = [];
+
+    const overlaps = (left: number, top: number, right: number, bottom: number) => {
+        for (const placed of placedRects) {
+            if (left < placed.right && right > placed.left && top < placed.bottom && bottom > placed.top) {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    let availableCoordinates: Array<[number, number]> = [[0, 0]];
+
+    const sanitizeCoodinates = () => {
+        availableCoordinates = availableCoordinates.filter(([x, y]) => {
+            return x < width || y < height;
+        });
+    };
+
+    while (0 < availableCoordinates.length) {
+        const index = Math.floor(state / 31) % availableCoordinates.length;
+        const [x, y] = availableCoordinates[index];
+        availableCoordinates.splice(index, 1);
+
+        ctx.font = `900 ${maxFontSize}px 'Piklet Caps', sans-serif`;
+        const textMetrics = ctx.measureText(text);
+        const textWidth = textMetrics.width;
+        const textHeight = textMetrics.actualBoundingBoxAscent + textMetrics.actualBoundingBoxDescent;
+
+        if (textWidth > width || textHeight > height) {
+            continue;
+        }
+
+        const left = x;
+        const top = y;
+        const right = left + textWidth;
+        const bottom = top + textHeight;
+
+        if (0 > left || right > width || 0 > top || bottom > height) {
+            continue;
+        }
+
+        if (overlaps(left - gap, top - gap, right + gap, bottom + gap)) {
+            continue;
+        }
+
+        ctx.fillStyle = hexToRgba(color, BACKGROUND_NAME_ALPHA);
+        ctx.fillText(text, x, bottom);
+
+        placedRects.push({ bottom, left, right, top });
+
+        availableCoordinates.push([right, top]);
+        availableCoordinates.push([left, bottom]);
+
+        sanitizeCoodinates();
+    }
 }
 
-const SurvivorCardBack: React.FC<SurvivorCardProps> = ({ bleed, card, onChangeImagePosition }) => {
-    const [dimensions, setDimensions] = useState({ height: 0, width: 0 });
+const SurvivorCardBack: React.FC<SurvivorCardProps> = ({ bleed, card, exportMode = false, onChangeImagePosition }) => {
+    const [dimensions, setDimensions] = useState(() => {
+        if (exportMode) {
+            const { height, width } = SURVIVOR_CARD_DIMENSIONS.pxCanvasDimensions(12);
+
+            return {
+                height,
+                width,
+            };
+        }
+        return { height: 0, width: 0 };
+    });
     const [dragging, setDragging] = useState(false);
     const [dragStart, setDragStart] = useState<null | { x: number; y: number }>(null);
     const imageUrls = useMemo(() => ({
@@ -258,6 +338,10 @@ const SurvivorCardBack: React.FC<SurvivorCardProps> = ({ bleed, card, onChangeIm
     }, [dimensions, loadedImages, images, card, bleed, scale, padding]);
 
     useEffect(() => {
+        if (exportMode) {
+            return;
+        }
+
         const updateDimensions = () => {
             if (!canvasRef.current) {
                 return;
@@ -272,7 +356,7 @@ const SurvivorCardBack: React.FC<SurvivorCardProps> = ({ bleed, card, onChangeIm
         updateDimensions();
 
         return () => window.removeEventListener('resize', updateDimensions);
-    }, []);
+    }, [exportMode]);
 
     useEffect(() => {
         updateCard();
