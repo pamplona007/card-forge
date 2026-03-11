@@ -15,13 +15,20 @@ interface CardCaptureOptions {
  * Wait for images to be loaded by checking if the canvas has content
  */
 const waitForCanvasContent = (
-    canvas: HTMLCanvasElement,
+    container: HTMLDivElement,
     timeout: number = 10000,
-): Promise<void> => {
+): Promise<HTMLCanvasElement> => {
     return new Promise((resolve, reject) => {
         const startTime = Date.now();
 
         const checkContent = () => {
+            const canvas = container.querySelector('canvas');
+
+            if (!canvas) {
+                setTimeout(checkContent, 100);
+                return;
+            }
+
             const ctx = canvas.getContext('2d');
             if (!ctx) {
                 reject(new Error('Could not get canvas context'));
@@ -32,7 +39,7 @@ const waitForCanvasContent = (
             const hasContent = imageData.data.some((pixel) => 0 !== pixel);
 
             if (hasContent) {
-                resolve();
+                resolve(canvas);
                 return;
             }
 
@@ -101,12 +108,7 @@ export async function captureSurvivorCard(
 
         await promise;
 
-        const canvas = container.querySelector('canvas');
-        if (!canvas) {
-            throw new Error('Canvas element not found');
-        }
-
-        await waitForCanvasContent(canvas);
+        const canvas = await waitForCanvasContent(container);
 
         const dataUrl = canvas.toDataURL('image/png');
 

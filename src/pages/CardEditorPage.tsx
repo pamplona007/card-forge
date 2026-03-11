@@ -6,14 +6,15 @@ import CardListView from 'components/editors/CardListView';
 import CardTypeSelectionModal from 'components/editors/CardTypeSelectionModal';
 import { getEditor } from 'components/editors/editorRegistry';
 import ExportOptionsModal, { type ExportOptions } from 'components/editors/ExportOptionsModal';
+import ProjectSettingsModal from 'components/editors/ProjectSettingsModal';
 import {
     type ZombicideCardData,
     type ZombicideCardType,
 } from 'components/editors/zombicide/ZombicideCardEditor';
 import SaveStatusText from 'components/SaveStatusText';
 import { useFirebase } from 'hooks/useFirebase';
-import { useImageUpload } from 'hooks/useImageUpload';
 import { useProject } from 'hooks/useProject';
+import { useUpdateCard } from 'hooks/useUpdateCard';
 import { useUpdateProject } from 'hooks/useUpdateProject';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -27,6 +28,7 @@ import {
     createDefaultSurvivorCard,
     createDefaultZombieSpawnCard,
 } from 'types/zombicide-card';
+import { resizeToDataUrl } from 'utils/imageUtils';
 
 import { generatePDFFromElements } from '../utils/pdfGenerator';
 
@@ -53,7 +55,7 @@ export default function CardEditorPage() {
     const { user } = useFirebase();
     const { data: projectData, isLoading: isLoadingProject } = useProject(projectId);
     const updateProjectMutation = useUpdateProject();
-    const imageUploadMutation = useImageUpload();
+    const updateCardMutation = useUpdateCard();
     const { t } = useTranslation();
 
     const [viewMode, setViewMode] = useState<'editor' | 'list'>('list');
@@ -69,6 +71,7 @@ export default function CardEditorPage() {
     const [isExporting, setIsExporting] = useState(false);
     const [exportError, setExportError] = useState<null | string>(null);
     const [showExportModal, setShowExportModal] = useState(false);
+    const [showSettingsModal, setShowSettingsModal] = useState(false);
 
     const game = getGameById(project?.gameId || 'zombicide-2e');
 
@@ -116,24 +119,30 @@ export default function CardEditorPage() {
         if (saveTimeoutRef.current) {
             clearTimeout(saveTimeoutRef.current);
         }
-        saveTimeoutRef.current = setTimeout(async () => {
-            await persistProject(newProject);
+        saveTimeoutRef.current = setTimeout(() => {
+            if (!user || !projectId) {
+                return;
+            }
+            setIsSaving(true);
+            updateCardMutation.mutate({ card: updatedCard, projectId }, {
+                onError: (error) => {
+                    console.error('Error auto-saving card:', error);
+                    setIsSaving(false);
+                },
+                onSuccess: () => {
+                    setIsSaving(false);
+                    setLastSaved(new Date());
+                },
+            });
         }, 1000);
-    }, [project, persistProject]);
+    }, [project, user, projectId, updateCardMutation]);
 
     const handleImageUpload = useCallback(async (file: File): Promise<string> => {
         if (!user) {
             throw new Error(t('editor.error.notAuthenticated'));
         }
-        const path = `users/${user.uid}/cards/${Date.now()}_${file.name}`;
-        const url = await imageUploadMutation.mutateAsync({ file, path });
-        return url;
-    }, [user, imageUploadMutation, t]);
-
-    const handleExportCard = useCallback(() => {
-        console.log('Exporting card:', currentCard);
-        toast.success(t('editor.alert.cardExported', { name: currentCard.name }));
-    }, [currentCard, t]);
+        return resizeToDataUrl(file);
+    }, [user, t]);
 
     const handleExportToPDF = useCallback(async (options?: ExportOptions) => {
         if (!project || 0 === project.cards.length) {
@@ -222,6 +231,16 @@ export default function CardEditorPage() {
         setViewMode('list');
     }, []);
 
+    const handleSaveSettings = useCallback((updates: Pick<Project, 'description' | 'isPublic' | 'name'>) => {
+        if (!project) {
+            return;
+        }
+        const updatedProject = { ...project, ...updates };
+        setProject(updatedProject);
+        setShowSettingsModal(false);
+        persistProject(updatedProject);
+    }, [project, persistProject]);
+
     const EditorComponent = currentCard.type && project?.gameId
         ? getEditor(project.gameId, currentCard.type)
         : null;
@@ -260,39 +279,6 @@ export default function CardEditorPage() {
         </Box>
     );
 
-    const renderEditorToolbar = () => (
-        <Box
-            mb="4"
-            p="3"
-            style={{
-                backgroundColor: 'var(--gray-3)',
-                borderRadius: 'var(--radius-3)',
-            }}
-        >
-            <Flex align="center" gap="3" wrap="wrap">
-                <Flex gap="2">
-                    <Button onClick={handleExportCard} variant="soft">
-                        Export
-                    </Button>
-                    <Button
-                        color="cyan"
-                        disabled={isExporting || 0 === project?.cards.length}
-                        onClick={() => setShowExportModal(true)}
-                        variant="soft"
-                    >
-                        {isExporting ? t('editor.button.exporting') : t('editor.button.exportPdf')}
-                    </Button>
-                </Flex>
-            </Flex>
-
-            {exportError && (
-                <Text color="red" mt="2" size="2">
-                    {exportError}
-                </Text>
-            )}
-        </Box>
-    );
-
     return (
         <AppLayout>
             {isLoadingProject
@@ -314,13 +300,18 @@ export default function CardEditorPage() {
                                         {game ? game.name : t('zombicide.editor.subtitle')}
                                     </Text>
                                 </Box>
-                                <Box>
+                                <Flex align="center" gap="3">
                                     <SaveStatusText
                                         isSaving={isSaving}
                                         isVisible={Boolean(projectId && user)}
                                         lastSaved={lastSaved}
                                     />
-                                </Box>
+                                    {user && (
+                                        <Button onClick={() => setShowSettingsModal(true)} variant="soft">
+                                            {t('projects.button.settings')}
+                                        </Button>
+                                    )}
+                                </Flex>
                             </Flex>
                         </Box>
 
@@ -338,6 +329,17 @@ export default function CardEditorPage() {
                             onExport={handleExportToPDF}
                         />
 
+                        {project && (
+                            <ProjectSettingsModal
+                                isOpen={showSettingsModal}
+                                isSaving={isSaving}
+                                key={showSettingsModal ? 'open' : 'closed'}
+                                onClose={() => setShowSettingsModal(false)}
+                                onSave={handleSaveSettings}
+                                project={project}
+                            />
+                        )}
+
                         {'editor' === viewMode && (
                             <>
                                 <Box mb="4">
@@ -345,8 +347,6 @@ export default function CardEditorPage() {
                                         {t('editor.backToList')}
                                     </Button>
                                 </Box>
-
-                                {renderEditorToolbar()}
 
                                 <Box style={{ minHeight: '600px' }}>
                                     {EditorComponent

@@ -359,7 +359,7 @@ function drawDescriptions(
     const descriptionBoxX = width * 0.525;
     const descriptionBoxY = height * 0.12;
     const descriptionBoxWidth = width * 0.34;
-    // Angle of the background image diagonal
+
     const skewAngle = -0.3;
 
     ctx.save();
@@ -367,7 +367,6 @@ function drawDescriptions(
     ctx.textAlign = 'left';
     ctx.textBaseline = 'top';
 
-    // Calculate line heights based on fonts
     ctx.font = `bold ${3 * scale}px 'Titling Gothic', sans-serif`;
     const titleMetrics = ctx.measureText('A');
     const titleLineHeight = (titleMetrics.actualBoundingBoxAscent ?? 3 * scale) + (titleMetrics.actualBoundingBoxDescent ?? 0) + (1 * scale);
@@ -401,7 +400,6 @@ function drawDescriptions(
                 const metrics = ctx.measureText(testLine);
                 const availableWidth = (descriptionBoxX + descriptionBoxWidth) - lineX;
 
-                // Calculate the angled boundary at the current Y position
                 const distanceFromTop = currentY - descriptionBoxY;
                 const angledOffset = distanceFromTop * Math.tan(skewAngle);
                 const adjustedX = descriptionBoxX + angledOffset + descPadding;
@@ -428,7 +426,6 @@ function drawDescriptions(
         }
     }
 
-    // Draw all lines
     for (const lineObj of descriptionLines) {
         if ('title' === lineObj.type) {
             ctx.font = `bold ${3 * scale}px 'Titling Gothic', sans-serif`;

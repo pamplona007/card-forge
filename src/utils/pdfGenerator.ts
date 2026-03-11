@@ -249,57 +249,60 @@ export const generatePDFFromElements = async (
             const endIdx = Math.min(startIdx + cardsPerPage, typeCards.length);
             const pageCards = typeCards.slice(startIdx, endIdx);
 
-            for (let i = 0; i < pageCards.length; i++) {
-                const cardIndex = i;
-                const card = pageCards[i];
-
-                try {
-                    const imageData = await captureCard(card, 'front');
-                    const pos = getCardPosition(cardIndex, gridLayout, cardDims);
-
-                    pdf.addImage(
-                        imageData,
-                        'PNG',
-                        pos.x,
-                        pos.y,
-                        cardDims.totalCanvasWidth,
-                        cardDims.totalCanvasHeight,
-                        undefined,
-                        undefined,
-                        gridLayout.rotated ? -90 : 0,
-                    );
-                } catch (error) {
+            const frontImages = await Promise.all(
+                pageCards.map((card, i) => captureCard(card, 'front').catch((error) => {
                     console.error(`Error processing ${cardType} front card ${startIdx + i}:`, error);
+                    return null;
+                })),
+            );
+
+            for (let i = 0; i < pageCards.length; i++) {
+                const imageData = frontImages[i];
+                if (!imageData) {
+                    continue;
                 }
+                const pos = getCardPosition(i, gridLayout, cardDims);
+                pdf.addImage(
+                    imageData,
+                    'PNG',
+                    pos.x,
+                    pos.y,
+                    cardDims.totalCanvasWidth,
+                    cardDims.totalCanvasHeight,
+                    undefined,
+                    undefined,
+                    gridLayout.rotated ? -90 : 0,
+                );
             }
 
             if (includeBacks) {
                 pdf.addPage();
 
-                for (let i = 0; i < pageCards.length; i++) {
-                    const cardIndex = i;
-                    const card = pageCards[i];
-
-                    try {
-                        const imageData = await captureCard(card, 'back');
-                        const pos = getCardPosition(cardIndex, gridLayout, cardDims, true);
-
-                        const mirroredX = pageWidth - pos.x - cardDims.totalCanvasWidth;
-
-                        pdf.addImage(
-                            imageData,
-                            'PNG',
-                            mirroredX,
-                            pos.y,
-                            cardDims.totalCanvasWidth,
-                            cardDims.totalCanvasHeight,
-                            undefined,
-                            undefined,
-                            gridLayout.rotated ? 90 : 0,
-                        );
-                    } catch (error) {
+                const backImages = await Promise.all(
+                    pageCards.map((card, i) => captureCard(card, 'back').catch((error) => {
                         console.error(`Error processing ${cardType} back card ${startIdx + i}:`, error);
+                        return null;
+                    })),
+                );
+
+                for (let i = 0; i < pageCards.length; i++) {
+                    const imageData = backImages[i];
+                    if (!imageData) {
+                        continue;
                     }
+                    const pos = getCardPosition(i, gridLayout, cardDims, true);
+                    const mirroredX = pageWidth - pos.x - cardDims.totalCanvasWidth;
+                    pdf.addImage(
+                        imageData,
+                        'PNG',
+                        mirroredX,
+                        pos.y,
+                        cardDims.totalCanvasWidth,
+                        cardDims.totalCanvasHeight,
+                        undefined,
+                        undefined,
+                        gridLayout.rotated ? 90 : 0,
+                    );
                 }
             }
 

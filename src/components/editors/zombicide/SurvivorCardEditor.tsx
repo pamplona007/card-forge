@@ -7,13 +7,13 @@ import type {
 import { Box, Button, Card, Flex, Grid, Slider, Text, TextField } from '@radix-ui/themes';
 import SurvivorCardBack from 'components/cards/zombicide/SurvivorCardBack';
 import SurvivorCardFront from 'components/cards/zombicide/SurvivorCardFront';
-import { useFirebase } from 'hooks/useFirebase';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     ABILITY_COLORS,
     SURVIVOR_TAGS,
 } from 'types/zombicide-card';
+import { resizeToDataUrl } from 'utils/imageUtils';
 
 import CardSideSwitch, { type CardSide } from './CardSideSwitch';
 
@@ -69,7 +69,6 @@ const SurvivorFrontEditor: React.FC<{
     onChange: (card: SurvivorCardData) => void;
 }> = ({ card, onChange }) => {
     const { t } = useTranslation();
-    const { deleteImage, uploadImage } = useFirebase();
     const [uploading, setUploading] = useState(false);
 
     const handleImageUploadClick = () => {
@@ -81,20 +80,7 @@ const SurvivorFrontEditor: React.FC<{
             if (file) {
                 setUploading(true);
                 try {
-                    if (card.image && card.image.includes('firebasestorage')) {
-                        const urlParts = card.image.split('/');
-                        const pathPart = urlParts.slice(urlParts.indexOf('o%2F') + 1).join('/')
-                            .split('?')[0];
-                        const path = decodeURIComponent(pathPart);
-                        try {
-                            await deleteImage(path);
-                        } catch {
-
-                        }
-                    }
-
-                    const path = `card-images/${card.name || 'survivor'}-${Date.now()}`;
-                    const url = await uploadImage(file, path);
+                    const url = await resizeToDataUrl(file);
                     onChange({ ...card, image: url });
                 } catch (error) {
                     console.error('Error uploading image:', error);
@@ -147,20 +133,7 @@ const SurvivorFrontEditor: React.FC<{
             </Box>
 
             <ImageUploader
-                onUpload={async (url) => {
-                    if (!url && card.image && card.image.includes('firebasestorage')) {
-                        const urlParts = card.image.split('/');
-                        const pathPart = urlParts.slice(urlParts.indexOf('o%2F') + 1).join('/')
-                            .split('?')[0];
-                        const path = decodeURIComponent(pathPart);
-                        try {
-                            await deleteImage(path);
-                        } catch {
-
-                        }
-                    }
-                    onChange({ ...card, image: url });
-                }}
+                onUpload={(url) => onChange({ ...card, image: url })}
                 onUploadClick={handleImageUploadClick}
                 uploading={uploading}
                 value={card.image}
@@ -342,7 +315,6 @@ const SurvivorBackEditor: React.FC<{
     onChange: (card: SurvivorCardData) => void;
 }> = ({ card, onChange }) => {
     const { t } = useTranslation();
-    const { deleteImage, uploadImage } = useFirebase();
     const [uploading, setUploading] = useState(false);
 
     const handleImageUploadClick = () => {
@@ -354,20 +326,7 @@ const SurvivorBackEditor: React.FC<{
             if (file) {
                 setUploading(true);
                 try {
-                    if (card.image && card.image.includes('firebasestorage')) {
-                        const urlParts = card.image.split('/');
-                        const pathPart = urlParts.slice(urlParts.indexOf('o%2F') + 1).join('/')
-                            .split('?')[0];
-                        const path = decodeURIComponent(pathPart);
-                        try {
-                            await deleteImage(path);
-                        } catch {
-
-                        }
-                    }
-
-                    const path = `card-images/${card.name || 'survivor'}-back-${Date.now()}`;
-                    const url = await uploadImage(file, path);
+                    const url = await resizeToDataUrl(file);
                     onChange({ ...card, image: url });
                 } catch (error) {
                     console.error('Error uploading image:', error);
@@ -382,20 +341,7 @@ const SurvivorBackEditor: React.FC<{
     return (
         <Flex direction="column" gap="4">
             <ImageUploader
-                onUpload={async (url) => {
-                    if (!url && card.image && card.image.includes('firebasestorage')) {
-                        const urlParts = card.image.split('/');
-                        const pathPart = urlParts.slice(urlParts.indexOf('o%2F') + 1).join('/')
-                            .split('?')[0];
-                        const path = decodeURIComponent(pathPart);
-                        try {
-                            await deleteImage(path);
-                        } catch {
-
-                        }
-                    }
-                    onChange({ ...card, image: url });
-                }}
+                onUpload={(url) => onChange({ ...card, image: url })}
                 onUploadClick={handleImageUploadClick}
                 uploading={uploading}
                 value={card.image}

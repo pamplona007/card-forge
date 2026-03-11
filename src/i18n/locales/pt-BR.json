@@ -167,19 +167,29 @@
     },
     "label": {
       "publishedBy": "Publicado por {{publisher}}",
-      "projectName": "Nome do Projeto"
+      "projectName": "Nome do Projeto",
+      "description": "Descrição",
+      "publicProject": "Projeto Público",
+      "publicProjectHint": "Qualquer pessoa pode ver e usar este projeto"
     },
     "placeholder": {
-      "projectName": "Meu Projeto Incrível"
+      "projectName": "Meu Projeto Incrível",
+      "description": "Uma breve descrição deste projeto"
     },
     "button": {
       "createNew": "+ Criar Novo Projeto",
       "cancel": "Cancelar",
-      "createProject": "Criar Projeto"
+      "createProject": "Criar Projeto",
+      "saveSettings": "Salvar Configurações",
+      "settings": "Configurações"
     },
     "dialog": {
       "createTitle": "Criar Novo Projeto",
       "createDescription": "Dê um nome ao seu novo projeto para começar."
+    },
+    "settings": {
+      "title": "Configurações do Projeto",
+      "description": "Atualize o nome, descrição e visibilidade do seu projeto."
     },
     "status": {
       "creating": "Criando...",

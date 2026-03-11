@@ -168,19 +168,29 @@
     },
     "label": {
       "publishedBy": "Published by {{publisher}}",
-      "projectName": "Project Name"
+      "projectName": "Project Name",
+      "description": "Description",
+      "publicProject": "Public Project",
+      "publicProjectHint": "Anyone can view and use this project"
     },
     "placeholder": {
-      "projectName": "My Awesome Project"
+      "projectName": "My Awesome Project",
+      "description": "A short description of this project"
     },
     "button": {
       "createNew": "+ Create New Project",
       "cancel": "Cancel",
-      "createProject": "Create Project"
+      "createProject": "Create Project",
+      "saveSettings": "Save Settings",
+      "settings": "Settings"
     },
     "dialog": {
       "createTitle": "Create New Project",
       "createDescription": "Give your new project a name to get started."
+    },
+    "settings": {
+      "title": "Project Settings",
+      "description": "Update your project name, description and visibility."
     },
     "status": {
       "creating": "Creating...",
