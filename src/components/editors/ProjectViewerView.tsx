@@ -105,7 +105,6 @@ export default function ProjectViewerView({ project }: ProjectViewerViewProps) {
                 onExport={handleExport}
             />
 
-            {/* Gallery */}
             {0 === project.cards.length
                 ? (
                     <Box
@@ -120,7 +119,7 @@ export default function ProjectViewerView({ project }: ProjectViewerViewProps) {
                     </Box>
                 )
                 : (
-                    <Flex gap="4" style={{ alignItems: 'flex-start' }}>
+                    <Grid columns={'auto 1fr'} gap="4" style={{ alignItems: 'flex-start' }}>
                         {/* Card grid */}
                         <Box style={{ flexShrink: 0, width: '300px' }}>
                             <Text color="gray" mb="2" size="2">
@@ -211,7 +210,7 @@ export default function ProjectViewerView({ project }: ProjectViewerViewProps) {
                         </Box>
 
                         {/* Preview panel */}
-                        <Box style={{ flex: 1, minWidth: 0, position: 'sticky', top: '80px' }}>
+                        <Box>
                             {selectedCard
                                 ? (
                                     <Box>
@@ -223,7 +222,7 @@ export default function ProjectViewerView({ project }: ProjectViewerViewProps) {
                                                 {selectedCard.type}
                                             </Badge>
                                         </Flex>
-                                        <CardPreview card={selectedCard} displayWidth={280} />
+                                        <CardPreview card={selectedCard} />
                                     </Box>
                                 )
                                 : (
@@ -240,7 +239,7 @@ export default function ProjectViewerView({ project }: ProjectViewerViewProps) {
                                     </Flex>
                                 )}
                         </Box>
-                    </Flex>
+                    </Grid>
                 )}
         </>
     );

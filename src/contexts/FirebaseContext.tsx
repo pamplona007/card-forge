@@ -368,10 +368,6 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const fetchProjectById = useCallback(async (projectId: string): Promise<null | Project> => {
-        if (!user) {
-            return null;
-        }
-
         try {
             const projectRef = doc(db, 'projects', projectId);
             const projectSnap = await getDoc(projectRef);
@@ -399,7 +395,7 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
             console.error('Error fetching project:', error);
             return null;
         }
-    }, [user]);
+    }, []);
 
     const contextValue: FirebaseContextType = {
         createProject,
