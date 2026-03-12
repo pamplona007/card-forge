@@ -104,8 +104,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
                     zIndex: 100,
                 }}
             >
-                <Container size="4">
-                    <Flex align="center" justify="between" px="2" py="4">
+                <Container px={'4'} size="4">
+                    <Flex align="center" justify="between" py="4">
                         <Heading size="6" style={{ color: 'var(--gray-12)' }} weight="bold">
                             {t('app.title')}
                         </Heading>
@@ -156,7 +156,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
             </header>
 
             <Box py="6">
-                <Container size="4">
+                <Container p={'4'} size="4">
                     {children}
                 </Container>
             </Box>

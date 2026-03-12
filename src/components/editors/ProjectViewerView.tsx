@@ -56,6 +56,12 @@ export default function ProjectViewerView({ project }: ProjectViewerViewProps) {
         }
     };
 
+    const texts = [
+        game ? game.name : project.gameId,
+        project.description,
+        t('editor.cardsCount', { count: project.cards.length }),
+    ].filter(Boolean).join(' | ');
+
     return (
         <>
             {/* Header */}
@@ -71,13 +77,8 @@ export default function ProjectViewerView({ project }: ProjectViewerViewProps) {
                             )}
                         </Flex>
                         <Text color="gray" size="2">
-                            {game ? game.name : project.gameId}
+                            {texts}
                         </Text>
-                        {project.description && (
-                            <Text as="p" color="gray" mt="1" size="2">
-                                {project.description}
-                            </Text>
-                        )}
                     </Box>
                     <Flex align="center" gap="2" mt="2">
                         <LikeButton project={project} />
@@ -90,6 +91,7 @@ export default function ProjectViewerView({ project }: ProjectViewerViewProps) {
                             {isExporting ? t('editor.button.exporting') : t('editor.button.exportPdf')}
                         </Button>
                     </Flex>
+
                 </Flex>
                 {exportError && (
                     <Text color="red" mt="2" size="2">
@@ -119,12 +121,16 @@ export default function ProjectViewerView({ project }: ProjectViewerViewProps) {
                     </Box>
                 )
                 : (
-                    <Grid columns={'auto 1fr'} gap="4" style={{ alignItems: 'flex-start' }}>
-                        {/* Card grid */}
-                        <Box style={{ flexShrink: 0, width: '300px' }}>
-                            <Text color="gray" mb="2" size="2">
-                                {t('editor.cardsCount', { count: project.cards.length })}
-                            </Text>
+                    <Grid
+                        areas={{
+                            initial: '"preview" "galery"',
+                            md: '"galery preview"',
+                        }}
+                        columns={{ initial: '1', md: '1fr 2fr' }}
+                        gap={'4'}
+                        rows={{ initial: 'auto auto', md: '1fr' }}
+                    >
+                        <Box gridArea={'galery'}>
                             <Grid columns="2" gap="2">
                                 {project.cards.map((card) => {
                                     const bg = TYPE_BACKGROUNDS[card.type];
@@ -209,21 +215,10 @@ export default function ProjectViewerView({ project }: ProjectViewerViewProps) {
                             </Grid>
                         </Box>
 
-                        {/* Preview panel */}
-                        <Box>
+                        <Box gridArea={'preview'}>
                             {selectedCard
                                 ? (
-                                    <Box>
-                                        <Flex align="baseline" gap="2" mb="3">
-                                            <Heading size="4">
-                                                {selectedCard.name || t('editor.label.unnamed')}
-                                            </Heading>
-                                            <Badge color="gray" variant="soft">
-                                                {selectedCard.type}
-                                            </Badge>
-                                        </Flex>
-                                        <CardPreview card={selectedCard} />
-                                    </Box>
+                                    <CardPreview card={selectedCard} />
                                 )
                                 : (
                                     <Flex

@@ -141,6 +141,22 @@ export default function GameProjectsPage() {
                 </Text>
             </Box>
 
+            {!user && 0 < publicProjects.length && (
+                <Box
+                    mb="6"
+                    p="4"
+                    style={{
+                        backgroundColor: 'var(--blue-2)',
+                        border: '1px solid var(--blue-4)',
+                        borderRadius: 'var(--radius-4)',
+                    }}
+                >
+                    <Text size="3">
+                        <strong>Sign in</strong> {t('projects.prompt.signIn')}
+                    </Text>
+                </Box>
+            )}
+
             {isLoading && (
                 <Box py="9" style={{ textAlign: 'center' }}>
                     <Spinner size="3" />
@@ -174,7 +190,7 @@ export default function GameProjectsPage() {
                             <Heading mb="4" size="5">
                                 {t('projects.section.publicProjects')}
                             </Heading>
-                            <Grid columns={{ initial: '1', lg: '4', md: '3', sm: '2' }} gap="4">
+                            <Grid columns={{ initial: '2', lg: '4', md: '3' }} gap="4">
                                 {publicProjects.map((project) => (
                                     <ProjectCard
                                         isOwner={project.userId === user?.uid}
@@ -228,26 +244,15 @@ export default function GameProjectsPage() {
                         </Box>
                     )}
 
-                    {!user && 0 < publicProjects.length && (
-                        <Box
-                            mb="6"
-                            p="4"
-                            style={{
-                                backgroundColor: 'var(--blue-2)',
-                                border: '1px solid var(--blue-4)',
-                                borderRadius: 'var(--radius-4)',
-                            }}
-                        >
-                            <Text size="3">
-                                <strong>Sign in</strong> {t('projects.prompt.signIn')}
-                            </Text>
-                        </Box>
-                    )}
                 </>
             )}
         </AppLayout>
     );
 }
+
+const TYPE_BACKGROUNDS: Record<Project['gameId'], { color: string; image?: string }> = {
+    'zombicide-2e': { color: '#1a2e1a', image: '/zombicide-2nd/survivor/card-background.png' },
+};
 
 function ProjectCard({ isOwner, onClick, project }: ProjectCardProps) {
     const { t } = useTranslation();
@@ -272,14 +277,47 @@ function ProjectCard({ isOwner, onClick, project }: ProjectCardProps) {
             <Box
                 style={{
                     alignItems: 'center',
-                    backgroundColor: 'var(--gray-4)',
+                    backgroundColor: TYPE_BACKGROUNDS[project.gameId].color,
                     borderRadius: 'var(--radius-2)',
                     display: 'flex',
                     height: '100px',
                     justifyContent: 'center',
                     marginBottom: '12px',
+                    overflow: 'hidden',
+                    position: 'relative',
                 }}
             >
+                {TYPE_BACKGROUNDS[project.gameId].image && (
+                    <img
+                        alt=""
+                        src={TYPE_BACKGROUNDS[project.gameId].image}
+                        style={{
+                            height: '100%',
+                            left: 0,
+                            objectFit: 'cover',
+                            objectPosition: 'center',
+                            position: 'absolute',
+                            scale: '1.2',
+                            top: 0,
+                            width: '100%',
+                        }}
+                    />
+                )}
+                {project.cards?.map((card, index) => (
+                    <img
+                        alt={card.name || t('editor.label.unnamed')}
+                        src={card.image}
+                        style={{
+                            height: '100%',
+                            left: `calc(${index * 18}% + 10px)`,
+                            objectFit: 'contain',
+                            objectPosition: 'top left',
+                            position: 'absolute',
+                            top: 0,
+                            width: '100%',
+                        }}
+                    />
+                ))}
                 <Text color="gray" size="6">
                     {project.name.charAt(0).toUpperCase()}
                 </Text>

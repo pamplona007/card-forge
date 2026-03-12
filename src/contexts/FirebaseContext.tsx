@@ -316,10 +316,12 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
             const projectsRef = collection(db, 'projects');
             const q = query(projectsRef, where('gameId', '==', gameId), where('isPublic', '==', true));
             const querySnapshot = await getDocs(q);
-            const projectsData: Project[] = querySnapshot.docs.map((doc) => {
+            const projectsData: Project[] = await Promise.all(querySnapshot.docs.map(async (doc) => {
                 const data = doc.data();
+                const cardsSnap = await getDocs(collection(db, 'projects', doc.id, 'cards'));
+                const cards = cardsSnap.docs.slice(0, 5).map((d) => d.data() as ZombicideCardData);
                 return {
-                    cards: [],
+                    cards,
                     createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(),
                     description: data.description,
                     gameId: data.gameId || gameId,
@@ -329,7 +331,7 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
                     updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(),
                     userId: data.userId || '',
                 };
-            });
+            }));
             return projectsData;
         } catch (error) {
             console.error('Error fetching public projects:', error);
@@ -346,10 +348,12 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
             const projectsRef = collection(db, 'projects');
             const q = query(projectsRef, where('gameId', '==', gameId), where('userId', '==', user.uid));
             const querySnapshot = await getDocs(q);
-            const projectsData: Project[] = querySnapshot.docs.map((doc) => {
+            const projectsData: Project[] = await Promise.all(querySnapshot.docs.map(async (doc) => {
                 const data = doc.data();
+                const cardsSnap = await getDocs(collection(db, 'projects', doc.id, 'cards'));
+                const cards = cardsSnap.docs.slice(0, 5).map((d) => d.data() as ZombicideCardData);
                 return {
-                    cards: [],
+                    cards: cards,
                     createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(),
                     description: data.description,
                     gameId: data.gameId || gameId,
@@ -359,7 +363,7 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
                     updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(),
                     userId: user.uid,
                 };
-            });
+            }));
             return projectsData;
         } catch (error) {
             console.error('Error fetching user projects:', error);

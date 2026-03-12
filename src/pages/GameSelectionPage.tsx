@@ -25,14 +25,13 @@ export default function GameSelectionPage() {
             </Box>
 
             <Grid
-                columns={{ initial: '1', md: '3', sm: '2' }}
+                columns={{ initial: '2', md: '4' }}
                 gap="5"
             >
                 {SUPPORTED_GAMES.map((game) => (
                     <Card
                         className="game-card"
                         key={game.id}
-                        size="3"
                         style={{
                             overflow: 'hidden',
                             transition: 'transform 0.2s ease, box-shadow 0.2s ease',
@@ -49,7 +48,6 @@ export default function GameSelectionPage() {
                                 position: 'relative',
                             }}
                         >
-
                             <Box
                                 style={{
                                     alignItems: 'center',
@@ -66,16 +64,10 @@ export default function GameSelectionPage() {
                             </Box>
                         </Box>
 
-                        <Box p="4">
+                        <Box mt={'2'}>
                             <Heading mb="1" size="5">
                                 {game.name}
                             </Heading>
-                            <Text color="gray" mb="3" size="2">
-                                {game.publisher}
-                            </Text>
-                            <Text mb="4" size="3" style={{ display: 'block', lineHeight: 1.5 }}>
-                                {game.description}
-                            </Text>
                             <Button
                                 color="blue"
                                 onClick={() => handleViewProjects(game.id)}

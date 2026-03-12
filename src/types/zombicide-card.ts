@@ -27,7 +27,19 @@ class CardDimensions {
         return this.width + (2 * this.bleed);
     }
 
-    constructor(bleed: number, height: number, width: number, canvasPaddingPercent: number = 0.05, borderRadius: number = 5) {
+    constructor({
+        bleed,
+        borderRadius = 5,
+        canvasPaddingPercent = 0.05,
+        height,
+        width,
+    }: {
+        bleed: number;
+        borderRadius?: number;
+        canvasPaddingPercent?: number;
+        height: number;
+        width: number;
+    }) {
         this.bleed = bleed;
         this.height = height;
         this.width = width;
@@ -48,9 +60,22 @@ class CardDimensions {
 
 export { CardDimensions };
 
-export const CARD_DIMENSIONS = new CardDimensions(3, 88.9, 63.5);
-export const SURVIVOR_CARD_DIMENSIONS = new CardDimensions(3, 76, 88, 0.05, 2);
-export const MINI_USA_CARD_DIMENSIONS = new CardDimensions(3, 63.5, 44.45);
+export const CARD_DIMENSIONS = new CardDimensions({
+    bleed: 3,
+    height: 88.9,
+    width: 63.5,
+});
+export const SURVIVOR_CARD_DIMENSIONS = new CardDimensions({
+    bleed: 3,
+    borderRadius: 2,
+    height: 76,
+    width: 88,
+});
+export const MINI_USA_CARD_DIMENSIONS = new CardDimensions({
+    bleed: 3,
+    height: 63.5,
+    width: 44.45,
+});
 
 export type AbilityColor = 'blue' | 'orange' | 'red' | 'yellow';
 
