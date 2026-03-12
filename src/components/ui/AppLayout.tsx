@@ -132,8 +132,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
                                                 <Text color="gray" size="1">{user.email}</Text>
                                             </DropdownMenu.Label>
                                             <DropdownMenu.Separator />
-                                            <DropdownMenu.Item onClick={() => navigate('/liked')}>
-                                                {t('likes.nav.likedProjects')}
+                                            <DropdownMenu.Item onClick={() => navigate(`/user/${user.uid}`)}>
+                                                {t('userProfile.nav.myProfile')}
                                             </DropdownMenu.Item>
                                             <DropdownMenu.Item onClick={() => navigate('/profile')}>
                                                 {t('profile.nav.myProfile')}

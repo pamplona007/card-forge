@@ -6,8 +6,8 @@ import { FirebaseProvider } from './firebase/context';
 import CardEditorPage from './pages/CardEditorPage';
 import GameProjectsPage from './pages/GameProjectsPage';
 import GameSelectionPage from './pages/GameSelectionPage';
-import LikedProjectsPage from './pages/LikedProjectsPage';
 import ProfilePage from './pages/ProfilePage';
+import UserProfilePage from './pages/UserProfilePage';
 
 function App() {
     return (
@@ -28,7 +28,7 @@ function AppContent() {
             <Route element={<GameSelectionPage />} path="/" />
             <Route element={<GameProjectsPage />} path="/game/:gameId" />
             <Route element={<CardEditorPage />} path="/project/:projectId" />
-            <Route element={<LikedProjectsPage />} path="/liked" />
+            <Route element={<UserProfilePage />} path="/user/:userId" />
             <Route element={<ProfilePage />} path="/profile" />
         </Routes>
     );

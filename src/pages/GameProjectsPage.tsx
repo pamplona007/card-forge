@@ -1,22 +1,14 @@
-import { Box, Button, Card, Dialog, Flex, Grid, Heading, Spinner, Switch, Text, TextArea, TextField } from '@radix-ui/themes';
+import { Box, Button, Dialog, Flex, Grid, Heading, Spinner, Switch, Text, TextArea, TextField } from '@radix-ui/themes';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import type { Project } from '../firebase/context';
-
 import AppLayout from '../components/ui/AppLayout';
-import LikeButton from '../components/ui/LikeButton';
+import ProjectCard from '../components/ui/ProjectCard';
 import { useCreateProject } from '../hooks/useCreateProject';
 import { useFirebase } from '../hooks/useFirebase';
 import { useProjects } from '../hooks/useProjects';
 import { getGameById } from '../types/game';
-
-interface ProjectCardProps {
-  isOwner: boolean;
-  onClick: () => void;
-  project: Project;
-}
 
 export default function GameProjectsPage() {
     const { gameId } = useParams<{ gameId: string }>();
@@ -288,98 +280,3 @@ export default function GameProjectsPage() {
     );
 }
 
-const TYPE_BACKGROUNDS: Record<Project['gameId'], { color: string; image?: string }> = {
-    'zombicide-2e': { color: '#1a2e1a', image: '/zombicide-2nd/survivor/card-background.png' },
-};
-
-function ProjectCard({ isOwner, onClick, project }: ProjectCardProps) {
-    const { i18n, t } = useTranslation();
-    const formatDate = (date: Date) => {
-        return new Date(date).toLocaleDateString(i18n.resolvedLanguage, {
-            day: 'numeric',
-            month: 'short',
-            year: 'numeric',
-        });
-    };
-
-    return (
-        <Card
-            className="project-card"
-            onClick={onClick}
-            style={{
-                cursor: 'pointer',
-                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-            }}
-        >
-            <Box
-                style={{
-                    alignItems: 'center',
-                    backgroundColor: TYPE_BACKGROUNDS[project.gameId].color,
-                    borderRadius: 'var(--radius-2)',
-                    display: 'flex',
-                    height: '100px',
-                    justifyContent: 'center',
-                    marginBottom: '12px',
-                    overflow: 'hidden',
-                    position: 'relative',
-                }}
-            >
-                {TYPE_BACKGROUNDS[project.gameId].image && (
-                    <img
-                        alt=""
-                        src={TYPE_BACKGROUNDS[project.gameId].image}
-                        style={{
-                            height: '100%',
-                            left: 0,
-                            objectFit: 'cover',
-                            objectPosition: 'center',
-                            position: 'absolute',
-                            scale: '1.2',
-                            top: 0,
-                            width: '100%',
-                        }}
-                    />
-                )}
-                {project.cards?.map((card, index) => (
-                    <img
-                        alt={card.name || t('editor.label.unnamed')}
-                        src={card.image}
-                        style={{
-                            height: '100%',
-                            left: `calc(${index * 18}% + 10px)`,
-                            objectFit: 'contain',
-                            objectPosition: 'top left',
-                            position: 'absolute',
-                            top: 0,
-                            width: '100%',
-                        }}
-                    />
-                ))}
-                <Text color="gray" size="6">
-                    {project.name.charAt(0).toUpperCase()}
-                </Text>
-            </Box>
-            <Flex align="center" justify="between" mb="1">
-                <Heading size="3" trim="both">
-                    {project.name}
-                </Heading>
-                <Flex align="center" gap="1">
-                    {isOwner && (
-                        <Text color="blue" size="1">
-                            {t('projects.card.yours')}
-                        </Text>
-                    )}
-                    <LikeButton project={project} size="1" />
-                </Flex>
-            </Flex>
-            {project.description && (
-                <Text color="gray" mb="2" size="2" style={{ display: 'block', lineHeight: 1.4 }}>
-                    {project.description}
-                </Text>
-            )}
-            <Text color="gray" size="1">
-                {t('projects.card.updated', { date: formatDate(project.updatedAt) })}
-            </Text>
-        </Card>
-    );
-}

@@ -274,7 +274,7 @@
       "generic": "An error occurred. Please try again"
     },
     "nav": {
-      "myProfile": "My Profile"
+      "myProfile": "Account Settings"
     }
   },
   "likes": {
@@ -313,6 +313,27 @@
     },
     "nav": {
       "likedProjects": "Liked Projects"
+    }
+  },
+  "userProfile": {
+    "title": "User Profile",
+    "ownTitle": "My Profile",
+    "loading": "Loading profile...",
+    "tab": {
+      "created": "Created",
+      "liked": "Liked"
+    },
+    "filter": {
+      "sort": {
+        "createdDate": "Created Date"
+      }
+    },
+    "empty": {
+      "noProjects": "No public projects yet.",
+      "noLikes": "No liked projects yet."
+    },
+    "nav": {
+      "myProfile": "My Profile"
     }
   },
   "viewer": {

@@ -1,21 +1,21 @@
 import { IconButton, Tooltip } from '@radix-ui/themes';
+import { useUserLikes } from 'hooks/useUserLikes';
 import { Heart } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-import type { Project } from '../../firebase/context';
+import type { LikedProject, Project } from '../../firebase/context';
 
 import { useFirebase } from '../../hooks/useFirebase';
-import { useLikes } from '../../hooks/useLikes';
 import { useToggleLike } from '../../hooks/useToggleLike';
 
 interface LikeButtonProps {
-  project: Project;
+  project: LikedProject | Project;
   size?: '1' | '2' | '3';
 }
 
 export default function LikeButton({ project, size = '2' }: LikeButtonProps) {
     const { user } = useFirebase();
-    const { data: likedProjects } = useLikes();
+    const { data: likedProjects } = useUserLikes(user?.uid);
     const toggleLikeMutation = useToggleLike();
     const { t } = useTranslation();
 
@@ -40,6 +40,7 @@ export default function LikeButton({ project, size = '2' }: LikeButtonProps) {
                 variant="ghost"
             >
                 <Heart
+                    color={isLiked ? 'currentColor' : 'var(--gray-1)'}
                     fill={isLiked ? 'currentColor' : 'none'}
                     size={16}
                     strokeWidth={2}

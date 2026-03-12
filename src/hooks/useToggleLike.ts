@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import type { Project } from '../firebase/context';
+import type { LikedProject, Project } from '../firebase/context';
 
 import { useFirebase } from './useFirebase';
 
@@ -9,7 +9,7 @@ export const useToggleLike = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({ isLiked, project }: { isLiked: boolean; project: Project }) => {
+        mutationFn: async ({ isLiked, project }: { isLiked: boolean; project: LikedProject | Project }) => {
             if (isLiked) {
                 await unlikeProject(project.id);
             } else {

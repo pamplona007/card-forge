@@ -273,7 +273,7 @@
       "generic": "Ocorreu um erro. Tente novamente"
     },
     "nav": {
-      "myProfile": "Meu Perfil"
+      "myProfile": "Configurações da Conta"
     }
   },
   "likes": {
@@ -312,6 +312,27 @@
     },
     "nav": {
       "likedProjects": "Projetos Curtidos"
+    }
+  },
+  "userProfile": {
+    "title": "Perfil do Usuário",
+    "ownTitle": "Meu Perfil",
+    "loading": "Carregando perfil...",
+    "tab": {
+      "created": "Criados",
+      "liked": "Curtidos"
+    },
+    "filter": {
+      "sort": {
+        "createdDate": "Data de Criação"
+      }
+    },
+    "empty": {
+      "noProjects": "Nenhum projeto público ainda.",
+      "noLikes": "Nenhum projeto curtido ainda."
+    },
+    "nav": {
+      "myProfile": "Meu Perfil"
     }
   },
   "viewer": {

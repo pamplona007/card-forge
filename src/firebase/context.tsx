@@ -27,8 +27,10 @@ import type { ZombicideCardData } from '../games/zombicide/editors/ZombicideCard
 import { auth, db } from './config';
 
 export type LikedProject = {
+  cards: ZombicideCardData[];
   description: string;
   gameId: string;
+  id: string;
   isPublic: boolean;
   likedAt: Date;
   name: string;
@@ -53,11 +55,12 @@ export type Project = {
 type FirebaseContextType = {
   createProject: (project: Omit<Project, 'createdAt' | 'id' | 'updatedAt'>) => Promise<string>;
   deleteProject: (projectId: string) => Promise<void>;
-  fetchLikedProjects: () => Promise<LikedProject[]>;
   fetchProjectById: (projectId: string) => Promise<null | Project>;
+  fetchProjectsByUser: (userId: string) => Promise<Project[]>;
   fetchPublicProjectsByGame: (gameId: string) => Promise<Project[]>;
+  fetchUserLikes: (userId: string) => Promise<LikedProject[]>;
   fetchUserProjectsByGame: (gameId: string) => Promise<Project[]>;
-  likeProject: (project: Project) => Promise<void>;
+  likeProject: (project: LikedProject | Project) => Promise<void>;
   loading: boolean;
   logOut: () => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
@@ -71,9 +74,10 @@ type FirebaseContextType = {
 export const FirebaseContext = createContext<FirebaseContextType>({
     createProject: async () => '',
     deleteProject: async () => {},
-    fetchLikedProjects: async () => [],
     fetchProjectById: async () => null,
+    fetchProjectsByUser: async () => [],
     fetchPublicProjectsByGame: async () => [],
+    fetchUserLikes: async () => [],
     fetchUserProjectsByGame: async () => [],
     likeProject: async () => {},
     loading: true,
@@ -228,7 +232,7 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
-    const likeProject = async (project: Project): Promise<void> => {
+    const likeProject = async (project: LikedProject | Project): Promise<void> => {
         if (!user) {
             throw new Error('User not authenticated');
         }
@@ -240,7 +244,6 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
                 isPublic: project.isPublic,
                 likedAt: serverTimestamp(),
                 name: project.name,
-                projectId: project.id,
                 updatedAt: project.updatedAt,
                 userId: project.userId,
             });
@@ -261,31 +264,6 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
         } catch (error) {
             console.error('Error unliking project:', error);
             throw error;
-        }
-    };
-
-    const fetchLikedProjects = async (): Promise<LikedProject[]> => {
-        if (!user) {
-            return [];
-        }
-        try {
-            const snap = await getDocs(collection(db, 'users', user.uid, 'likes'));
-            return snap.docs.map((d) => {
-                const data = d.data();
-                return {
-                    description: data.description ?? '',
-                    gameId: data.gameId ?? '',
-                    isPublic: data.isPublic ?? true,
-                    likedAt: data.likedAt?.toDate ? data.likedAt.toDate() : new Date(),
-                    name: data.name ?? '',
-                    projectId: d.id,
-                    updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(),
-                    userId: data.userId ?? '',
-                };
-            });
-        } catch (error) {
-            console.error('Error fetching liked projects:', error);
-            return [];
         }
     };
 
@@ -372,6 +350,61 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
+    const fetchProjectsByUser = async (userId: string): Promise<Project[]> => {
+        try {
+            const projectsRef = collection(db, 'projects');
+            const q = query(projectsRef, where('userId', '==', userId));
+            const querySnapshot = await getDocs(q);
+            return Promise.all(querySnapshot.docs.map(async (d) => {
+                const data = d.data();
+                const cardsSnap = await getDocs(collection(db, 'projects', d.id, 'cards'));
+                const cards = cardsSnap.docs.slice(0, 5).map((c) => c.data() as ZombicideCardData);
+                return {
+                    cards,
+                    createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(),
+                    description: data.description,
+                    gameId: data.gameId || '',
+                    id: d.id,
+                    isPublic: data.isPublic ?? false,
+                    name: data.name,
+                    updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(),
+                    userId: data.userId || '',
+                };
+            }));
+        } catch (error) {
+            console.error('Error fetching projects by user:', error);
+            return [];
+        }
+    };
+
+    const fetchUserLikes = async (userId: string): Promise<LikedProject[]> => {
+        try {
+            const snap = await getDocs(collection(db, 'users', userId, 'likes'));
+            return Promise.all(snap.docs.map(async (d) => {
+                const data = d.data();
+                const cardsSnap = await getDocs(collection(db, 'projects', d.id, 'cards'));
+                const cards = cardsSnap.docs.slice(0, 5).map((c) => c.data() as ZombicideCardData);
+
+                return {
+                    cards: cards,
+                    createdAt: data.likedAt?.toDate ? data.likedAt.toDate() : new Date(),
+                    description: data.description ?? '',
+                    gameId: data.gameId ?? '',
+                    id: d.id,
+                    isPublic: data.isPublic ?? true,
+                    likedAt: data.likedAt?.toDate ? data.likedAt.toDate() : new Date(),
+                    name: data.name ?? '',
+                    projectId: d.id,
+                    updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(),
+                    userId: data.userId ?? '',
+                };
+            }));
+        } catch (error) {
+            console.error('Error fetching user likes:', error);
+            return [];
+        }
+    };
+
     const fetchProjectById = useCallback(async (projectId: string): Promise<null | Project> => {
         try {
             const projectRef = doc(db, 'projects', projectId);
@@ -405,9 +438,10 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
     const contextValue: FirebaseContextType = {
         createProject,
         deleteProject,
-        fetchLikedProjects,
         fetchProjectById,
+        fetchProjectsByUser,
         fetchPublicProjectsByGame,
+        fetchUserLikes,
         fetchUserProjectsByGame,
         likeProject,
         loading,
