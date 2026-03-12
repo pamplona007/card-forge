@@ -1,55 +1,9 @@
 import { Box } from '@radix-ui/themes';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+import useFonts from '../../hooks/useFonts';
 import { CardDimensions, SURVIVOR_CARD_DIMENSIONS } from '../../types/zombicide-card';
-import { hexToRgba } from './cardUtils';
-
-const loadSingleFont = async (
-    family: string,
-    url: string,
-    descriptors: object,
-    weightCheck: string,
-) => {
-    let loaded = false;
-    try {
-        const face = new FontFace(family, `url(${url})`, {
-            ...descriptors,
-            display: 'block',
-        });
-        await face.load();
-        document.fonts.add(face);
-        loaded = true;
-    } catch (err) {
-        console.warn(`Failed to load font ${family} from ${url}`, err);
-    }
-
-    try {
-        await document.fonts.ready;
-        await document.fonts.load(weightCheck);
-    } catch (err) {
-        console.warn(`Font ready check failed for ${family}`, err);
-    }
-
-    const check =
-        document.fonts.check(weightCheck) ||
-        document.fonts.check(`1em "${family}"`);
-
-    return loaded || check;
-};
-
-loadSingleFont(
-    'Piklet Caps',
-    '/fonts/piklet-caps-clean.otf',
-    { style: 'normal', weight: '900' },
-    '900 270px "Piklet Caps"',
-);
-
-loadSingleFont(
-    'Titling Gothic',
-    '/fonts/TITLINGGOTHICFBCOMP-MEDIUM.TTF',
-    { style: 'normal', weight: '500' },
-    '500 38px "Titling Gothic"',
-);
+import { type FontSpec, hexToRgba } from './cardUtils';
 
 const createClipWithoutBleed = (ctx: CanvasRenderingContext2D, dims: CardDimensions, scale: number, padding: number) => {
     const borderRadius = dims.borderRadius * scale;
@@ -147,6 +101,13 @@ export interface CardCanvasProps {
      * `cardDimensions.pxCanvasDimensions(12)`.
      */
     exportMode?: boolean;
+    /**
+     * Fonts that must be loaded before the first draw. Pass a stable array
+     * reference (module-level constant) so the hook dependency is stable.
+     * Loading is deduplicated — the same font spec is only ever fetched once
+     * across all mounted components.
+     */
+    fonts?: FontSpec[];
     onMouseDown?: CardCanvasMouseHandler;
     onMouseMove?: CardCanvasMouseHandler;
     onMouseUp?: CardCanvasMouseHandler;
@@ -178,10 +139,12 @@ const CardCanvas: React.FC<CardCanvasProps> = ({
     cursor,
     draw,
     exportMode = false,
+    fonts,
     onMouseDown,
     onMouseMove,
     onMouseUp,
 }) => {
+    const fontsLoaded = useFonts(fonts ?? []);
     const [dimensions, setDimensions] = useState(() => {
         if (exportMode) {
             return cardDimensions.pxCanvasDimensions(12);
@@ -224,7 +187,7 @@ const CardCanvas: React.FC<CardCanvasProps> = ({
 
     const render = useCallback(() => {
         const canvas = canvasRef.current;
-        if (!canvas) {
+        if (!canvas || !fontsLoaded) {
             return;
         }
 
@@ -258,7 +221,7 @@ const CardCanvas: React.FC<CardCanvasProps> = ({
         });
 
         ctx.restore();
-    }, [bleed, cardDimensions, dimensions, draw, padding, scale]);
+    }, [bleed, cardDimensions, dimensions, draw, fontsLoaded, padding, scale]);
 
     useEffect(() => {
         render();

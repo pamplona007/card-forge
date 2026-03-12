@@ -63,7 +63,7 @@ export default function CardListView({
                                 aspectRatio: '1',
                                 backgroundColor: TYPE_BACKGROUNDS[card.type].color,
                                 border: '1px solid var(--gray-5)',
-                                borderRadius: 'var(--radius-2)',
+                                borderRadius: 'var(--radius-4)',
                                 overflow: 'hidden',
                                 position: 'relative',
                             }}
@@ -78,6 +78,7 @@ export default function CardListView({
                                         objectFit: 'cover',
                                         objectPosition: 'center',
                                         position: 'absolute',
+                                        scale: '1.2',
                                         top: 0,
                                         width: '100%',
                                     }}

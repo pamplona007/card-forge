@@ -7,7 +7,7 @@ import {
     type SurvivorCardData,
 } from '../../../types/zombicide-card';
 import CardCanvas, { type CardCanvasMouseHandler, type DrawParams } from '../CardCanvas';
-import { hexToRgba } from '../cardUtils';
+import { hexToRgba, ZOMBICIDE_FONTS } from '../cardUtils';
 
 interface SurvivorCardProps extends CardProps {
     bleed?: boolean;
@@ -246,6 +246,7 @@ const SurvivorCardFront: React.FC<SurvivorCardProps> = ({ bleed, card, exportMod
             cursor={onChangeImagePosition ? 'move' : 'default'}
             draw={draw}
             exportMode={exportMode}
+            fonts={ZOMBICIDE_FONTS}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
