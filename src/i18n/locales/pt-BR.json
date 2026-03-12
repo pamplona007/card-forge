@@ -69,6 +69,8 @@
     },
     "section": { "projectCards": "Cartas do Projeto ({{count}})" },
     "label": {
+      "description": "Descrição",
+      "imageScale": "Escala da Imagem",
       "unnamed": "Sem Nome",
       "cardImage": "Imagem da Carta",
       "abilities": "Habilidades",
@@ -95,6 +97,8 @@
       "xpValue": "Valor de XP"
     },
     "placeholder": {
+      "descriptionHeading": "Título da Descrição",
+      "descriptionText": "O texto da descrição vai aqui. Use este espaço para descrever as habilidades da carta, história ou qualquer outra informação que você gostaria de incluir.",
       "flavorTextOptional": "Texto de sabor opcional",
       "copyright": "© Editora",
       "equipmentName": "Nome do equipamento",

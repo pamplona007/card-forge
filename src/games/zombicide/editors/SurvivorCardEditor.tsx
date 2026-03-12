@@ -1,4 +1,4 @@
-import { Box, Button, Card, Flex, Grid, Slider, Text, TextField } from '@radix-ui/themes';
+import { Box, Button, Card, Flex, Grid, Slider, Text, TextArea, TextField } from '@radix-ui/themes';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { resizeToDataUrl } from 'utils/imageUtils';
@@ -374,6 +374,37 @@ const SurvivorBackEditor: React.FC<{
                     </Flex>
                 </Box>
             )}
+
+            {[0, 1, 2].map((index) => (
+                <Box key={index}>
+                    <Text as="p" mb="2" size="2" style={{ color: 'var(--gray-11)' }}>
+                        {t('editor.label.description')} {index + 1}
+                    </Text>
+                    <Flex direction="column" gap="2">
+                        <TextField.Root
+                            onChange={(e) => {
+                                const description = card.descriptions?.[index] || { text: '', title: '' };
+                                const descriptions = [...(card.descriptions || [])];
+                                descriptions[index] = { ...description, title: e.target.value };
+                                onChange({ ...card, descriptions });
+                            }}
+                            placeholder={t('editor.placeholder.descriptionHeading')}
+                            value={card.descriptions?.[index]?.title || ''}
+                        />
+                        <TextArea
+                            onChange={(e) => {
+                                const description = card.descriptions?.[index] || { text: '', title: '' };
+                                const descriptions = [...(card.descriptions || [])];
+                                descriptions[index] = { ...description, text: e.target.value };
+                                onChange({ ...card, descriptions });
+                            }}
+                            placeholder={t('editor.placeholder.descriptionText')}
+                            style={{ minHeight: '100px' }}
+                            value={card.descriptions?.[index]?.text || ''}
+                        />
+                    </Flex>
+                </Box>
+            ))}
         </Flex>
     );
 };

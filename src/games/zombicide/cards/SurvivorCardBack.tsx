@@ -263,7 +263,7 @@ function drawDescriptions(
     const descriptionLines: Array<{ text: string; type: 'body' | 'title'; x: number; y: number; }> = [];
 
     for (const desc of card.descriptions) {
-        if (desc.title) {
+        if (desc?.title) {
             ctx.font = `bold ${3 * scale}px 'Titling Gothic', sans-serif`;
             const distanceFromTop = currentY - descriptionBoxY;
             const angledOffset = distanceFromTop * Math.tan(skewAngle);
@@ -272,7 +272,7 @@ function drawDescriptions(
             currentY += titleLineHeight;
         }
 
-        if (desc.text) {
+        if (desc?.text) {
             ctx.font = `400 ${2 * scale}px 'Titling Gothic', sans-serif`;
             const words = desc.text.split(' ');
             let line = '';
