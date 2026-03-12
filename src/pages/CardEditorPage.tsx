@@ -1,7 +1,7 @@
 import { Box, Spinner, Text } from '@radix-ui/themes';
-import AppLayout from 'components/AppLayout';
-import ProjectOwnerView from 'components/editors/ProjectOwnerView';
-import ProjectViewerView from 'components/editors/ProjectViewerView';
+import ProjectOwnerView from 'components/editor/ProjectOwnerView';
+import ProjectViewerView from 'components/editor/ProjectViewerView';
+import AppLayout from 'components/ui/AppLayout';
 import { useFirebase } from 'hooks/useFirebase';
 import { useProject } from 'hooks/useProject';
 import { useTranslation } from 'react-i18next';

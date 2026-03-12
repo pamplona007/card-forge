@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import type { LikedProject } from '../contexts/FirebaseContext';
+import type { LikedProject } from '../firebase/context';
 
 import { useFirebase } from './useFirebase';
 

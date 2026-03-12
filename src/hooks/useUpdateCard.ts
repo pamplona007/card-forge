@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-import type { ZombicideCardData } from '../components/editors/zombicide/ZombicideCardEditor';
+import type { ZombicideCardData } from '../games/zombicide/editors/ZombicideCardEditor';
 
 import { useFirebase } from './useFirebase';
 

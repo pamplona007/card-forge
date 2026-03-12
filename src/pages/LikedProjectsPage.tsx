@@ -4,9 +4,9 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import type { LikedProject } from '../contexts/FirebaseContext';
+import type { LikedProject } from '../firebase/context';
 
-import AppLayout from '../components/AppLayout';
+import AppLayout from '../components/ui/AppLayout';
 import { useFirebase } from '../hooks/useFirebase';
 import { useLikes } from '../hooks/useLikes';
 import { SUPPORTED_GAMES } from '../types/game';
@@ -19,14 +19,6 @@ const ALL_GAMES = 'all';
 interface LikedProjectCardProps {
     onNavigate: (projectId: string) => void;
     project: LikedProject;
-}
-
-function formatDate(date: Date) {
-    return new Date(date).toLocaleDateString(undefined, {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-    });
 }
 
 export default function LikedProjectsPage() {
@@ -206,6 +198,14 @@ export default function LikedProjectsPage() {
             )}
         </AppLayout>
     );
+}
+
+function formatDate(date: Date) {
+    return new Date(date).toLocaleDateString(undefined, {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+    });
 }
 
 function LikedProjectCard({ onNavigate, project }: LikedProjectCardProps) {

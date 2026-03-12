@@ -1,8 +1,8 @@
 import { Theme } from '@radix-ui/themes/components/index';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-import ToastProvider from './components/ToastProvider';
-import { FirebaseProvider } from './contexts/FirebaseContext';
+import ToastProvider from './components/ui/ToastProvider';
+import { FirebaseProvider } from './firebase/context';
 import CardEditorPage from './pages/CardEditorPage';
 import GameProjectsPage from './pages/GameProjectsPage';
 import GameSelectionPage from './pages/GameSelectionPage';

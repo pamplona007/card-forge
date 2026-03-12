@@ -2,7 +2,7 @@ import { Box, Button, Card, Grid, Heading, Text } from '@radix-ui/themes';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import AppLayout from '../components/AppLayout';
+import AppLayout from '../components/ui/AppLayout';
 import { SUPPORTED_GAMES } from '../types/game';
 
 export default function GameSelectionPage() {

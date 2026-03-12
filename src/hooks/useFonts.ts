@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import type { FontSpec } from '../components/cards/cardUtils';
+import type { FontSpec } from '../components/canvas/cardUtils';
 
 // Module-level cache: font key → promise of success boolean.
 // Shared across all component instances so the same font is never loaded twice.

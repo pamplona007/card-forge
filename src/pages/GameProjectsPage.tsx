@@ -3,10 +3,10 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import type { Project } from '../contexts/FirebaseContext';
+import type { Project } from '../firebase/context';
 
-import AppLayout from '../components/AppLayout';
-import LikeButton from '../components/LikeButton';
+import AppLayout from '../components/ui/AppLayout';
+import LikeButton from '../components/ui/LikeButton';
 import { useCreateProject } from '../hooks/useCreateProject';
 import { useFirebase } from '../hooks/useFirebase';
 import { useProjects } from '../hooks/useProjects';

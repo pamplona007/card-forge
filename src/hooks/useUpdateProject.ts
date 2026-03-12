@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import type { Project } from '../contexts/FirebaseContext';
+import type { Project } from '../firebase/context';
 
 import { useFirebase } from './useFirebase';
 
