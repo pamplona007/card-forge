@@ -181,7 +181,9 @@
       "cancel": "Cancelar",
       "createProject": "Criar Projeto",
       "saveSettings": "Salvar Configurações",
-      "settings": "Configurações"
+      "settings": "Configurações",
+      "deleteProject": "Excluir Projeto",
+      "confirmDelete": "Sim, Excluir Projeto"
     },
     "dialog": {
       "createTitle": "Criar Novo Projeto",
@@ -189,7 +191,10 @@
     },
     "settings": {
       "title": "Configurações do Projeto",
-      "description": "Atualize o nome, descrição e visibilidade do seu projeto."
+      "description": "Atualize o nome, descrição e visibilidade do seu projeto.",
+      "dangerZone": "Zona de Perigo",
+      "deleteWarning": "Esta ação não pode ser desfeita. Todos os cartões deste projeto serão excluídos permanentemente.",
+      "deleteConfirmTitle": "Tem certeza que deseja excluir \"{{name}}\"?"
     },
     "status": {
       "creating": "Criando...",
@@ -299,6 +304,7 @@
     "noCards": "Este projeto ainda não tem cards."
   },
   "games": {
+    "title": "Jogos",
     "description": "Selecione um jogo para começar a criar cartas personalizadas para sua coleção de jogos de tabuleiro.",
     "button": { "viewProjects": "Ver Projetos" },
     "empty": {

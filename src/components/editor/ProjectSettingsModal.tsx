@@ -5,17 +5,21 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface ProjectSettingsModalProps {
+    isDeleting?: boolean;
     isOpen: boolean;
     isSaving: boolean;
     onClose: () => void;
+    onDelete?: () => void;
     onSave: (updates: Pick<Project, 'description' | 'isPublic' | 'name'>) => void;
     project: Project;
 }
 
 export default function ProjectSettingsModal({
+    isDeleting,
     isOpen,
     isSaving,
     onClose,
+    onDelete,
     onSave,
     project,
 }: ProjectSettingsModalProps) {
@@ -24,6 +28,7 @@ export default function ProjectSettingsModal({
     const [name, setName] = useState(project.name);
     const [description, setDescription] = useState(project.description);
     const [isPublic, setIsPublic] = useState(project.isPublic);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
     const handleSave = () => {
         onSave({ description, isPublic, name: name.trim() || project.name });
@@ -84,6 +89,63 @@ export default function ProjectSettingsModal({
                         </Flex>
                     </Box>
                 </Flex>
+
+                {onDelete && (
+                    <Box
+                        mt="5"
+                        p="3"
+                        style={{
+                            border: '1px solid var(--red-6)',
+                            borderRadius: 'var(--radius-3)',
+                        }}
+                    >
+                        <Text as="p" color="red" mb="2" size="2" weight="bold">
+                            {t('projects.settings.dangerZone')}
+                        </Text>
+                        {showDeleteConfirm
+                            ? (
+                                <Flex direction="column" gap="2">
+                                    <Text as="p" size="2">
+                                        {t('projects.settings.deleteConfirmTitle', { name: project.name })}
+                                    </Text>
+                                    <Text as="p" color="gray" size="1">
+                                        {t('projects.settings.deleteWarning')}
+                                    </Text>
+                                    <Flex gap="2" mt="1">
+                                        <Button
+                                            color="gray"
+                                            disabled={isDeleting}
+                                            onClick={() => setShowDeleteConfirm(false)}
+                                            size="2"
+                                            variant="soft"
+                                        >
+                                            {t('projects.button.cancel')}
+                                        </Button>
+                                        <Button
+                                            color="red"
+                                            disabled={isDeleting}
+                                            loading={isDeleting}
+                                            onClick={onDelete}
+                                            size="2"
+                                        >
+                                            {t('projects.button.confirmDelete')}
+                                        </Button>
+                                    </Flex>
+                                </Flex>
+                            )
+                            : (
+                                <Button
+                                    color="red"
+                                    disabled={isSaving}
+                                    onClick={() => setShowDeleteConfirm(true)}
+                                    size="2"
+                                    variant="soft"
+                                >
+                                    {t('projects.button.deleteProject')}
+                                </Button>
+                            )}
+                    </Box>
+                )}
 
                 <Flex gap="3" justify="end" mt="5">
                     <Dialog.Close>

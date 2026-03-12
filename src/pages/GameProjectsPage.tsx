@@ -1,4 +1,4 @@
-import { Box, Button, Card, Dialog, Flex, Grid, Heading, Spinner, Text, TextField } from '@radix-ui/themes';
+import { Box, Button, Card, Dialog, Flex, Grid, Heading, Spinner, Switch, Text, TextArea, TextField } from '@radix-ui/themes';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -29,6 +29,8 @@ export default function GameProjectsPage() {
     const [game] = useState(getGameById(gameId || ''));
     const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
     const [newProjectName, setNewProjectName] = useState('');
+    const [newProjectDescription, setNewProjectDescription] = useState('');
+    const [newProjectIsPublic, setNewProjectIsPublic] = useState(false);
 
     const publicProjects = projectsData?.publicProjects || [];
     const userProjects = projectsData?.userProjects || [];
@@ -41,9 +43,9 @@ export default function GameProjectsPage() {
         try {
             const projectId = await createProjectMutation.mutateAsync({
                 cards: [],
-                description: '',
+                description: newProjectDescription.trim(),
                 gameId,
-                isPublic: false,
+                isPublic: newProjectIsPublic,
                 name: newProjectName.trim(),
                 userId: user.uid,
             });
@@ -54,6 +56,8 @@ export default function GameProjectsPage() {
         } finally {
             setIsCreateDialogOpen(false);
             setNewProjectName('');
+            setNewProjectDescription('');
+            setNewProjectIsPublic(false);
         }
     };
 
@@ -101,9 +105,9 @@ export default function GameProjectsPage() {
                                 <Dialog.Description mb="4" size="2">
                                     {t('projects.dialog.createDescription')}
                                 </Dialog.Description>
-                                <Flex direction="column" gap="3">
-                                    <label>
-                                        <Text as="span" mb="1" size="2" style={{ display: 'block' }}>
+                                <Flex direction="column" gap="4">
+                                    <Box>
+                                        <Text as="label" mb="2" size="2" weight="bold">
                                             {t('projects.label.projectName')}
                                         </Text>
                                         <TextField.Root
@@ -116,7 +120,40 @@ export default function GameProjectsPage() {
                                             placeholder={t('projects.placeholder.projectName')}
                                             value={newProjectName}
                                         />
-                                    </label>
+                                    </Box>
+                                    <Box>
+                                        <Text as="label" mb="2" size="2" weight="bold">
+                                            {t('projects.label.description')}
+                                        </Text>
+                                        <TextArea
+                                            onChange={(e) => setNewProjectDescription(e.target.value)}
+                                            placeholder={t('projects.placeholder.description')}
+                                            rows={3}
+                                            value={newProjectDescription}
+                                        />
+                                    </Box>
+                                    <Box
+                                        p="3"
+                                        style={{
+                                            backgroundColor: 'var(--gray-3)',
+                                            borderRadius: 'var(--radius-3)',
+                                        }}
+                                    >
+                                        <Flex align="center" gap="3" justify="between">
+                                            <Box>
+                                                <Text as="p" size="2" weight="bold">
+                                                    {t('projects.label.publicProject')}
+                                                </Text>
+                                                <Text as="p" color="gray" size="1">
+                                                    {t('projects.label.publicProjectHint')}
+                                                </Text>
+                                            </Box>
+                                            <Switch
+                                                checked={newProjectIsPublic}
+                                                onCheckedChange={setNewProjectIsPublic}
+                                            />
+                                        </Flex>
+                                    </Box>
                                 </Flex>
                                 <Flex gap="3" justify="end" mt="5">
                                     <Dialog.Close>
@@ -127,6 +164,7 @@ export default function GameProjectsPage() {
                                     <Button
                                         color="blue"
                                         disabled={!newProjectName.trim() || createProjectMutation.isPending}
+                                        loading={createProjectMutation.isPending}
                                         onClick={handleCreateProject}
                                     >
                                         {createProjectMutation.isPending ? t('projects.status.creating') : t('projects.button.createProject')}

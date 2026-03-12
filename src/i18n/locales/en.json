@@ -182,7 +182,9 @@
       "cancel": "Cancel",
       "createProject": "Create Project",
       "saveSettings": "Save Settings",
-      "settings": "Settings"
+      "settings": "Settings",
+      "deleteProject": "Delete Project",
+      "confirmDelete": "Yes, Delete Project"
     },
     "dialog": {
       "createTitle": "Create New Project",
@@ -190,7 +192,10 @@
     },
     "settings": {
       "title": "Project Settings",
-      "description": "Update your project name, description and visibility."
+      "description": "Update your project name, description and visibility.",
+      "dangerZone": "Danger Zone",
+      "deleteWarning": "This action cannot be undone. All cards in this project will be permanently deleted.",
+      "deleteConfirmTitle": "Are you sure you want to delete \"{{name}}\"?"
     },
     "status": {
       "creating": "Creating...",
@@ -300,6 +305,7 @@
     "noCards": "This project has no cards yet."
   },
   "games": {
+    "title": "Games",
     "description": "Select a game to start creating custom cards for your tabletop collection.",
     "button": { "viewProjects": "View Projects" },
     "empty": {

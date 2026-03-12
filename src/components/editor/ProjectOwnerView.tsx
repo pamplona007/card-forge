@@ -22,8 +22,10 @@ import { generatePDFFromElements } from 'games/zombicide/utils/pdfGenerator';
 import { useFirebase } from 'hooks/useFirebase';
 import { useUpdateCard } from 'hooks/useUpdateCard';
 import { useUpdateProject } from 'hooks/useUpdateProject';
+import { useDeleteProject } from 'hooks/useDeleteProject';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { getGameById } from 'types/game';
 import { resizeToDataUrl } from 'utils/imageUtils';
@@ -54,6 +56,8 @@ export default function ProjectOwnerView({ initialProject, projectId }: ProjectO
     const { user } = useFirebase();
     const updateProjectMutation = useUpdateProject();
     const updateCardMutation = useUpdateCard();
+    const deleteProjectMutation = useDeleteProject();
+    const navigate = useNavigate();
     const { t } = useTranslation();
 
     const [viewMode, setViewMode] = useState<'editor' | 'list'>('list');
@@ -212,6 +216,11 @@ export default function ProjectOwnerView({ initialProject, projectId }: ProjectO
         persistProject(updatedProject);
     }, [project, persistProject]);
 
+    const handleDeleteProject = useCallback(async () => {
+        await deleteProjectMutation.mutateAsync(projectId);
+        navigate(`/game/${project.gameId}`);
+    }, [deleteProjectMutation, projectId, project.gameId, navigate]);
+
     const EditorComponent = currentCard.type
         ? getEditor(project.gameId, currentCard.type)
         : null;
@@ -288,10 +297,12 @@ export default function ProjectOwnerView({ initialProject, projectId }: ProjectO
             />
 
             <ProjectSettingsModal
+                isDeleting={deleteProjectMutation.isPending}
                 isOpen={showSettingsModal}
                 isSaving={isSaving}
                 key={showSettingsModal ? 'open' : 'closed'}
                 onClose={() => setShowSettingsModal(false)}
+                onDelete={handleDeleteProject}
                 onSave={handleSaveSettings}
                 project={project}
             />
