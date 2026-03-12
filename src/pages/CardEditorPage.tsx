@@ -1,4 +1,4 @@
-import { Box, Button, Spinner, Text } from '@radix-ui/themes';
+import { Box, Button, Flex, Spinner, Text } from '@radix-ui/themes';
 import ProjectOwnerView from 'components/editor/ProjectOwnerView';
 import ProjectViewerView from 'components/editor/ProjectViewerView';
 import AppLayout from 'components/ui/AppLayout';
@@ -11,17 +11,25 @@ export default function CardEditorPage() {
     const { projectId } = useParams<{ projectId: string }>();
     const { user } = useFirebase();
     const { data: project, isLoading } = useProject(projectId);
+    const { data: originalProject } = useProject(project?.remixedFrom);
     const { t } = useTranslation();
 
     return (
         <AppLayout>
-            <Box mb={'3'}>
+            <Flex align="center" justify="between" mb="3">
                 <Link style={{ textDecoration: 'none' }} to={`/game/${project?.gameId}`}>
-                    <Button color="blue" size="2" variant='ghost'>
+                    <Button color="blue" size="2" variant="ghost">
                         {t('editor.backToProjects')}
                     </Button>
                 </Link>
-            </Box>
+                {originalProject && (
+                    <Link style={{ textDecoration: 'none' }} to={`/project/${originalProject.id}`}>
+                        <Button color="gray" size="2" variant="ghost">
+                            {t('projects.remix.remixedFrom', { name: originalProject.name })}
+                        </Button>
+                    </Link>
+                )}
+            </Flex>
 
             {isLoading
                 ? (

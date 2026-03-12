@@ -45,6 +45,7 @@ export type Project = {
   id: string;
   isPublic: boolean;
   name: string;
+  remixedFrom?: string;
   updatedAt: Date;
   userId: string;
 };

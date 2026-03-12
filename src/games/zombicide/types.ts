@@ -64,6 +64,7 @@ export interface SurvivorCardData {
   imageScale?: number;
   imageScaleBack?: number;
   name: string;
+  showTagDescription?: boolean;
   tag: SurvivorTag;
 }
 

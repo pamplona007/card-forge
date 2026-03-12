@@ -5,8 +5,10 @@ import type { ZombicideCardData, ZombicideCardType } from 'games/zombicide/edito
 import { Badge, Box, Button, Flex, Grid, Heading, Text } from '@radix-ui/themes';
 import CardPreview from 'components/editor/CardPreview';
 import ExportOptionsModal from 'components/editor/ExportOptionsModal';
+import RemixModal from 'components/editor/RemixModal';
 import LikeButton from 'components/ui/LikeButton';
 import { generatePDFFromElements } from 'games/zombicide/utils/pdfGenerator';
+import { useFirebase } from 'hooks/useFirebase';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getGameById } from 'types/game';
@@ -25,12 +27,19 @@ const TYPE_BACKGROUNDS: Record<ZombicideCardType, { color: string; image?: strin
 
 export default function ProjectViewerView({ project }: ProjectViewerViewProps) {
     const { t } = useTranslation();
+    const { user } = useFirebase();
     const game = getGameById(project.gameId);
 
     const [exportError, setExportError] = useState<null | string>(null);
     const [isExporting, setIsExporting] = useState(false);
     const [showExportModal, setShowExportModal] = useState(false);
+    const [showRemixModal, setShowRemixModal] = useState(false);
     const [selectedCard, setSelectedCard] = useState<null | ZombicideCardData>(null);
+
+    const remixDefaultName = t('projects.remix.defaultName', {
+        name: project.name,
+        user: user?.displayName || user?.email,
+    });
 
     const handleExport = async (options?: ExportOptions) => {
         if (0 === project.cards.length) {
@@ -81,6 +90,14 @@ export default function ProjectViewerView({ project }: ProjectViewerViewProps) {
                     </Box>
                     <Flex align="center" gap="2" mt="2">
                         <LikeButton project={project} />
+                        {user && (
+                            <Button
+                                onClick={() => setShowRemixModal(true)}
+                                variant="soft"
+                            >
+                                {t('projects.button.remix')}
+                            </Button>
+                        )}
                         <Button
                             color="cyan"
                             disabled={isExporting || 0 === project.cards.length}
@@ -105,6 +122,16 @@ export default function ProjectViewerView({ project }: ProjectViewerViewProps) {
                 onClose={() => setShowExportModal(false)}
                 onExport={handleExport}
             />
+
+            {user && (
+                <RemixModal
+                    defaultName={remixDefaultName}
+                    isOpen={showRemixModal}
+                    key={showRemixModal ? 'open' : 'closed'}
+                    onClose={() => setShowRemixModal(false)}
+                    project={project}
+                />
+            )}
 
             {0 === project.cards.length
                 ? (

@@ -2,6 +2,7 @@ import CardCanvas, { type CardCanvasMouseHandler, type DrawParams } from 'compon
 import { hexToRgba, ZOMBICIDE_FONTS } from 'components/canvas/cardUtils';
 import { useImages } from 'hooks/useImages';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import {
     type CardProps,
@@ -234,8 +235,14 @@ function drawDescriptions(
     card: SurvivorCardData,
     width: number,
     height: number,
+    tagDescription?: { text: string; title: string },
 ) {
-    if (!card.descriptions || 0 === card.descriptions.length) {
+    const allDescriptions = [
+        ...(card.descriptions || []),
+        ...(tagDescription ? [tagDescription] : []),
+    ];
+
+    if (0 === allDescriptions.length) {
         return;
     }
 
@@ -262,7 +269,7 @@ function drawDescriptions(
     let currentY = descriptionBoxY;
     const descriptionLines: Array<{ text: string; type: 'body' | 'title'; x: number; y: number; }> = [];
 
-    for (const desc of card.descriptions) {
+    for (const desc of allDescriptions) {
         if (desc?.title) {
             ctx.font = `bold ${3 * scale}px 'Titling Gothic', sans-serif`;
             const distanceFromTop = currentY - descriptionBoxY;
@@ -322,6 +329,7 @@ function drawDescriptions(
 }
 
 const SurvivorCardBack: React.FC<SurvivorCardProps> = ({ bleed, card, exportMode = false, onChangeImagePosition }) => {
+    const { t } = useTranslation();
     const [dragging, setDragging] = useState(false);
     const [dragStart, setDragStart] = useState<null | { x: number; y: number }>(null);
 
@@ -420,8 +428,15 @@ const SurvivorCardBack: React.FC<SurvivorCardProps> = ({ bleed, card, exportMode
             }
         }
 
-        drawDescriptions(scale, ctx, card, canvasWidth, canvasHeight);
-    }, [loadedImages, images, card]);
+        const tagDescription = (card.showTagDescription && card.tag)
+            ? {
+                text: t(`zombicide.tags.${card.tag}.description`),
+                title: t(`zombicide.tags.${card.tag}.title`),
+            }
+            : undefined;
+
+        drawDescriptions(scale, ctx, card, canvasWidth, canvasHeight, tagDescription);
+    }, [loadedImages, images, card, t]);
 
     const handleMouseDown = useCallback<CardCanvasMouseHandler>((e, scale) => {
         if (!images.character) {

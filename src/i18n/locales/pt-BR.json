@@ -79,6 +79,7 @@
       "name": "Nome",
       "health": "Pontos de Vida",
       "tags": "Tags",
+      "showTagDescription": "Exibir descrição da tag no verso da carta",
       "blueAbility": "Habilidade Azul (Início do Jogo)",
       "yellowAbility": "Habilidade Amarela (Início do Jogo)",
       "orangeAbilities": "Habilidades Laranja (Subida de Nível)",
@@ -189,7 +190,15 @@
       "saveSettings": "Salvar Configurações",
       "settings": "Configurações",
       "deleteProject": "Excluir Projeto",
-      "confirmDelete": "Sim, Excluir Projeto"
+      "confirmDelete": "Sim, Excluir Projeto",
+      "remix": "Remixar"
+    },
+    "remix": {
+      "title": "Remixar Projeto",
+      "description": "Crie sua própria cópia deste projeto para editar livremente.",
+      "createButton": "Criar Remix",
+      "defaultName": "{{name}}, remix de {{user}}",
+      "remixedFrom": "Remixado de {{name}}"
     },
     "dialog": {
       "createTitle": "Criar Novo Projeto",
@@ -367,6 +376,206 @@
       "yellow": "Amarelo",
       "orange": "Laranja",
       "redHard": "Vermelho (Difícil)"
+    },
+    "abilities": {
+      "plusOneAction": {
+        "name": "+1 Ação",
+        "description": "O Sobrevivente pode realizar 1 Ação adicional durante sua ativação."
+      },
+      "plusOneFreeMove": {
+        "name": "+1 Movimento Grátis",
+        "description": "Uma vez por ativação, o Sobrevivente pode realizar 1 Ação de Movimento gratuitamente (não custa uma Ação)."
+      },
+      "plusOneFreeSearch": {
+        "name": "+1 Busca Grátis",
+        "description": "Uma vez por ativação, o Sobrevivente pode realizar 1 Ação de Busca gratuitamente (não custa uma Ação)."
+      },
+      "plusOneDieMelee": {
+        "name": "+1 Dado Corpo a Corpo",
+        "description": "O Sobrevivente rola 1 dado adicional em todos os ataques Corpo a Corpo."
+      },
+      "plusOneDieRanged": {
+        "name": "+1 Dado à Distância",
+        "description": "O Sobrevivente rola 1 dado adicional em todos os ataques à Distância."
+      },
+      "plusOneDieResultMelee": {
+        "name": "+1 no resultado: Corpo a Corpo",
+        "description": "Adicione +1 a cada resultado de dado ao fazer um ataque Corpo a Corpo (resultado máximo de 6)."
+      },
+      "plusOneDieResultRanged": {
+        "name": "+1 no resultado: à Distância",
+        "description": "Adicione +1 a cada resultado de dado ao fazer um ataque à Distância (resultado máximo de 6)."
+      },
+      "athletic": {
+        "name": "Atlético",
+        "description": "O valor de Movimento do Sobrevivente é aumentado em 1."
+      },
+      "bloodlustMelee": {
+        "name": "Sede de Sangue: Corpo a Corpo",
+        "description": "Cada vez que o Sobrevivente mata um Zumbi com um ataque Corpo a Corpo, ele pode imediatamente fazer 1 ataque Corpo a Corpo gratuito."
+      },
+      "bornLeader": {
+        "name": "Líder Nato",
+        "description": "Uma vez por ativação, o Sobrevivente pode dar 1 Ação a outro Sobrevivente na mesma Zona."
+      },
+      "bulletproof": {
+        "name": "À Prova de Balas",
+        "description": "O Sobrevivente ignora 1 Ferida de ataques à Distância cada vez que é alvo."
+      },
+      "combatTraining": {
+        "name": "Treinamento de Combate",
+        "description": "O Sobrevivente rola 2 dados adicionais em todos os ataques de Combate."
+      },
+      "crossbowExpert": {
+        "name": "Especialista em Besta",
+        "description": "Armas de besta empunhadas por este Sobrevivente não geram Ruído."
+      },
+      "duckAndCover": {
+        "name": "Agachar e se Proteger",
+        "description": "O Sobrevivente pode gastar 1 Ação para ignorar todas as Feridas de 1 ataque até sua próxima ativação."
+      },
+      "eagleEyes": {
+        "name": "Olho de Águia",
+        "description": "Todas as armas à Distância empunhadas pelo Sobrevivente ganham +1 em seu Alcance."
+      },
+      "fast": {
+        "name": "Rápido",
+        "description": "O valor de Movimento do Sobrevivente é aumentado em 1."
+      },
+      "firefighter": {
+        "name": "Bombeiro",
+        "description": "O Sobrevivente é imune a dano de Fogo."
+      },
+      "fortunate": {
+        "name": "Sortudo",
+        "description": "Uma vez por rodada, o Sobrevivente pode lançar novamente 1 dado de sua escolha."
+      },
+      "freeSlotAny": {
+        "name": "Slot Livre: Qualquer",
+        "description": "O Sobrevivente ganha 1 slot de equipamento adicional que pode guardar qualquer tipo de equipamento."
+      },
+      "freeSlotHand": {
+        "name": "Slot Livre: Mão",
+        "description": "O Sobrevivente ganha 1 slot de equipamento de Mão adicional."
+      },
+      "freeSlotShoulder": {
+        "name": "Slot Livre: Ombro",
+        "description": "O Sobrevivente ganha 1 slot de equipamento de Ombro adicional."
+      },
+      "gunslinger": {
+        "name": "Pistoleiro",
+        "description": "O Sobrevivente pode fazer ataques à Distância como parte de uma Ação de Movimento sem nenhuma penalidade."
+      },
+      "hoarder": {
+        "name": "Acumulador",
+        "description": "O Sobrevivente pode carregar 1 item adicional em seus slots de reserva."
+      },
+      "ironFist": {
+        "name": "Punho de Ferro",
+        "description": "Os ataques Desarmados do Sobrevivente rolam 1 dado adicional e acertam com resultado 3+."
+      },
+      "jumpShot": {
+        "name": "Tiro em Salto",
+        "description": "O Sobrevivente pode fazer ataques à Distância durante uma Ação de Movimento sem gastar uma Ação adicional."
+      },
+      "loud": {
+        "name": "Barulhento",
+        "description": "Todos os Zumbis na Zona do Sobrevivente são automaticamente ativados e atacam o Sobrevivente."
+      },
+      "makeshiftWeapon": {
+        "name": "Arma Improvisada",
+        "description": "O Sobrevivente pode usar Armas Improvisadas sem nenhuma penalidade."
+      },
+      "moveAndShoot": {
+        "name": "Mover e Atirar",
+        "description": "O Sobrevivente pode se mover até seu valor total de Movimento e então fazer 1 ataque à Distância como uma única Ação."
+      },
+      "ninja": {
+        "name": "Ninja",
+        "description": "As ações do Sobrevivente não geram nenhum Ruído."
+      },
+      "painkiller": {
+        "name": "Analgésico",
+        "description": "O Sobrevivente ignora a primeira Ferida que receber em cada rodada."
+      },
+      "rebelYell": {
+        "name": "Grito de Rebeldia",
+        "description": "Quando o Sobrevivente sofre uma Ferida, cada Sobrevivente na mesma Zona ganha +1 dado em todos os ataques até o fim da rodada."
+      },
+      "regeneration": {
+        "name": "Regeneração",
+        "description": "O Sobrevivente cura 1 Ferida no final de cada rodada."
+      },
+      "scavenger": {
+        "name": "Catador",
+        "description": "O Sobrevivente encontra 1 item adicional sempre que realizar uma Ação de Busca."
+      },
+      "slippery": {
+        "name": "Escorregadio",
+        "description": "O Sobrevivente pode se mover por Zonas ocupadas por Zumbis sem parar."
+      },
+      "sniper": {
+        "name": "Franco-Atirador",
+        "description": "Os ataques à Distância do Sobrevivente ignoram Cobertura e podem atacar Zonas até 1 Zona além do Alcance normal da arma."
+      },
+      "sprint": {
+        "name": "Arrancada",
+        "description": "O Sobrevivente pode se mover até 3 Zonas ao gastar 1 Ação de Movimento, independentemente de seu valor normal de Movimento."
+      },
+      "steadyHand": {
+        "name": "Mão Firme",
+        "description": "O Sobrevivente pode lançar novamente até 1 dado que errou por ataque à Distância."
+      },
+      "stoic": {
+        "name": "Estóico",
+        "description": "O Sobrevivente é imune ao Pânico."
+      },
+      "taunt": {
+        "name": "Provocação",
+        "description": "O Sobrevivente pode gastar 1 Ação para forçar todos os Zumbis em sua Zona a atacar apenas eles até o final da rodada."
+      },
+      "tough": {
+        "name": "Resistente",
+        "description": "A capacidade máxima de Feridas do Sobrevivente é aumentada em 1."
+      },
+      "train": {
+        "name": "Treinar",
+        "description": "O Sobrevivente pode gastar 1 Ação para permitir que outro Sobrevivente na mesma Zona use 1 Habilidade."
+      },
+      "trickShot": {
+        "name": "Tiro Certeiro",
+        "description": "Os ataques à Distância do Sobrevivente podem acertar alvos em Zonas adjacentes sem a penalidade normal de alcance."
+      },
+      "zombieLink": {
+        "name": "Elo Zumbi",
+        "description": "Zumbis ignoram o Sobrevivente a menos que o Sobrevivente os ataque ou entre em sua Zona."
+      }
+    },
+    "tags": {
+      "holiday": {
+        "title": "Sobrevivente de Feriado",
+        "description": "Sobreviventes de Feriado trazem espírito festivo aos momentos mais sombrios. Armados com equipamentos sazonais e tradições de feriado transformadas em armas, eles celebram a sobrevivência com um sorriso."
+      },
+      "kids": {
+        "title": "Sobrevivente Criança",
+        "description": "Sobreviventes Crianças são jovens heróis que enganam os zumbis com raciocínio rápido e tamanho pequeno. Subestimados por muitos, eles surpreendem a todos com sua resiliência e criatividade."
+      },
+      "park": {
+        "title": "Sobrevivente do Parque",
+        "description": "Sobreviventes do Parque foram apanhados pelo surto enquanto curtiam o ar livre. Seu conhecimento de espaços abertos e preparo físico lhes dá vantagem em terrenos perigosos."
+      },
+      "police": {
+        "title": "Sobrevivente Policial",
+        "description": "Sobreviventes Policiais aplicam seu treinamento de combate e experiência em gestão de crises ao apocalipse zumbi. São lutadores disciplinados que protegem o grupo."
+      },
+      "supes": {
+        "title": "Sobrevivente Super-Herói",
+        "description": "Sobreviventes Super-Heróis possuem poderes extraordinários que os distinguem das pessoas comuns. Suas habilidades vão além dos limites humanos normais, tornando-os inestimáveis na luta contra os mortos-vivos."
+      },
+      "zombvivor": {
+        "title": "Zombivor",
+        "description": "Zombivors são sobreviventes que foram infectados mas não se transformaram completamente. Eles ganham resiliência de morto-vivo — capazes de absorver mais dano — enquanto lutam contra seus instintos mais sombrios para permanecer do lado dos vivos."
+      }
     }
   }
 }

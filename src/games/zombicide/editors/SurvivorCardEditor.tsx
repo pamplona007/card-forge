@@ -1,5 +1,6 @@
-import { Box, Button, Card, Flex, Grid, Slider, Text, TextArea, TextField } from '@radix-ui/themes';
-import React, { useState } from 'react';
+import { Box, Button, Card, Checkbox, Flex, Grid, Slider, Text, TextArea, TextField } from '@radix-ui/themes';
+import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
+import ReactDOM from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { resizeToDataUrl } from 'utils/imageUtils';
 
@@ -12,15 +13,208 @@ import type {
 import CardSideSwitch, { type CardSide } from '../../../components/ui/CardSideSwitch';
 import SurvivorCardBack from '../cards/SurvivorCardBack';
 import SurvivorCardFront from '../cards/SurvivorCardFront';
+import { SURVIVOR_ABILITY_DATABASE } from '../data/survivorAbilities';
 import {
     ABILITY_COLORS,
     SURVIVOR_TAGS,
 } from '../types';
 
+interface AbilityAutocompleteProps {
+    onChange: (value: string) => void;
+    onSelect?: (name: string, description?: string) => void;
+    placeholder?: string;
+    style?: React.CSSProperties;
+    value: string;
+}
+
 interface SurvivorCardEditorProps {
     card: SurvivorCardData;
     onChange: (card: SurvivorCardData) => void;
 }
+
+const AbilityAutocomplete: React.FC<AbilityAutocompleteProps> = ({
+    onChange,
+    onSelect,
+    placeholder,
+    style,
+    value,
+}) => {
+    const { t } = useTranslation();
+    const listboxId = useId();
+    const [open, setOpen] = useState(false);
+    const [activeIndex, setActiveIndex] = useState(-1);
+    const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const listboxRef = useRef<HTMLDivElement>(null);
+
+    const suggestions = useMemo(() => {
+        if (!value.trim()) {
+            return [];
+        }
+        const q = value.toLowerCase();
+        return SURVIVOR_ABILITY_DATABASE
+            .filter((a) => t(a.nameKey).toLowerCase()
+                .includes(q))
+            .slice(0, 8);
+    }, [value, t]);
+
+    const updateAnchorRect = useCallback(() => {
+        if (containerRef.current) {
+            setAnchorRect(containerRef.current.getBoundingClientRect());
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!open) {
+            return;
+        }
+        updateAnchorRect();
+        window.addEventListener('scroll', updateAnchorRect, true);
+        window.addEventListener('resize', updateAnchorRect);
+        return () => {
+            window.removeEventListener('scroll', updateAnchorRect, true);
+            window.removeEventListener('resize', updateAnchorRect);
+        };
+    }, [open, updateAnchorRect]);
+
+    useEffect(() => {
+        const handler = (e: MouseEvent) => {
+            if (
+                containerRef.current?.contains(e.target as Node) ||
+                listboxRef.current?.contains(e.target as Node)
+            ) {
+                return;
+            }
+            setOpen(false);
+        };
+        document.addEventListener('mousedown', handler);
+        return () => document.removeEventListener('mousedown', handler);
+    }, []);
+
+    const handleSelect = (nameKey: string, descriptionKey?: string) => {
+        const name = t(nameKey);
+        const description = descriptionKey ? t(descriptionKey) : undefined;
+        onSelect?.(name, description);
+        onChange(name);
+        setOpen(false);
+        setActiveIndex(-1);
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (!open) {
+            if ('ArrowDown' === e.key && 0 < suggestions.length) {
+                setOpen(true);
+                setActiveIndex(0);
+                e.preventDefault();
+            }
+            return;
+        }
+        switch (e.key) {
+            case 'ArrowDown':
+                e.preventDefault();
+                setActiveIndex((i) => Math.min(i + 1, suggestions.length - 1));
+                break;
+            case 'ArrowUp':
+                e.preventDefault();
+                setActiveIndex((i) => Math.max(i - 1, -1));
+                break;
+            case 'Enter':
+                if (0 <= activeIndex) {
+                    e.preventDefault();
+                    handleSelect(suggestions[activeIndex].nameKey, suggestions[activeIndex].descriptionKey);
+                }
+                break;
+            case 'Escape':
+                setOpen(false);
+                setActiveIndex(-1);
+                break;
+        }
+    };
+
+    const dropdown = open && 0 < suggestions.length && anchorRect
+        ? ReactDOM.createPortal(
+            <Box
+                aria-label={placeholder}
+                id={listboxId}
+                ref={listboxRef}
+                role="listbox"
+                style={{
+                    background: 'var(--gray-1)',
+                    border: '1px solid var(--gray-6)',
+                    borderRadius: 'var(--radius-2)',
+                    boxShadow: 'var(--shadow-4)',
+                    left: anchorRect.left,
+                    maxHeight: '220px',
+                    overflowY: 'auto',
+                    position: 'fixed',
+                    top: anchorRect.bottom + 4,
+                    width: anchorRect.width,
+                    zIndex: 9999,
+                }}
+            >
+                {suggestions.map((ability, index) => (
+                    <Box
+                        aria-selected={index === activeIndex}
+                        id={`${listboxId}-option-${index}`}
+                        key={ability.nameKey}
+                        onMouseDown={(e) => {
+                            e.preventDefault();
+                            handleSelect(ability.nameKey, ability.descriptionKey);
+                        }}
+                        onMouseEnter={() => setActiveIndex(index)}
+                        onMouseLeave={() => setActiveIndex(-1)}
+                        role="option"
+                        style={{
+                            background: index === activeIndex ? 'var(--gray-3)' : '',
+                            cursor: 'pointer',
+                            padding: '6px 10px',
+                        }}
+                    >
+                        <Text size="2">{t(ability.nameKey)}</Text>
+                        {ability.descriptionKey && (
+                            <Text
+                                as="p"
+                                size="1"
+                                style={{ color: 'var(--gray-10)', marginTop: '1px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                            >
+                                {t(ability.descriptionKey)}
+                            </Text>
+                        )}
+                    </Box>
+                ))}
+            </Box>,
+            document.body,
+        )
+        : null;
+
+    return (
+        <div ref={containerRef}>
+            <TextField.Root
+                aria-activedescendant={0 <= activeIndex ? `${listboxId}-option-${activeIndex}` : undefined}
+                aria-autocomplete="list"
+                aria-controls={open ? listboxId : undefined}
+                aria-expanded={open}
+                aria-haspopup="listbox"
+                onChange={(e) => {
+                    onChange(e.target.value);
+                    setActiveIndex(-1);
+                    setOpen(true);
+                }}
+                onFocus={() => {
+                    if (value.trim()) {
+                        setOpen(true);
+                    }
+                }}
+                onKeyDown={handleKeyDown}
+                placeholder={placeholder}
+                role="combobox"
+                style={style}
+                value={value}
+            />
+            {dropdown}
+        </div>
+    );
+};
 
 const ImageUploader: React.FC<{
     label?: string;
@@ -105,6 +299,16 @@ const SurvivorFrontEditor: React.FC<{
     const toggleTag = (tag: SurvivorTag) => {
         onChange({ ...card, tag });
     };
+
+    const abilitySlots: Array<{ color: string; slot: keyof SurvivorCardData['abilities'] }> = [
+        { color: ABILITY_COLORS.blue, slot: 'blue' },
+        { color: ABILITY_COLORS.yellow, slot: 'yellow' },
+        { color: ABILITY_COLORS.orange, slot: 'orange1' },
+        { color: ABILITY_COLORS.orange, slot: 'orange2' },
+        { color: ABILITY_COLORS.red, slot: 'red1' },
+        { color: ABILITY_COLORS.red, slot: 'red2' },
+        { color: ABILITY_COLORS.red, slot: 'red3' },
+    ];
 
     return (
         <Flex direction="column" gap="4">
@@ -237,75 +441,23 @@ const SurvivorFrontEditor: React.FC<{
                 </Box>
             </Box>
 
-            <TextField.Root
-                onChange={(e) => {
-                    const ability = card.abilities.blue!;
-                    updateAbility('blue', { ...ability, name: e.target.value });
-                }}
-                placeholder={t('editor.placeholder.abilityName')}
-                style={{ borderLeft: `3px solid ${ABILITY_COLORS.blue}` }}
-                value={card.abilities.blue?.name}
-            />
-
-            <TextField.Root
-                onChange={(e) => {
-                    const ability = card.abilities.yellow!;
-                    updateAbility('yellow', { ...ability, name: e.target.value });
-                }}
-                placeholder={t('editor.placeholder.abilityName')}
-                style={{ borderLeft: `3px solid ${ABILITY_COLORS.yellow}` }}
-                value={card.abilities.yellow?.name}
-            />
-
-            <TextField.Root
-                onChange={(e) => {
-                    const ability = card.abilities.orange1!;
-                    updateAbility('orange1', { ...ability, name: e.target.value });
-                }}
-                placeholder={t('editor.placeholder.abilityName')}
-                style={{ borderLeft: `3px solid ${ABILITY_COLORS.orange}` }}
-                value={card.abilities.orange1?.name}
-            />
-
-            <TextField.Root
-                onChange={(e) => {
-                    const ability = card.abilities.orange2!;
-                    updateAbility('orange2', { ...ability, name: e.target.value });
-                }}
-                placeholder={t('editor.placeholder.abilityName')}
-                style={{ borderLeft: `3px solid ${ABILITY_COLORS.orange}` }}
-                value={card.abilities.orange2?.name}
-            />
-
-            <TextField.Root
-                onChange={(e) => {
-                    const ability = card.abilities.red1!;
-                    updateAbility('red1', { ...ability, name: e.target.value });
-                }}
-                placeholder={t('editor.placeholder.abilityName')}
-                style={{ borderLeft: `3px solid ${ABILITY_COLORS.red}` }}
-                value={card.abilities.red1?.name}
-            />
-
-            <TextField.Root
-                onChange={(e) => {
-                    const ability = card.abilities.red2!;
-                    updateAbility('red2', { ...ability, name: e.target.value });
-                }}
-                placeholder={t('editor.placeholder.abilityName')}
-                style={{ borderLeft: `3px solid ${ABILITY_COLORS.red}` }}
-                value={card.abilities.red2?.name}
-            />
-
-            <TextField.Root
-                onChange={(e) => {
-                    const ability = card.abilities.red3!;
-                    updateAbility('red3', { ...ability, name: e.target.value });
-                }}
-                placeholder={t('editor.placeholder.abilityName')}
-                style={{ borderLeft: `3px solid ${ABILITY_COLORS.red}` }}
-                value={card.abilities.red3?.name}
-            />
+            <Box>
+                <Text as="p" mb="2" size="2" style={{ color: 'var(--gray-11)' }}>{t('editor.label.abilities')}</Text>
+                <Flex direction="column" gap="2">
+                    {abilitySlots.map(({ color, slot }) => (
+                        <AbilityAutocomplete
+                            key={slot}
+                            onChange={(name) => {
+                                const ability = card.abilities[slot]!;
+                                updateAbility(slot, { ...ability, name });
+                            }}
+                            placeholder={t('editor.placeholder.abilityName')}
+                            style={{ borderLeft: `3px solid ${color}` }}
+                            value={card.abilities[slot]?.name ?? ''}
+                        />
+                    ))}
+                </Flex>
+            </Box>
         </Flex>
     );
 };
@@ -381,11 +533,20 @@ const SurvivorBackEditor: React.FC<{
                         {t('editor.label.description')} {index + 1}
                     </Text>
                     <Flex direction="column" gap="2">
-                        <TextField.Root
-                            onChange={(e) => {
+                        <AbilityAutocomplete
+                            onChange={(title) => {
                                 const description = card.descriptions?.[index] || { text: '', title: '' };
                                 const descriptions = [...(card.descriptions || [])];
-                                descriptions[index] = { ...description, title: e.target.value };
+                                descriptions[index] = { ...description, title };
+                                onChange({ ...card, descriptions });
+                            }}
+                            onSelect={(name, description) => {
+                                const descriptions = [...(card.descriptions || [])];
+                                const existing = descriptions[index] || { text: '', title: '' };
+                                descriptions[index] = {
+                                    text: description ?? existing.text,
+                                    title: name,
+                                };
                                 onChange({ ...card, descriptions });
                             }}
                             placeholder={t('editor.placeholder.descriptionHeading')}
@@ -405,6 +566,41 @@ const SurvivorBackEditor: React.FC<{
                     </Flex>
                 </Box>
             ))}
+
+            {card.tag && (
+                <Box
+                    style={{
+                        background: 'var(--gray-2)',
+                        borderRadius: 'var(--radius-2)',
+                        padding: 'var(--space-3)',
+                    }}
+                >
+                    <Flex align="center" gap="2">
+                        <Checkbox
+                            checked={card.showTagDescription ?? false}
+                            id="show-tag-description"
+                            onCheckedChange={(checked) => {
+                                onChange({ ...card, showTagDescription: Boolean(checked) });
+                            }}
+                        />
+                        <Text
+                            as="label"
+                            htmlFor="show-tag-description"
+                            size="2"
+                            style={{ cursor: 'pointer', userSelect: 'none' }}
+                        >
+                            {t('editor.label.showTagDescription')}
+                        </Text>
+                    </Flex>
+                    {card.showTagDescription && (
+                        <Box mt="2">
+                            <Text size="1" style={{ color: 'var(--gray-10)' }}>
+                                {t(`zombicide.tags.${card.tag}.title`)} — {t(`zombicide.tags.${card.tag}.description`)}
+                            </Text>
+                        </Box>
+                    )}
+                </Box>
+            )}
         </Flex>
     );
 };

@@ -79,6 +79,7 @@
       "name": "Name",
       "health": "Health",
       "tags": "Tags",
+      "showTagDescription": "Show tag description on card back",
       "side": "Side",
       "blueAbility": "Blue Ability (Start of Game)",
       "yellowAbility": "Yellow Ability (Start of Game)",
@@ -190,7 +191,15 @@
       "saveSettings": "Save Settings",
       "settings": "Settings",
       "deleteProject": "Delete Project",
-      "confirmDelete": "Yes, Delete Project"
+      "confirmDelete": "Yes, Delete Project",
+      "remix": "Remix"
+    },
+    "remix": {
+      "title": "Remix Project",
+      "description": "Create your own copy of this project to edit freely.",
+      "createButton": "Create Remix",
+      "defaultName": "{{name}}, {{user}}'s remix",
+      "remixedFrom": "Remixed from {{name}}"
     },
     "dialog": {
       "createTitle": "Create New Project",
@@ -368,6 +377,206 @@
       "yellow": "Yellow",
       "orange": "Orange",
       "redHard": "Red (Hard)"
+    },
+    "abilities": {
+      "plusOneAction": {
+        "name": "+1 Action",
+        "description": "The Survivor may perform 1 additional Action during their activation."
+      },
+      "plusOneFreeMove": {
+        "name": "+1 Free Move",
+        "description": "Once per activation, the Survivor may perform 1 Move Action for free (it does not cost an Action)."
+      },
+      "plusOneFreeSearch": {
+        "name": "+1 Free Search",
+        "description": "Once per activation, the Survivor may perform 1 Search Action for free (it does not cost an Action)."
+      },
+      "plusOneDieMelee": {
+        "name": "+1 Die Melee",
+        "description": "The Survivor rolls 1 additional die on all Melee attacks."
+      },
+      "plusOneDieRanged": {
+        "name": "+1 Die Ranged",
+        "description": "The Survivor rolls 1 additional die on all Ranged attacks."
+      },
+      "plusOneDieResultMelee": {
+        "name": "+1 to die result: Melee",
+        "description": "Add +1 to each die result when making a Melee attack (maximum result of 6)."
+      },
+      "plusOneDieResultRanged": {
+        "name": "+1 to die result: Ranged",
+        "description": "Add +1 to each die result when making a Ranged attack (maximum result of 6)."
+      },
+      "athletic": {
+        "name": "Athletic",
+        "description": "The Survivor's Move value is increased by 1."
+      },
+      "bloodlustMelee": {
+        "name": "Bloodlust: Melee",
+        "description": "Each time the Survivor kills a Zombie with a Melee attack, they may immediately make 1 free Melee attack."
+      },
+      "bornLeader": {
+        "name": "Born Leader",
+        "description": "Once per activation, the Survivor may give 1 Action to another Survivor in the same Zone."
+      },
+      "bulletproof": {
+        "name": "Bulletproof",
+        "description": "The Survivor ignores 1 Wound from Ranged attacks each time they are targeted."
+      },
+      "combatTraining": {
+        "name": "Combat Training",
+        "description": "The Survivor rolls 2 additional dice on all Combat attacks."
+      },
+      "crossbowExpert": {
+        "name": "Crossbow Expert",
+        "description": "Crossbow weapons wielded by this Survivor do not generate Noise."
+      },
+      "duckAndCover": {
+        "name": "Duck and Cover",
+        "description": "The Survivor may spend 1 Action to ignore all Wounds from 1 attack until their next activation."
+      },
+      "eagleEyes": {
+        "name": "Eagle Eyes",
+        "description": "All Ranged weapons wielded by the Survivor gain +1 to their Range."
+      },
+      "fast": {
+        "name": "Fast",
+        "description": "The Survivor's Move value is increased by 1."
+      },
+      "firefighter": {
+        "name": "Firefighter",
+        "description": "The Survivor is immune to Fire damage."
+      },
+      "fortunate": {
+        "name": "Fortunate",
+        "description": "Once per round, the Survivor may reroll 1 die of their choice."
+      },
+      "freeSlotAny": {
+        "name": "Free Slot: Any",
+        "description": "The Survivor gains 1 additional equipment slot that can hold any type of equipment."
+      },
+      "freeSlotHand": {
+        "name": "Free Slot: Hand",
+        "description": "The Survivor gains 1 additional Hand equipment slot."
+      },
+      "freeSlotShoulder": {
+        "name": "Free Slot: Shoulder",
+        "description": "The Survivor gains 1 additional Shoulder equipment slot."
+      },
+      "gunslinger": {
+        "name": "Gunslinger",
+        "description": "The Survivor may make Ranged attacks as part of a Move Action without any penalty."
+      },
+      "hoarder": {
+        "name": "Hoarder",
+        "description": "The Survivor may carry 1 additional item in their reserve slots."
+      },
+      "ironFist": {
+        "name": "Iron Fist",
+        "description": "The Survivor's Unarmed attacks roll 1 additional die and hit on a result of 3+."
+      },
+      "jumpShot": {
+        "name": "Jump Shot",
+        "description": "The Survivor may make Ranged attacks during a Move Action without spending an additional Action."
+      },
+      "loud": {
+        "name": "Loud",
+        "description": "All Zombies in the Survivor's Zone are automatically activated and target the Survivor."
+      },
+      "makeshiftWeapon": {
+        "name": "Makeshift Weapon",
+        "description": "The Survivor may use Improvised Weapons without any penalty."
+      },
+      "moveAndShoot": {
+        "name": "Move and Shoot",
+        "description": "The Survivor may move up to their full Move value and then make 1 Ranged attack as a single Action."
+      },
+      "ninja": {
+        "name": "Ninja",
+        "description": "The Survivor's actions do not generate any Noise."
+      },
+      "painkiller": {
+        "name": "Painkiller",
+        "description": "The Survivor ignores the first Wound they receive each round."
+      },
+      "rebelYell": {
+        "name": "Rebel Yell",
+        "description": "When the Survivor takes a Wound, each Survivor in the same Zone gains +1 die on all attacks until the end of the round."
+      },
+      "regeneration": {
+        "name": "Regeneration",
+        "description": "The Survivor heals 1 Wound at the end of each round."
+      },
+      "scavenger": {
+        "name": "Scavenger",
+        "description": "The Survivor finds 1 additional item whenever they perform a Search Action."
+      },
+      "slippery": {
+        "name": "Slippery",
+        "description": "The Survivor may move through Zombie-occupied Zones without stopping."
+      },
+      "sniper": {
+        "name": "Sniper",
+        "description": "The Survivor's Ranged attacks ignore Cover and can target Zones up to 1 Zone further than the weapon's normal Range."
+      },
+      "sprint": {
+        "name": "Sprint",
+        "description": "The Survivor may move up to 3 Zones when spending 1 Move Action, regardless of their normal Move value."
+      },
+      "steadyHand": {
+        "name": "Steady Hand",
+        "description": "The Survivor may reroll up to 1 missed die per Ranged attack."
+      },
+      "stoic": {
+        "name": "Stoic",
+        "description": "The Survivor is immune to Panic."
+      },
+      "taunt": {
+        "name": "Taunt",
+        "description": "The Survivor may spend 1 Action to force all Zombies in their Zone to target only them until the end of the round."
+      },
+      "tough": {
+        "name": "Tough",
+        "description": "The Survivor's maximum Wound capacity is increased by 1."
+      },
+      "train": {
+        "name": "Train",
+        "description": "The Survivor may spend 1 Action to allow another Survivor in the same Zone to use 1 Skill."
+      },
+      "trickShot": {
+        "name": "Trick Shot",
+        "description": "The Survivor's Ranged attacks can hit targets in adjacent Zones without the normal range penalty."
+      },
+      "zombieLink": {
+        "name": "Zombie Link",
+        "description": "Zombies ignore the Survivor unless the Survivor attacks them or enters their Zone."
+      }
+    },
+    "tags": {
+      "holiday": {
+        "title": "Holiday Survivor",
+        "description": "Holiday Survivors bring festive spirit to the darkest times. Armed with seasonal gear and holiday traditions turned weapons, they celebrate survival with a smile."
+      },
+      "kids": {
+        "title": "Kid Survivor",
+        "description": "Kid Survivors are young heroes who outwit zombies with quick thinking and small size. Underestimated by many, they surprise everyone with their resilience and resourcefulness."
+      },
+      "park": {
+        "title": "Park Survivor",
+        "description": "Park Survivors were caught in the outbreak while enjoying the outdoors. Their knowledge of open spaces and physical fitness gives them an edge in navigating dangerous terrain."
+      },
+      "police": {
+        "title": "Police Survivor",
+        "description": "Police Survivors apply their combat training and crisis management experience to the zombie apocalypse. They are disciplined fighters who protect the group."
+      },
+      "supes": {
+        "title": "Super Survivor",
+        "description": "Super Survivors possess extraordinary powers that set them apart from ordinary people. Their abilities go beyond normal human limitations, making them invaluable in the fight against the undead."
+      },
+      "zombvivor": {
+        "title": "Zombivor",
+        "description": "Zombivors are survivors who have been infected but not fully turned. They gain undead resilience — able to absorb more damage — while battling their darker instincts to remain on the side of the living."
+      }
     }
   }
 }
