@@ -1,11 +1,11 @@
-import { Box, Spinner, Text } from '@radix-ui/themes';
+import { Box, Button, Spinner, Text } from '@radix-ui/themes';
 import ProjectOwnerView from 'components/editor/ProjectOwnerView';
 import ProjectViewerView from 'components/editor/ProjectViewerView';
 import AppLayout from 'components/ui/AppLayout';
 import { useFirebase } from 'hooks/useFirebase';
 import { useProject } from 'hooks/useProject';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 export default function CardEditorPage() {
     const { projectId } = useParams<{ projectId: string }>();
@@ -15,6 +15,14 @@ export default function CardEditorPage() {
 
     return (
         <AppLayout>
+            <Box mb={'3'}>
+                <Link style={{ textDecoration: 'none' }} to={`/game/${project?.gameId}`}>
+                    <Button color="blue" size="2" variant='ghost'>
+                        {t('editor.backToProjects')}
+                    </Button>
+                </Link>
+            </Box>
+
             {isLoading
                 ? (
                     <Box py="9" style={{ textAlign: 'center' }}>

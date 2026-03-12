@@ -1,3 +1,5 @@
+import { POKER_CARD_DIMENSIONS, SURVIVOR_CARD_DIMENSIONS } from 'games/zombicide/types';
+
 /**
  * Card type dimensions in millimeters
  */
@@ -27,34 +29,29 @@ export interface Game {
   publisher: string;
 }
 
-const STANDARD_CARD_DIMENSIONS: CardDimensions = {
-    height: 88.9,
-    width: 63.5,
-};
-
 const zombicide2eCardTypes: CardType[] = [
     {
-        dimensions: STANDARD_CARD_DIMENSIONS,
+        dimensions: SURVIVOR_CARD_DIMENSIONS,
         id: 'survivor',
         name: 'Survivor',
     },
     {
-        dimensions: STANDARD_CARD_DIMENSIONS,
+        dimensions: POKER_CARD_DIMENSIONS,
         id: 'equipment',
         name: 'Equipment',
     },
     {
-        dimensions: STANDARD_CARD_DIMENSIONS,
+        dimensions: POKER_CARD_DIMENSIONS,
         id: 'pimp-weapon',
         name: 'Pimp Weapon',
     },
     {
-        dimensions: STANDARD_CARD_DIMENSIONS,
+        dimensions: POKER_CARD_DIMENSIONS,
         id: 'zombie-spawn',
         name: 'Zombie Spawn',
     },
     {
-        dimensions: STANDARD_CARD_DIMENSIONS,
+        dimensions: POKER_CARD_DIMENSIONS,
         id: 'abomination',
         name: 'Abomination',
     },

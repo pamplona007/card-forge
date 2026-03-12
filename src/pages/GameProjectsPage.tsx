@@ -190,7 +190,7 @@ export default function GameProjectsPage() {
                     }}
                 >
                     <Text size="3">
-                        <strong>Sign in</strong> {t('projects.prompt.signIn')}
+                        <strong>{t('auth.signIn')}</strong> {t('projects.prompt.signIn')}
                     </Text>
                 </Box>
             )}
@@ -210,7 +210,7 @@ export default function GameProjectsPage() {
                             <Heading mb="4" size="5">
                                 {t('projects.section.myProjects')}
                             </Heading>
-                            <Grid columns={{ initial: '1', lg: '4', md: '3', sm: '2' }} gap="4">
+                            <Grid columns={{ initial: '2', lg: '4', md: '3' }} gap="4">
                                 {userProjects.map((project) => (
                                     <ProjectCard
                                         isOwner={true}
@@ -293,9 +293,9 @@ const TYPE_BACKGROUNDS: Record<Project['gameId'], { color: string; image?: strin
 };
 
 function ProjectCard({ isOwner, onClick, project }: ProjectCardProps) {
-    const { t } = useTranslation();
+    const { i18n, t } = useTranslation();
     const formatDate = (date: Date) => {
-        return new Date(date).toLocaleDateString('en-US', {
+        return new Date(date).toLocaleDateString(i18n.resolvedLanguage, {
             day: 'numeric',
             month: 'short',
             year: 'numeric',
@@ -306,7 +306,6 @@ function ProjectCard({ isOwner, onClick, project }: ProjectCardProps) {
         <Card
             className="project-card"
             onClick={onClick}
-            size="2"
             style={{
                 cursor: 'pointer',
                 transition: 'transform 0.2s ease, box-shadow 0.2s ease',

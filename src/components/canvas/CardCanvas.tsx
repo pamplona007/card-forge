@@ -1,7 +1,8 @@
 import { Box } from '@radix-ui/themes';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { CardDimensions } from 'types/card';
 
-import { CardDimensions, SURVIVOR_CARD_DIMENSIONS } from '../../games/zombicide/types';
+import { SURVIVOR_CARD_DIMENSIONS } from '../../games/zombicide/types';
 import useFonts from '../../hooks/useFonts';
 import { type FontSpec, hexToRgba } from './cardUtils';
 

@@ -1,66 +1,7 @@
-class CardDimensions {
-    bleed: number;
-    borderRadius: number;
-    canvasPaddingPercent: number;
-    height: number;
-    width: number;
-
-    get actualPadding() {
-        const widthPercent = 1 - (this.canvasPaddingPercent * 2);
-        const paddingValue = this.totalWidth * (1 - widthPercent) / 2;
-        return Math.round(paddingValue * 100) / 100;
-    }
-
-    get totalCanvasHeight() {
-        return this.totalHeight + (2 * this.actualPadding);
-    }
-
-    get totalCanvasWidth() {
-        return this.totalWidth + (2 * this.actualPadding);
-    }
-
-    get totalHeight() {
-        return this.height + (2 * this.bleed);
-    }
-
-    get totalWidth() {
-        return this.width + (2 * this.bleed);
-    }
-
-    constructor({
-        bleed,
-        borderRadius = 5,
-        canvasPaddingPercent = 0.05,
-        height,
-        width,
-    }: {
-        bleed: number;
-        borderRadius?: number;
-        canvasPaddingPercent?: number;
-        height: number;
-        width: number;
-    }) {
-        this.bleed = bleed;
-        this.height = height;
-        this.width = width;
-        this.canvasPaddingPercent = canvasPaddingPercent;
-        this.borderRadius = borderRadius;
-    }
-
-    pxCanvasDimensions(dpi = 300) {
-        const pxHeight = Math.round(this.totalCanvasHeight * dpi);
-        const pxWidth = Math.round(this.totalCanvasWidth * dpi);
-
-        return {
-            height: pxHeight,
-            width: pxWidth,
-        };
-    }
-}
-
+import { CardDimensions } from 'types/card';
 export { CardDimensions };
 
-export const CARD_DIMENSIONS = new CardDimensions({
+export const POKER_CARD_DIMENSIONS = new CardDimensions({
     bleed: 3,
     height: 88.9,
     width: 63.5,

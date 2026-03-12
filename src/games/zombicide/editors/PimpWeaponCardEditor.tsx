@@ -99,7 +99,7 @@ const PimpWeaponCardEditor: React.FC<PimpWeaponCardEditorProps> = ({
         const newAbility = {
             description: '',
             id: crypto.randomUUID(),
-            name: 'New Ability',
+            name: '',
         };
         onChange({ ...card, abilities: [...card.abilities, newAbility] });
     };
@@ -165,10 +165,10 @@ const PimpWeaponCardEditor: React.FC<PimpWeaponCardEditorProps> = ({
                         >
                             <Select.Trigger />
                             <Select.Content>
-                                <Select.Item value="melee">{t('weaponType.melee')}</Select.Item>
-                                <Select.Item value="ranged">{t('weaponType.ranged')}</Select.Item>
-                                <Select.Item value="explosive">{t('weaponType.explosive')}</Select.Item>
-                                <Select.Item value="fire">{t('weaponType.fire')}</Select.Item>
+                                <Select.Item value="melee">{t('zombicide.weaponType.melee')}</Select.Item>
+                                <Select.Item value="ranged">{t('zombicide.weaponType.ranged')}</Select.Item>
+                                <Select.Item value="explosive">{t('zombicide.weaponType.explosive')}</Select.Item>
+                                <Select.Item value="fire">{t('zombicide.weaponType.fire')}</Select.Item>
                             </Select.Content>
                         </Select.Root>
                     </Box>

@@ -19,10 +19,10 @@ import {
     createDefaultZombieSpawnCard,
 } from 'games/zombicide/types';
 import { generatePDFFromElements } from 'games/zombicide/utils/pdfGenerator';
+import { useDeleteProject } from 'hooks/useDeleteProject';
 import { useFirebase } from 'hooks/useFirebase';
 import { useUpdateCard } from 'hooks/useUpdateCard';
 import { useUpdateProject } from 'hooks/useUpdateProject';
-import { useDeleteProject } from 'hooks/useDeleteProject';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -263,7 +263,7 @@ export default function ProjectOwnerView({ initialProject, projectId }: ProjectO
                 <Flex align="center" justify="between">
                     <Box>
                         <Heading mb="1" size="6">
-                            {project.name || t('editor.label.untitledProject')}
+                            {project.name || t('editor.defaultProjectName')}
                         </Heading>
                         <Text color="gray" size="2">
                             {game ? game.name : t('zombicide.editor.subtitle')}

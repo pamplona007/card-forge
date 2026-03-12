@@ -11,27 +11,20 @@ interface CardTypeSelectionModalProps {
     onSelectCardType: (type: ZombicideCardType) => void;
 }
 
-const CARD_TYPE_INFO: Record<string, { description: string; dimensions: string }> = {
-    'abomination': {
-        description: 'Abomination cards are powerful boss zombies with high health and special abilities.',
-        dimensions: '63.5mm x 88.9mm',
-    },
-    'equipment': {
-        description: 'Equipment cards are items that survivors can equip and use.',
-        dimensions: '63.5mm x 88.9mm',
-    },
-    'pimp-weapon': {
-        description: 'Pimp Weapon cards are powerful unique weapons with special abilities.',
-        dimensions: '63.5mm x 88.9mm',
-    },
-    'survivor': {
-        description: 'Survivor cards represent player characters with abilities and equipment slots.',
-        dimensions: '63.5mm x 88.9mm',
-    },
-    'zombie-spawn': {
-        description: 'Zombie Spawn cards determine which zombies appear during the game.',
-        dimensions: '63.5mm x 88.9mm',
-    },
+const CARD_TYPE_DIMENSIONS: Record<string, string> = {
+    'abomination': '63.5mm x 88.9mm',
+    'equipment': '63.5mm x 88.9mm',
+    'pimp-weapon': '63.5mm x 88.9mm',
+    'survivor': '63.5mm x 88.9mm',
+    'zombie-spawn': '63.5mm x 88.9mm',
+};
+
+const CARD_TYPE_DESCRIPTION_KEYS: Record<string, string> = {
+    'abomination': 'zombicide.cardTypeDescription.abomination',
+    'equipment': 'zombicide.cardTypeDescription.equipment',
+    'pimp-weapon': 'zombicide.cardTypeDescription.pimpWeapon',
+    'survivor': 'zombicide.cardTypeDescription.survivor',
+    'zombie-spawn': 'zombicide.cardTypeDescription.zombieSpawn',
 };
 
 export default function CardTypeSelectionModal({
@@ -71,10 +64,8 @@ export default function CardTypeSelectionModal({
                 <Dialog.Title>{t('editor.selectCardType')}</Dialog.Title>
                 <Grid columns={{ initial: '1', sm: '2' }} gap="3" mt="4">
                     {cardTypes.map((type) => {
-                        const typeInfo = CARD_TYPE_INFO[type.id] || {
-                            description: '',
-                            dimensions: '63.5mm x 88.9mm',
-                        };
+                        const descriptionKey = CARD_TYPE_DESCRIPTION_KEYS[type.id];
+                        const dimensions = CARD_TYPE_DIMENSIONS[type.id] ?? '63.5mm x 88.9mm';
 
                         return (
                             <Box
@@ -94,10 +85,10 @@ export default function CardTypeSelectionModal({
                                     {getDisplayName(type.id)}
                                 </Text>
                                 <Text as="p" color="gray" mt="2" size="2">
-                                    {typeInfo.description}
+                                    {descriptionKey ? t(descriptionKey) : ''}
                                 </Text>
                                 <Text as="p" color="gray" mt="1" size="1">
-                                    {typeInfo.dimensions}
+                                    {dimensions}
                                 </Text>
                             </Box>
                         );

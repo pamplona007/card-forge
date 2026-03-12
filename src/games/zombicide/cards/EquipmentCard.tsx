@@ -6,7 +6,7 @@ import type {
 } from '../types';
 
 import {
-    CARD_DIMENSIONS,
+    POKER_CARD_DIMENSIONS,
     RARITY_COLORS,
 } from '../types';
 
@@ -19,7 +19,7 @@ const EquipmentCard: React.FC<EquipmentCardProps> = ({
     exportMode = false,
     showBleed = false,
 }) => {
-    const { bleed, height, totalHeight, totalWidth, width } = CARD_DIMENSIONS;
+    const { bleed, height, totalHeight, totalWidth, width } = POKER_CARD_DIMENSIONS;
     const cardWidth = showBleed ? totalWidth : width;
     const cardHeight = showBleed ? totalHeight : height;
     const scale = exportMode ? 1 : 1;

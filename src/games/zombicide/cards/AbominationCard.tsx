@@ -6,7 +6,7 @@ import type {
 } from '../types';
 
 import {
-    CARD_DIMENSIONS,
+    POKER_CARD_DIMENSIONS,
 } from '../types';
 
 interface AbominationCardProps extends CardProps {
@@ -18,7 +18,7 @@ const AbominationCard: React.FC<AbominationCardProps> = ({
     exportMode = false,
     showBleed = false,
 }) => {
-    const { bleed, height, totalHeight, totalWidth, width } = CARD_DIMENSIONS;
+    const { bleed, height, totalHeight, totalWidth, width } = POKER_CARD_DIMENSIONS;
     const cardWidth = showBleed ? totalWidth : width;
     const cardHeight = showBleed ? totalHeight : height;
     const scale = exportMode ? 1 : 1;

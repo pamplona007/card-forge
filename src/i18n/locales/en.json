@@ -42,6 +42,7 @@
     }
   },
   "editor": {
+    "backToProjects": "Back to List",
     "createNewCard": "Create New Card",
     "selectCardType": "Select Card Type",
     "noCards": "No cards yet. Click \"Create New Card\" to add your first card!",
@@ -107,6 +108,7 @@
       "weaponName": "Weapon name",
       "zombieName": "Zombie name",
       "abominationName": "Abomination name",
+      "survivorName": "Survivor name",
       "abilityName": "Ability name",
       "description": "Description"
     },
@@ -334,6 +336,9 @@
         "back": "Back",
         "backDescription": "Card Back Settings",
         "backInfo": "The back of the card displays abilities pulled from the front side. Only the card image can be customized here."
+      },
+      "side": {
+        "label": "Side"
       }
     },
     "card": {
@@ -344,6 +349,13 @@
         "zombieSpawn": "Zombie Spawn",
         "abomination": "Abomination"
       }
+    },
+    "cardTypeDescription": {
+      "survivor": "Survivor cards represent player characters with abilities and equipment slots.",
+      "equipment": "Equipment cards are items that survivors can equip and use.",
+      "pimpWeapon": "Pimp Weapon cards are powerful unique weapons with special abilities.",
+      "zombieSpawn": "Zombie Spawn cards determine which zombies appear during the game.",
+      "abomination": "Abomination cards are powerful boss zombies with high health and special abilities."
     },
     "weaponType": {
       "melee": "Melee",

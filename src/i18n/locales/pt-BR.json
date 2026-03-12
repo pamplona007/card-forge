@@ -42,6 +42,7 @@
     }
   },
   "editor": {
+    "backToProjects": "Voltar para lista",
     "createNewCard": "Criar Nova Carta",
     "selectCardType": "Selecionar Tipo de Carta",
     "noCards": "Nenhuma carta ainda. Clique em \"Criar Nova Carta\" para adicionar sua primeira carta!",
@@ -106,6 +107,7 @@
       "weaponName": "Nome da arma",
       "zombieName": "Nome do zumbi",
       "abominationName": "Nome da abominação",
+      "survivorName": "Nome do sobrevivente",
       "abilityName": "Nome da habilidade",
       "description": "Descrição"
     },
@@ -327,6 +329,15 @@
         "abomination": "Abominação",
         "showBack": "Mostrar Verso",
         "showFront": "Mostrar Frente"
+      },
+      "label": {
+        "front": "Frente",
+        "back": "Verso",
+        "backDescription": "Configurações do Verso",
+        "backInfo": "O verso da carta exibe habilidades retiradas da frente. Apenas a imagem da carta pode ser personalizada aqui."
+      },
+      "side": {
+        "label": "Lado"
       }
     },
     "card": {
@@ -337,6 +348,13 @@
         "zombieSpawn": "Spawn de Zumbi",
         "abomination": "Abominação"
       }
+    },
+    "cardTypeDescription": {
+      "survivor": "Cartas de Sobrevivente representam personagens jogadores com habilidades e slots de equipamento.",
+      "equipment": "Cartas de Equipamento são itens que os sobreviventes podem equipar e usar.",
+      "pimpWeapon": "Cartas de Arma Pimp são armas únicas e poderosas com habilidades especiais.",
+      "zombieSpawn": "Cartas de Spawn de Zumbi determinam quais zumbis aparecem durante o jogo.",
+      "abomination": "Cartas de Abominação são zumbis chefes poderosos com muita vida e habilidades especiais."
     },
     "weaponType": {
       "melee": "Corpo a Corpo",

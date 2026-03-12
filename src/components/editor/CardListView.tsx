@@ -24,6 +24,17 @@ export default function CardListView({
 }: CardListViewProps) {
     const { t } = useTranslation();
 
+    const getCardTypeName = (type: ZombicideCardType) => {
+        const keyMap: Record<ZombicideCardType, string> = {
+            'abomination': 'zombicide.card.type.abomination',
+            'equipment': 'zombicide.card.type.equipment',
+            'pimp-weapon': 'zombicide.card.type.pimpWeapon',
+            'survivor': 'zombicide.card.type.survivor',
+            'zombie-spawn': 'zombicide.card.type.zombieSpawn',
+        };
+        return t(keyMap[type]);
+    };
+
     if (0 === cards.length) {
         return (
             <Box
@@ -125,7 +136,7 @@ export default function CardListView({
                                             size="1"
                                             style={{ color: 'rgba(255,255,255,0.7)', textShadow: '0 1px 3px rgba(0,0,0,0.8)' }}
                                         >
-                                            {card.type}
+                                            {getCardTypeName(card.type)}
                                         </Text>
                                     </Flex>
                                 )}

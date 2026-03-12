@@ -234,10 +234,10 @@ const ZombieSpawnCardEditor: React.FC<ZombieSpawnCardEditorProps> = ({
                         >
                             <Select.Trigger />
                             <Select.Content>
-                                <Select.Item value="blue">{t('spawnZone.blueEasy')}</Select.Item>
-                                <Select.Item value="yellow">{t('spawnZone.yellow')}</Select.Item>
-                                <Select.Item value="orange">{t('spawnZone.orange')}</Select.Item>
-                                <Select.Item value="red">{t('spawnZone.redHard')}</Select.Item>
+                                <Select.Item value="blue">{t('zombicide.spawnZone.blueEasy')}</Select.Item>
+                                <Select.Item value="yellow">{t('zombicide.spawnZone.yellow')}</Select.Item>
+                                <Select.Item value="orange">{t('zombicide.spawnZone.orange')}</Select.Item>
+                                <Select.Item value="red">{t('zombicide.spawnZone.redHard')}</Select.Item>
                             </Select.Content>
                         </Select.Root>
                     </Box>
