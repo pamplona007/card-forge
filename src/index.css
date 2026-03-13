@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+.radix-themes {
+  --default-font-family: 'Lato', sans-serif;
+  --heading-font-family: 'Bebas Neue', sans-serif;
+  --code-font-family: monospace;
+}
+
+.rt-Heading {
+  letter-spacing: 0.03em;
+}

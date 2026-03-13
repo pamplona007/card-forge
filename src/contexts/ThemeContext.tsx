@@ -1,19 +1,10 @@
-import { createContext, useContext, useState, type ReactNode } from 'react';
+import type { ThemeProps } from '@radix-ui/themes';
 
-type Appearance = 'light' | 'dark';
+import { createContext } from 'react';
 
 interface ThemeContextValue {
-    appearance: Appearance;
+    appearance: ThemeProps['appearance'];
     toggle: () => void;
 }
 
-const ThemeContext = createContext<ThemeContextValue>({ appearance: 'light', toggle: () => {} });
-
-export function ThemeProvider({ children }: { children: ReactNode }) {
-    const [appearance, setAppearance] = useState<Appearance>('light');
-    const toggle = () => setAppearance((a) => (a === 'light' ? 'dark' : 'light'));
-
-    return <ThemeContext.Provider value={{ appearance, toggle }}>{children}</ThemeContext.Provider>;
-}
-
-export const useAppTheme = () => useContext(ThemeContext);
+export const ThemeContext = createContext<ThemeContextValue>({ appearance: 'light', toggle: () => {} });

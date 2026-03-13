@@ -1,8 +1,9 @@
-import { Theme } from '@radix-ui/themes/components/index';
+import { Theme, type ThemeProps } from '@radix-ui/themes/components/index';
+import { ThemeContext } from 'contexts/ThemeContext';
+import { useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import ToastProvider from './components/ui/ToastProvider';
-import { ThemeProvider, useAppTheme } from './contexts/ThemeContext';
 import { FirebaseProvider } from './firebase/context';
 import GameProjectsPage from './pages/GameProjectsPage';
 import GameSelectionPage from './pages/GameSelectionPage';
@@ -11,24 +12,23 @@ import ProjectPage from './pages/ProjectPage';
 import UserProfilePage from './pages/UserProfilePage';
 
 function App() {
-    return (
-        <ThemeProvider>
-            <ThemedApp />
-        </ThemeProvider>
-    );
-}
+    const [appearance, setAppearance] = useState<ThemeProps['appearance']>('light');
 
-function ThemedApp() {
-    const { appearance } = useAppTheme();
+    const toggle = () => {
+        setAppearance((prev) => ('light' === prev ? 'dark' : 'light'));
+    };
+
     return (
-        <Theme accentColor="orange" appearance={appearance} grayColor="sand">
-            <FirebaseProvider>
-                <BrowserRouter>
-                    <ToastProvider />
-                    <AppContent />
-                </BrowserRouter>
-            </FirebaseProvider>
-        </Theme>
+        <ThemeContext.Provider value={{ appearance, toggle }}>
+            <Theme accentColor="orange" appearance={appearance} grayColor="sand">
+                <FirebaseProvider>
+                    <BrowserRouter>
+                        <ToastProvider />
+                        <AppContent />
+                    </BrowserRouter>
+                </FirebaseProvider>
+            </Theme>
+        </ThemeContext.Provider>
     );
 }
 

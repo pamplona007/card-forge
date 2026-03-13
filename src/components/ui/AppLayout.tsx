@@ -1,10 +1,10 @@
 import { Avatar, Box, Button, Container, Dialog, DropdownMenu, Flex, Heading, IconButton, Text, TextField } from '@radix-ui/themes';
+import { ThemeContext } from 'contexts/ThemeContext';
 import { Moon, Sun } from 'lucide-react';
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import { useAppTheme } from '../../contexts/ThemeContext';
 import { useFirebase } from '../../hooks/useFirebase';
 
 interface AppLayoutProps {
@@ -92,7 +92,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
     };
 
     const buttonText = isSignUp ? t('auth.dialog.createAccount') : t('auth.dialog.signIn');
-    const { appearance, toggle } = useAppTheme();
+    const { appearance, toggle } = useContext(ThemeContext);
 
     return (
         <Box style={{ backgroundColor: 'var(--gray-2)', minHeight: '100vh' }}>
