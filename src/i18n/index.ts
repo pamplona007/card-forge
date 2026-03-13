@@ -16,7 +16,7 @@ i18n
     .init({
         detection: {
             caches: ['localStorage', 'cookie'],
-            order: ['navigator', 'htmlTag', 'localStorage', 'cookie'],
+            order: ['localStorage', 'cookie', 'navigator', 'htmlTag'],
         },
         fallbackLng: 'en',
         interpolation: {

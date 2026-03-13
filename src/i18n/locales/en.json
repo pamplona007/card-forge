@@ -79,7 +79,7 @@
       "name": "Name",
       "health": "Health",
       "tags": "Tags",
-      "showTagDescription": "Show tag description on card back",
+      "showTagDescription": "Show tag description",
       "side": "Side",
       "blueAbility": "Blue Ability (Start of Game)",
       "yellowAbility": "Yellow Ability (Start of Game)",

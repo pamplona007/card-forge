@@ -79,7 +79,7 @@
       "name": "Nome",
       "health": "Pontos de Vida",
       "tags": "Tags",
-      "showTagDescription": "Exibir descrição da tag no verso da carta",
+      "showTagDescription": "Exibir descrição da tag",
       "blueAbility": "Habilidade Azul (Início do Jogo)",
       "yellowAbility": "Habilidade Amarela (Início do Jogo)",
       "orangeAbilities": "Habilidades Laranja (Subida de Nível)",

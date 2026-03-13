@@ -238,8 +238,8 @@ function drawDescriptions(
     tagDescription?: { text: string; title: string },
 ) {
     const allDescriptions = [
-        ...(card.descriptions || []),
         ...(tagDescription ? [tagDescription] : []),
+        ...(card.descriptions || []),
     ];
 
     if (0 === allDescriptions.length) {
@@ -248,7 +248,9 @@ function drawDescriptions(
 
     const descriptionBoxX = width * 0.525;
     const descriptionBoxY = height * 0.12;
-    const descriptionBoxWidth = width * 0.34;
+    const descriptionBoxWidth = width * 0.35;
+    const headingSize = 3 * scale;
+    const descriptionSize = 2.5 * scale;
 
     const skewAngle = -0.3;
 
@@ -257,21 +259,23 @@ function drawDescriptions(
     ctx.textAlign = 'left';
     ctx.textBaseline = 'top';
 
-    ctx.font = `bold ${3 * scale}px 'Titling Gothic', sans-serif`;
+    ctx.font = `bold ${headingSize}px 'Titling Gothic', sans-serif`;
     const titleMetrics = ctx.measureText('A');
-    const titleLineHeight = (titleMetrics.actualBoundingBoxAscent ?? 3 * scale) + (titleMetrics.actualBoundingBoxDescent ?? 0) + (1 * scale);
+    const titleLineHeight = (titleMetrics.actualBoundingBoxAscent ?? headingSize) + (titleMetrics.actualBoundingBoxDescent ?? 0) + (1 * scale);
 
-    ctx.font = `400 ${2 * scale}px 'Titling Gothic', sans-serif`;
+    ctx.font = `400 ${descriptionSize}px 'Titling Gothic', sans-serif`;
     const bodyMetrics = ctx.measureText('A');
-    const bodyLineHeight = (bodyMetrics.actualBoundingBoxAscent ?? 2 * scale) + (bodyMetrics.actualBoundingBoxDescent ?? 0) + (1 * scale);
+    const bodyLineHeight = (bodyMetrics.actualBoundingBoxAscent ?? descriptionSize) + (bodyMetrics.actualBoundingBoxDescent ?? 0) + (1 * scale);
 
     const descPadding = 4 * scale;
     let currentY = descriptionBoxY;
     const descriptionLines: Array<{ text: string; type: 'body' | 'title'; x: number; y: number; }> = [];
 
+    let lineX = descriptionBoxX;
+
     for (const desc of allDescriptions) {
         if (desc?.title) {
-            ctx.font = `bold ${3 * scale}px 'Titling Gothic', sans-serif`;
+            ctx.font = `bold ${headingSize}px 'Titling Gothic', sans-serif`;
             const distanceFromTop = currentY - descriptionBoxY;
             const angledOffset = distanceFromTop * Math.tan(skewAngle);
             const adjustedX = descriptionBoxX + angledOffset + descPadding;
@@ -280,10 +284,9 @@ function drawDescriptions(
         }
 
         if (desc?.text) {
-            ctx.font = `400 ${2 * scale}px 'Titling Gothic', sans-serif`;
+            ctx.font = `400 ${descriptionSize}px 'Titling Gothic', sans-serif`;
             const words = desc.text.split(' ');
             let line = '';
-            let lineX = descriptionBoxX;
 
             for (const word of words) {
                 const testLine = line ? `${line} ${word}` : word;
@@ -318,9 +321,9 @@ function drawDescriptions(
 
     for (const lineObj of descriptionLines) {
         if ('title' === lineObj.type) {
-            ctx.font = `bold ${3 * scale}px 'Titling Gothic', sans-serif`;
+            ctx.font = `bold ${headingSize}px 'Titling Gothic', sans-serif`;
         } else {
-            ctx.font = `400 ${2 * scale}px 'Titling Gothic', sans-serif`;
+            ctx.font = `400 ${descriptionSize}px 'Titling Gothic', sans-serif`;
         }
         ctx.fillText(lineObj.text, lineObj.x, lineObj.y);
     }
@@ -386,8 +389,8 @@ const SurvivorCardBack: React.FC<SurvivorCardProps> = ({ bleed, card, exportMode
             const characterAspectRatio = images.character.width / images.character.height;
             const characterWidth = 40 * ((card.imageScaleBack || 100) / 100) * scale;
             const characterHeight = characterWidth / characterAspectRatio;
-            const characterX = ((canvasWidth - characterWidth) + ((card.imageOffsetXBack || 0) * scale)) || ((canvasWidth - characterWidth) / 2);
-            const characterY = (24 * scale) + (11 * scale) + (5 * scale) + ((card.imageOffsetYBack || 0) * scale);
+            const characterX = (card.imageOffsetXBack || 0) * scale;
+            const characterY = (24 * scale) + ((card.imageOffsetYBack || 0) * scale);
             ctx.drawImage(images.character, characterX, characterY, characterWidth, characterHeight);
         }
 
@@ -417,14 +420,14 @@ const SurvivorCardBack: React.FC<SurvivorCardProps> = ({ bleed, card, exportMode
         ctx.textAlign = 'left';
         ctx.textBaseline = 'alphabetic';
 
-        const tagIconWidth = 11 * scale;
-        const tagIconLeft = canvasWidth - tagIconWidth - (11 * scale);
-        const tagIconTop = 11.5 * scale;
-
         if (card.tag) {
             const tagIcon = images[`icon${card.tag.charAt(0).toUpperCase() + card.tag.slice(1)}` as keyof typeof images];
+            const tagIconheight = 9 * scale;
+            const tagIconWidth = tagIcon ? (tagIcon.height * (tagIconheight / tagIcon.height)) * (tagIcon.width / tagIcon.height) : 0;
+            const tagIconLeft = canvasWidth - tagIconWidth - (47 * scale);
+            const tagIconTop = 11.5 * scale;
             if (tagIcon) {
-                ctx.drawImage(tagIcon, tagIconLeft, tagIconTop, tagIconWidth, tagIcon.height * (tagIconWidth / tagIcon.width));
+                ctx.drawImage(tagIcon, tagIconLeft, tagIconTop, tagIconWidth, tagIconheight);
             }
         }
 
@@ -445,13 +448,12 @@ const SurvivorCardBack: React.FC<SurvivorCardProps> = ({ bleed, card, exportMode
         const rect = e.currentTarget.getBoundingClientRect();
         const clickX = e.clientX - rect.left;
         const clickY = e.clientY - rect.top;
-        const canvasWidth = e.currentTarget.width;
 
         const characterAspectRatio = images.character.width / images.character.height;
         const characterWidth = 40 * ((card.imageScale || 100) / 100) * scale;
         const characterHeight = characterWidth / characterAspectRatio;
-        const characterX = ((canvasWidth - characterWidth) + ((card.imageOffsetXBack || 0) * scale)) || ((canvasWidth - characterWidth) / 2);
-        const characterY = (24 * scale) + (11 * scale) + (5 * scale) + ((card.imageOffsetYBack || 0) * scale);
+        const characterX = (card.imageOffsetXBack || 0) * scale;
+        const characterY = (24 * scale) + ((card.imageOffsetYBack || 0) * scale);
 
         if (
             clickX >= characterX &&

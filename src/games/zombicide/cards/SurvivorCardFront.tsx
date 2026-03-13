@@ -183,14 +183,14 @@ const SurvivorCardFront: React.FC<SurvivorCardProps> = ({ bleed, card, exportMod
             ctx.drawImage(hpImage, hpLeft, hpImageTop, hpWidth, hpImage.height * (hpWidth / hpImage.width));
         }
 
-        const tagIconWidth = 11 * scale;
-        const tagIconLeft = canvasWidth - tagIconWidth - (11 * scale);
-        const tagIconTop = 11.5 * scale;
-
         if (card.tag) {
             const tagIcon = images[`icon${card.tag.charAt(0).toUpperCase() + card.tag.slice(1)}` as keyof typeof images];
+            const tagIconheight = 10 * scale;
+            const tagIconWidth = tagIcon ? (tagIcon.height * (tagIconheight / tagIcon.height)) * (tagIcon.width / tagIcon.height) : 0;
+            const tagIconLeft = canvasWidth - tagIconWidth - (11 * scale);
+            const tagIconTop = 11.5 * scale;
             if (tagIcon) {
-                ctx.drawImage(tagIcon, tagIconLeft, tagIconTop, tagIconWidth, tagIcon.height * (tagIconWidth / tagIcon.width));
+                ctx.drawImage(tagIcon, tagIconLeft, tagIconTop, tagIconWidth, tagIconheight);
             }
         }
     }, [loadedImages, images, card]);

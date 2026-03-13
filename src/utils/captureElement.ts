@@ -49,7 +49,7 @@ const waitForCanvasContent = (
         setTimeout(check, 100);
     };
 
-    check();
+    setTimeout(check, 100);
 });
 
 /**

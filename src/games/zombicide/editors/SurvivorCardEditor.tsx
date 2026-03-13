@@ -94,8 +94,7 @@ const AbilityAutocomplete: React.FC<AbilityAutocompleteProps> = ({
     const handleSelect = (nameKey: string, descriptionKey?: string) => {
         const name = t(nameKey);
         const description = descriptionKey ? t(descriptionKey) : undefined;
-        onSelect?.(name, description);
-        onChange(name);
+        (onSelect || onChange)(name, description);
         setOpen(false);
         setActiveIndex(-1);
     };
@@ -499,6 +498,34 @@ const SurvivorBackEditor: React.FC<{
                 value={card.image}
             />
 
+            {card.tag && (
+                <Box
+                    style={{
+                        background: 'var(--gray-2)',
+                        borderRadius: 'var(--radius-2)',
+                        padding: 'var(--space-3)',
+                    }}
+                >
+                    <Flex align="center" gap="2">
+                        <Checkbox
+                            checked={card.showTagDescription ?? false}
+                            id="show-tag-description"
+                            onCheckedChange={(checked) => {
+                                onChange({ ...card, showTagDescription: Boolean(checked) });
+                            }}
+                        />
+                        <Text
+                            as="label"
+                            htmlFor="show-tag-description"
+                            size="2"
+                            style={{ cursor: 'pointer', userSelect: 'none' }}
+                        >
+                            {t('editor.label.showTagDescription')}
+                        </Text>
+                    </Flex>
+                </Box>
+            )}
+
             {card.image && (
                 <Box>
                     <Text as="p" mb="2" size="2" style={{ color: 'var(--gray-11)' }}>{t('editor.label.imageScale')}</Text>
@@ -566,41 +593,6 @@ const SurvivorBackEditor: React.FC<{
                     </Flex>
                 </Box>
             ))}
-
-            {card.tag && (
-                <Box
-                    style={{
-                        background: 'var(--gray-2)',
-                        borderRadius: 'var(--radius-2)',
-                        padding: 'var(--space-3)',
-                    }}
-                >
-                    <Flex align="center" gap="2">
-                        <Checkbox
-                            checked={card.showTagDescription ?? false}
-                            id="show-tag-description"
-                            onCheckedChange={(checked) => {
-                                onChange({ ...card, showTagDescription: Boolean(checked) });
-                            }}
-                        />
-                        <Text
-                            as="label"
-                            htmlFor="show-tag-description"
-                            size="2"
-                            style={{ cursor: 'pointer', userSelect: 'none' }}
-                        >
-                            {t('editor.label.showTagDescription')}
-                        </Text>
-                    </Flex>
-                    {card.showTagDescription && (
-                        <Box mt="2">
-                            <Text size="1" style={{ color: 'var(--gray-10)' }}>
-                                {t(`zombicide.tags.${card.tag}.title`)} — {t(`zombicide.tags.${card.tag}.description`)}
-                            </Text>
-                        </Box>
-                    )}
-                </Box>
-            )}
         </Flex>
     );
 };

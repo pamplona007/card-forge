@@ -53,7 +53,7 @@ export interface PDFGeneratorOptions {
 }
 
 const MARGIN = 5;
-const MIN_SPACING = 3;
+const MIN_SPACING = -5;
 
 interface GridConfig {
     cardsPerCol: number;
