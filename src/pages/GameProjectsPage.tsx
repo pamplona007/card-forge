@@ -76,13 +76,28 @@ export default function GameProjectsPage() {
         <AppLayout>
 
             <Box mb="6">
-                <Flex align="center" justify="between" mb="4">
+                <Flex
+                    align={{
+                        initial: 'start',
+                        sm: 'center',
+                    }}
+                    direction={{
+                        initial: 'column',
+                        sm: 'row',
+                    }}
+                    gap={'4'}
+                    justify="between"
+                    mb="4"
+                >
                     <Box>
                         <Heading mb="2" size="8">
                             {game.name}
                         </Heading>
                         <Text color="gray" size="4">
                             {t('projects.label.publishedBy', { publisher: game.publisher })}
+                        </Text>
+                        <Text as='p' size="4">
+                            {game.description}
                         </Text>
                     </Box>
                     {user && (
@@ -166,9 +181,6 @@ export default function GameProjectsPage() {
                         </Dialog.Root>
                     )}
                 </Flex>
-                <Text size="4" style={{ display: 'block', lineHeight: 1.6 }}>
-                    {game.description}
-                </Text>
             </Box>
 
             {!user && 0 < publicProjects.length && (
@@ -279,4 +291,3 @@ export default function GameProjectsPage() {
         </AppLayout>
     );
 }
-

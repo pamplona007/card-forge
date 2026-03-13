@@ -7,7 +7,7 @@ import { useProject } from 'hooks/useProject';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 
-export default function CardEditorPage() {
+export default function ProjectPage() {
     const { projectId } = useParams<{ projectId: string }>();
     const { user } = useFirebase();
     const { data: project, isLoading } = useProject(projectId);

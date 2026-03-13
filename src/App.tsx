@@ -3,10 +3,10 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import ToastProvider from './components/ui/ToastProvider';
 import { FirebaseProvider } from './firebase/context';
-import CardEditorPage from './pages/CardEditorPage';
 import GameProjectsPage from './pages/GameProjectsPage';
 import GameSelectionPage from './pages/GameSelectionPage';
 import ProfilePage from './pages/ProfilePage';
+import ProjectPage from './pages/ProjectPage';
 import UserProfilePage from './pages/UserProfilePage';
 
 function App() {
@@ -27,7 +27,7 @@ function AppContent() {
         <Routes>
             <Route element={<GameSelectionPage />} path="/" />
             <Route element={<GameProjectsPage />} path="/game/:gameId" />
-            <Route element={<CardEditorPage />} path="/project/:projectId" />
+            <Route element={<ProjectPage />} path="/project/:projectId" />
             <Route element={<UserProfilePage />} path="/user/:userId" />
             <Route element={<ProfilePage />} path="/profile" />
         </Routes>

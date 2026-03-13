@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { useFirebase } from '../../hooks/useFirebase';
-import LanguageSwitcher from './LanguageSwitcher';
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -18,7 +17,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const { t } = useTranslation();
+    const { i18n, t } = useTranslation();
     const navigate = useNavigate();
 
     const handleAuth = async () => {
@@ -110,7 +109,6 @@ export default function AppLayout({ children }: AppLayoutProps) {
                             {t('app.title')}
                         </Heading>
                         <Flex align="center" gap="4">
-                            <LanguageSwitcher />
                             {user
                                 ? (
                                     <DropdownMenu.Root>
@@ -138,6 +136,26 @@ export default function AppLayout({ children }: AppLayoutProps) {
                                             <DropdownMenu.Item onClick={() => navigate('/profile')}>
                                                 {t('profile.nav.myProfile')}
                                             </DropdownMenu.Item>
+                                            <DropdownMenu.Separator />
+                                            <DropdownMenu.Sub>
+                                                <DropdownMenu.SubTrigger>
+                                                    {t('app.language')}
+                                                </DropdownMenu.SubTrigger>
+                                                <DropdownMenu.SubContent>
+                                                    <DropdownMenu.Item onClick={() => i18n.changeLanguage('en')}>
+                                                        <Flex align="center" gap="2">
+                                                            <Text>EN</Text>
+                                                            {'en' === (i18n.language || i18n.resolvedLanguage) && <Text color="blue">✓</Text>}
+                                                        </Flex>
+                                                    </DropdownMenu.Item>
+                                                    <DropdownMenu.Item onClick={() => i18n.changeLanguage('pt-BR')}>
+                                                        <Flex align="center" gap="2">
+                                                            <Text>PT</Text>
+                                                            {'pt-BR' === (i18n.language || i18n.resolvedLanguage) && <Text color="blue">✓</Text>}
+                                                        </Flex>
+                                                    </DropdownMenu.Item>
+                                                </DropdownMenu.SubContent>
+                                            </DropdownMenu.Sub>
                                             <DropdownMenu.Separator />
                                             <DropdownMenu.Item color="red" onClick={logOut}>
                                                 {t('auth.signOut')}
