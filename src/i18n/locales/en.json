@@ -218,11 +218,11 @@
     },
     "section": {
       "myProjects": "My Projects",
-      "publicProjects": "Public Projects"
+      "publicProjects": "Projects"
     },
     "empty": {
-      "noPublicProjects": "No Public Projects Yet",
-      "publicProjectsPrompt": "Be the first to create a public project for this game!",
+      "noPublicProjects": "No Projects Yet",
+      "publicProjectsPrompt": "Be the first to create a project for this game!",
       "noProjects": "No Projects Yet",
       "createFirstPrompt": "Create your first project to start designing cards!"
     },
@@ -231,7 +231,15 @@
     },
     "card": {
       "updated": "Updated {{date}}",
-      "yours": "Yours"
+      "yours": "Yours",
+      "likes_one": "{{count}} like",
+      "likes_other": "{{count}} likes"
+    },
+    "sort": {
+      "recent": "Most Recent",
+      "likes": "Most Liked",
+      "week": "Popular This Week",
+      "month": "Popular This Month"
     },
     "buttonRemove": { "remove": "Remove" }
   },
@@ -344,6 +352,7 @@
     "title": "Games",
     "description": "Select a game to start creating custom cards for your tabletop collection.",
     "button": { "viewProjects": "View Projects" },
+    "comingSoon": "Coming Soon",
     "empty": {
       "title": "No Games Available",
       "description": "Check back later for supported games."

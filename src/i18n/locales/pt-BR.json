@@ -217,11 +217,11 @@
     },
     "section": {
       "myProjects": "Meus Projetos",
-      "publicProjects": "Projetos Públicos"
+      "publicProjects": "Projetos"
     },
     "empty": {
-      "noPublicProjects": "Nenhum Projeto Público Ainda",
-      "publicProjectsPrompt": "Seja o primeiro a criar um projeto público para este jogo!",
+      "noPublicProjects": "Nenhum Projeto Ainda",
+      "publicProjectsPrompt": "Seja o primeiro a criar um projeto para este jogo!",
       "noProjects": "Nenhum Projeto Ainda",
       "createFirstPrompt": "Crie seu primeiro projeto para começar a criar cartas!"
     },
@@ -230,7 +230,15 @@
     },
     "card": {
       "updated": "Atualizado {{date}}",
-      "yours": "Seu"
+      "yours": "Seu",
+      "likes_one": "{{count}} curtida",
+      "likes_other": "{{count}} curtidas"
+    },
+    "sort": {
+      "recent": "Mais Recentes",
+      "likes": "Mais Curtidos",
+      "week": "Popular Esta Semana",
+      "month": "Popular Este Mês"
     },
     "buttonRemove": { "remove": "Remover" }
   },
@@ -343,6 +351,7 @@
     "title": "Jogos",
     "description": "Selecione um jogo para começar a criar cartas personalizadas para sua coleção de jogos de tabuleiro.",
     "button": { "viewProjects": "Ver Projetos" },
+    "comingSoon": "Em Breve",
     "empty": {
       "title": "Nenhum Jogo Disponível",
       "description": "Volte mais tarde para ver os jogos suportados."

@@ -114,9 +114,16 @@ export default function ProjectCard({ isOwner, onClick, project, showGame }: Pro
                 </Flex>
             )}
 
-            <Text color="gray" size="1" style={{ display: 'block' }}>
-                {t('projects.card.updated', { date: formatDate(project.updatedAt) })}
-            </Text>
+            <Flex align="center" justify="between">
+                <Text color="gray" size="1">
+                    {t('projects.card.updated', { date: formatDate(project.updatedAt) })}
+                </Text>
+                {!!project.likesCount && (
+                    <Text color="gray" size="1">
+                        ♥ {t('projects.card.likes', { count: project.likesCount })}
+                    </Text>
+                )}
+            </Flex>
         </Card>
     );
 }

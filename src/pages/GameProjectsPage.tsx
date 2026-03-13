@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, Flex, Grid, Heading, Spinner, Switch, Text, TextArea, TextField } from '@radix-ui/themes';
+import { Box, Button, Dialog, Flex, Grid, Heading, Select, Spinner, Switch, Text, TextArea, TextField } from '@radix-ui/themes';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -7,6 +7,7 @@ import AppLayout from '../components/ui/AppLayout';
 import ProjectCard from '../components/ui/ProjectCard';
 import { useCreateProject } from '../hooks/useCreateProject';
 import { useFirebase } from '../hooks/useFirebase';
+import { usePopularProjects } from '../hooks/usePopularProjects';
 import { useProjects } from '../hooks/useProjects';
 import { getGameById } from '../types/game';
 
@@ -23,9 +24,28 @@ export default function GameProjectsPage() {
     const [newProjectName, setNewProjectName] = useState('');
     const [newProjectDescription, setNewProjectDescription] = useState('');
     const [newProjectIsPublic, setNewProjectIsPublic] = useState(false);
+    const [sortBy, setSortBy] = useState<'likes' | 'month' | 'recent' | 'week'>('recent');
 
-    const publicProjects = projectsData?.publicProjects || [];
+    const { data: popularWeek, isLoading: isLoadingWeek } = usePopularProjects(gameId, 7, 'week' === sortBy);
+    const { data: popularMonth, isLoading: isLoadingMonth } = usePopularProjects(gameId, 30, 'month' === sortBy);
+
     const userProjects = projectsData?.userProjects || [];
+    const rawPublicProjects = projectsData?.publicProjects || [];
+
+    const publicProjects = (() => {
+        if ('week' === sortBy) {
+            return popularWeek ?? [];
+        }
+        if ('month' === sortBy) {
+            return popularMonth ?? [];
+        }
+        if ('likes' === sortBy) {
+            return [...rawPublicProjects].sort((a, b) => (b.likesCount ?? 0) - (a.likesCount ?? 0));
+        }
+        return [...rawPublicProjects].sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
+    })();
+
+    const isLoadingPublic = isLoading || ('week' === sortBy && isLoadingWeek) || ('month' === sortBy && isLoadingMonth);
 
     const handleCreateProject = async () => {
         if (!newProjectName.trim() || !user || !gameId) {
@@ -207,6 +227,7 @@ export default function GameProjectsPage() {
             )}
 
             {!isLoading && (
+
                 <>
 
                     {user && 0 < userProjects.length && (
@@ -227,11 +248,28 @@ export default function GameProjectsPage() {
                         </Box>
                     )}
 
-                    {0 < publicProjects.length && (
+                    {(0 < publicProjects.length || 0 < rawPublicProjects.length) && (
                         <Box mb="7">
-                            <Heading mb="4" size="5">
-                                {t('projects.section.publicProjects')}
-                            </Heading>
+                            <Flex align="center" justify="between" mb="4">
+                                <Heading size="5">
+                                    {t('projects.section.publicProjects')}
+                                </Heading>
+                                <Select.Root onValueChange={(v) => setSortBy(v as typeof sortBy)} value={sortBy}>
+                                    <Select.Trigger />
+                                    <Select.Content>
+                                        <Select.Item value="recent">{t('projects.sort.recent')}</Select.Item>
+                                        <Select.Item value="likes">{t('projects.sort.likes')}</Select.Item>
+                                        <Select.Item value="week">{t('projects.sort.week')}</Select.Item>
+                                        <Select.Item value="month">{t('projects.sort.month')}</Select.Item>
+                                    </Select.Content>
+                                </Select.Root>
+                            </Flex>
+                            {isLoadingPublic && (
+                                <Flex align="center" py="4">
+                                    <Spinner size="2" />
+                                    <Text color="gray" ml="2" size="2">{t('projects.status.loading')}</Text>
+                                </Flex>
+                            )}
                             <Grid columns={{ initial: '2', lg: '4', md: '3' }} gap="4">
                                 {publicProjects.map((project) => (
                                     <ProjectCard
