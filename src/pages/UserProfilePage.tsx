@@ -1,5 +1,5 @@
 import { Avatar, Badge, Box, Button, Card, Flex, Grid, Heading, Select, Spinner, Tabs, Text } from '@radix-ui/themes';
-import { ArrowDownAZ, ArrowUpAZ, Clock, Heart } from 'lucide-react';
+import { ArrowDownAZ, ArrowUpAZ, Clock } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
