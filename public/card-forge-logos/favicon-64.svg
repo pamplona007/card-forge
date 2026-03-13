@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="2 6 60 60" width="64" height="64">
+  <g transform="translate(32,36)">
+    <g transform="rotate(-28) translate(-16,-23)">
+      <rect x="1" y="1" width="32" height="46" rx="4" fill="#000" opacity="0.3"/>
+      <rect x="0" y="0" width="32" height="46" rx="4" fill="#2E1206" stroke="#8B3A0A" stroke-width="1.2"/>
+      <rect x="3" y="3" width="26" height="40" rx="2" fill="none" stroke="#8B3A0A" stroke-width="0.6" opacity="0.5"/>
+    </g>
+    <g transform="rotate(-12) translate(-16,-23)">
+      <rect x="1" y="1" width="32" height="46" rx="4" fill="#000" opacity="0.25"/>
+      <rect x="0" y="0" width="32" height="46" rx="4" fill="#3D1A08" stroke="#A0440E" stroke-width="1.2"/>
+      <rect x="3" y="3" width="26" height="40" rx="2" fill="none" stroke="#A0440E" stroke-width="0.6" opacity="0.5"/>
+    </g>
+    <g transform="rotate(5) translate(-16,-23)">
+      <rect x="1" y="1" width="32" height="46" rx="4" fill="#000" opacity="0.3"/>
+      <rect x="0" y="0" width="32" height="46" rx="4" fill="#C05A18"/>
+      <rect x="2" y="2" width="28" height="42" rx="3" fill="#FDF3E3"/>
+      <rect x="3" y="3" width="26" height="7" rx="2" fill="#3D1A08"/>
+      <rect x="3" y="13" width="26" height="18" rx="2" fill="#FDEBD0"/>
+      <rect x="3" y="33" width="26" height="4" rx="1" fill="#C05A18" opacity="0.2"/>
+      <rect x="3" y="39" width="26" height="5" rx="1.5" fill="#3D1A08" opacity="0.08"/>
+      <rect x="5" y="40" width="8" height="2" rx="1" fill="#C05A18" opacity="0.5"/>
+      <rect x="19" y="40" width="8" height="2" rx="1" fill="#8B3A0A" opacity="0.4"/>
+      <polygon points="16,38 17,41 16,44 15,41" fill="#E8A055" opacity="0.8"/>
+    </g>
+  </g>
+</svg>

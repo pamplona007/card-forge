@@ -1,8 +1,10 @@
-import { Avatar, Box, Button, Container, Dialog, DropdownMenu, Flex, Heading, Text, TextField } from '@radix-ui/themes';
+import { Avatar, Box, Button, Container, Dialog, DropdownMenu, Flex, Heading, IconButton, Text, TextField } from '@radix-ui/themes';
+import { Moon, Sun } from 'lucide-react';
 import { type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
+import { useAppTheme } from '../../contexts/ThemeContext';
 import { useFirebase } from '../../hooks/useFirebase';
 
 interface AppLayoutProps {
@@ -90,13 +92,14 @@ export default function AppLayout({ children }: AppLayoutProps) {
     };
 
     const buttonText = isSignUp ? t('auth.dialog.createAccount') : t('auth.dialog.signIn');
+    const { appearance, toggle } = useAppTheme();
 
     return (
         <Box style={{ backgroundColor: 'var(--gray-2)', minHeight: '100vh' }}>
 
             <header
                 style={{
-                    backgroundColor: 'white',
+                    backgroundColor: 'var(--color-panel-solid)',
                     borderBottom: '1px solid var(--gray-5)',
                     position: 'sticky',
                     top: 0,
@@ -104,11 +107,21 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 }}
             >
                 <Container px={'4'} size="4">
-                    <Flex align="center" justify="between" py="4">
-                        <Heading size="6" style={{ color: 'var(--gray-12)' }} weight="bold">
-                            {t('app.title')}
-                        </Heading>
-                        <Flex align="center" gap="4">
+                    <Flex align="center" justify="between" py="3">
+                        <Flex align="center" gap="2">
+                            <img
+                                alt="Card Forge"
+                                src="/card-forge-logos/card-forge-logo.svg"
+                                style={{ height: 40, width: 40 }}
+                            />
+                            <Heading size="5" style={{ color: 'var(--orange-11)' }} weight="bold">
+                                {t('app.title')}
+                            </Heading>
+                        </Flex>
+                        <Flex align="center" gap="5">
+                            <IconButton onClick={toggle} radius="full" size="2" variant="ghost">
+                                {'dark' === appearance ? <Sun size={16} /> : <Moon size={16} />}
+                            </IconButton>
                             {user
                                 ? (
                                     <DropdownMenu.Root>
@@ -145,13 +158,13 @@ export default function AppLayout({ children }: AppLayoutProps) {
                                                     <DropdownMenu.Item onClick={() => i18n.changeLanguage('en')}>
                                                         <Flex align="center" gap="2">
                                                             <Text>EN</Text>
-                                                            {'en' === (i18n.language || i18n.resolvedLanguage) && <Text color="blue">✓</Text>}
+                                                            {'en' === (i18n.language || i18n.resolvedLanguage) && <Text color="orange">✓</Text>}
                                                         </Flex>
                                                     </DropdownMenu.Item>
                                                     <DropdownMenu.Item onClick={() => i18n.changeLanguage('pt-BR')}>
                                                         <Flex align="center" gap="2">
                                                             <Text>PT</Text>
-                                                            {'pt-BR' === (i18n.language || i18n.resolvedLanguage) && <Text color="blue">✓</Text>}
+                                                            {'pt-BR' === (i18n.language || i18n.resolvedLanguage) && <Text color="orange">✓</Text>}
                                                         </Flex>
                                                     </DropdownMenu.Item>
                                                 </DropdownMenu.SubContent>
@@ -164,7 +177,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                                     </DropdownMenu.Root>
                                 )
                                 : (
-                                    <Button color="blue" onClick={handleAuth} variant="solid">
+                                    <Button onClick={handleAuth} variant="solid">
                                         {t('auth.signIn')}
                                     </Button>
                                 )}
@@ -237,7 +250,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                                     setIsSignUp(!isSignUp);
                                     setError('');
                                 }}
-                                style={{ color: 'var(--blue-9)', cursor: 'pointer' }}
+                                style={{ color: 'var(--orange-10)', cursor: 'pointer' }}
                             >
                                 {isSignUp ? t('auth.dialog.signIn') : t('auth.dialog.createAccount')}
                             </Text>

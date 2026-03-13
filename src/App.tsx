@@ -2,6 +2,7 @@ import { Theme } from '@radix-ui/themes/components/index';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import ToastProvider from './components/ui/ToastProvider';
+import { ThemeProvider, useAppTheme } from './contexts/ThemeContext';
 import { FirebaseProvider } from './firebase/context';
 import GameProjectsPage from './pages/GameProjectsPage';
 import GameSelectionPage from './pages/GameSelectionPage';
@@ -11,7 +12,16 @@ import UserProfilePage from './pages/UserProfilePage';
 
 function App() {
     return (
-        <Theme>
+        <ThemeProvider>
+            <ThemedApp />
+        </ThemeProvider>
+    );
+}
+
+function ThemedApp() {
+    const { appearance } = useAppTheme();
+    return (
+        <Theme accentColor="orange" appearance={appearance} grayColor="sand">
             <FirebaseProvider>
                 <BrowserRouter>
                     <ToastProvider />

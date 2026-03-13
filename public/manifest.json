@@ -1,0 +1,31 @@
+{
+  "name": "Card Forge",
+  "short_name": "Card Forge",
+  "description": "Create and share custom cards for your tabletop games",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a0c04",
+  "theme_color": "#C05A18",
+  "icons": [
+    {
+      "src": "/card-forge-logos/favicon-16.svg",
+      "sizes": "16x16",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/card-forge-logos/favicon-32.svg",
+      "sizes": "32x32",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/card-forge-logos/favicon-64.svg",
+      "sizes": "64x64",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/card-forge-logos/favicon-128.svg",
+      "sizes": "128x128",
+      "type": "image/svg+xml"
+    }
+  ]
+}

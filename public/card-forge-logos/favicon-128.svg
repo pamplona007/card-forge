@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="8 10 112 112" width="128" height="128">
+  <g transform="translate(64,68)">
+    <!-- Card 1 back -->
+    <g transform="rotate(-30) translate(-30,-43)">
+      <rect x="1" y="1" width="60" height="86" rx="6" fill="#000" opacity="0.3"/>
+      <rect x="0" y="0" width="60" height="86" rx="6" fill="#2E1206" stroke="#8B3A0A" stroke-width="1.5"/>
+      <rect x="4" y="4" width="52" height="78" rx="4" fill="none" stroke="#8B3A0A" stroke-width="0.8" opacity="0.5"/>
+      <g opacity="0.2" stroke="#E8804A" stroke-width="0.6" fill="none">
+        <path d="M8,8 L16,16 L8,24 L0,16Z" transform="translate(6,6)"/>
+        <path d="M8,8 L16,16 L8,24 L0,16Z" transform="translate(24,6)"/>
+        <path d="M8,8 L16,16 L8,24 L0,16Z" transform="translate(42,6)"/>
+        <path d="M8,8 L16,16 L8,24 L0,16Z" transform="translate(15,20)"/>
+        <path d="M8,8 L16,16 L8,24 L0,16Z" transform="translate(33,20)"/>
+        <path d="M8,8 L16,16 L8,24 L0,16Z" transform="translate(6,34)"/>
+        <path d="M8,8 L16,16 L8,24 L0,16Z" transform="translate(24,34)"/>
+        <path d="M8,8 L16,16 L8,24 L0,16Z" transform="translate(42,34)"/>
+        <path d="M8,8 L16,16 L8,24 L0,16Z" transform="translate(15,48)"/>
+        <path d="M8,8 L16,16 L8,24 L0,16Z" transform="translate(33,48)"/>
+      </g>
+    </g>
+    <!-- Card 2 -->
+    <g transform="rotate(-14) translate(-30,-43)">
+      <rect x="1" y="1" width="60" height="86" rx="6" fill="#000" opacity="0.25"/>
+      <rect x="0" y="0" width="60" height="86" rx="6" fill="#3D1A08" stroke="#A0440E" stroke-width="1.5"/>
+      <rect x="4" y="4" width="52" height="78" rx="4" fill="none" stroke="#A0440E" stroke-width="0.8" opacity="0.5"/>
+      <g opacity="0.2" stroke="#E8804A" stroke-width="0.6" fill="none">
+        <path d="M8,8 L16,16 L8,24 L0,16Z" transform="translate(6,6)"/>
+        <path d="M8,8 L16,16 L8,24 L0,16Z" transform="translate(24,6)"/>
+        <path d="M8,8 L16,16 L8,24 L0,16Z" transform="translate(42,6)"/>
+        <path d="M8,8 L16,16 L8,24 L0,16Z" transform="translate(15,20)"/>
+        <path d="M8,8 L16,16 L8,24 L0,16Z" transform="translate(33,20)"/>
+        <path d="M8,8 L16,16 L8,24 L0,16Z" transform="translate(6,34)"/>
+        <path d="M8,8 L16,16 L8,24 L0,16Z" transform="translate(24,34)"/>
+        <path d="M8,8 L16,16 L8,24 L0,16Z" transform="translate(42,34)"/>
+        <path d="M8,8 L16,16 L8,24 L0,16Z" transform="translate(15,48)"/>
+        <path d="M8,8 L16,16 L8,24 L0,16Z" transform="translate(33,48)"/>
+      </g>
+    </g>
+    <!-- Card 3 front -->
+    <g transform="rotate(4) translate(-30,-43)">
+      <rect x="1" y="1" width="60" height="86" rx="6" fill="#000" opacity="0.3"/>
+      <rect x="0" y="0" width="60" height="86" rx="6" fill="#C05A18"/>
+      <rect x="3" y="3" width="54" height="80" rx="4" fill="#FDF3E3"/>
+      <rect x="5" y="5" width="50" height="10" rx="3" fill="#3D1A08"/>
+      <rect x="5" y="18" width="50" height="34" rx="3" fill="#FDEBD0"/>
+      <rect x="6" y="19" width="48" height="32" rx="2" fill="none" stroke="#C05A18" stroke-width="0.6" opacity="0.3"/>
+      <rect x="5" y="55" width="50" height="6" rx="2" fill="#C05A18" opacity="0.2"/>
+      <rect x="7" y="57" width="16" height="3" rx="1.5" fill="#C05A18" opacity="0.4"/>
+      <rect x="5" y="64" width="50" height="3" rx="1.5" fill="#3D1A08" opacity="0.2"/>
+      <rect x="5" y="70" width="40" height="3" rx="1.5" fill="#3D1A08" opacity="0.15"/>
+      <rect x="5" y="77" width="50" height="4" rx="2" fill="#3D1A08" opacity="0.1"/>
+      <rect x="7" y="78" width="10" height="2" rx="1" fill="#C05A18" opacity="0.5"/>
+      <rect x="43" y="78" width="10" height="2" rx="1" fill="#8B3A0A" opacity="0.4"/>
+      <polygon points="30,76 31.5,79 30,82 28.5,79" fill="#E8A055" opacity="0.8"/>
+    </g>
+  </g>
+</svg>
