@@ -410,175 +410,347 @@
     "abilities": {
       "plusOneAction": {
         "name": "+1 Ação",
-        "description": "O Sobrevivente pode realizar 1 Ação adicional durante sua ativação."
+        "description": "O Sobrevivente tem uma Ação extra e pode usá-la como quiser."
       },
-      "plusOneFreeMove": {
-        "name": "+1 Movimento Grátis",
-        "description": "Uma vez por ativação, o Sobrevivente pode realizar 1 Ação de Movimento gratuitamente (não custa uma Ação)."
+      "plusOneDamageCombat": {
+        "name": "+1 de Dano: Combate",
+        "description": "O Sobrevivente ganha um bônus de +1 de Dano em Ações de Combate."
       },
-      "plusOneFreeSearch": {
-        "name": "+1 Busca Grátis",
-        "description": "Uma vez por ativação, o Sobrevivente pode realizar 1 Ação de Busca gratuitamente (não custa uma Ação)."
+      "plusOneDamageMelee": {
+        "name": "+1 de Dano: Corpo a Corpo",
+        "description": "O Sobrevivente ganha um bônus de +1 de Dano em Ações Corpo a Corpo."
+      },
+      "plusOneDamageRanged": {
+        "name": "+1 de Dano: Longo Alcance",
+        "description": "O Sobrevivente ganha um bônus de +1 de Dano em Ações de Longo Alcance."
+      },
+      "plusOneDieCombat": {
+        "name": "+1 dado: Combate",
+        "description": "As armas do Sobrevivente rolam 1 dado extra em Ações de Combate. Armas Duplas ganham 1 dado extra cada, totalizando +2 dados por Ação Dupla de Combate."
       },
       "plusOneDieMelee": {
-        "name": "+1 Dado Corpo a Corpo",
-        "description": "O Sobrevivente rola 1 dado adicional em todos os ataques Corpo a Corpo."
+        "name": "+1 dado: Corpo a Corpo",
+        "description": "As armas do Sobrevivente rolam 1 dado extra em Ações Corpo a Corpo. Armas Duplas ganham 1 dado extra cada, totalizando +2 dados por Ação Dupla Corpo a Corpo."
       },
       "plusOneDieRanged": {
-        "name": "+1 Dado à Distância",
-        "description": "O Sobrevivente rola 1 dado adicional em todos os ataques à Distância."
+        "name": "+1 dado: Longo Alcance",
+        "description": "As armas do Sobrevivente rolam 1 dado extra em Ações de Longo Alcance. Armas Duplas ganham 1 dado extra cada, totalizando +2 dados por Ação Dupla de Longo Alcance."
+      },
+      "plusOneFreeCombatAction": {
+        "name": "+1 Ação de Combate gratuita",
+        "description": "O Sobrevivente ganha 1 Ação de Combate extra gratuita. Essa Ação pode ser usada apenas para realizar uma Ação de Combate."
+      },
+      "plusOneFreeMeleeAction": {
+        "name": "+1 Ação Corpo a Corpo gratuita",
+        "description": "O Sobrevivente ganha 1 Ação Corpo a Corpo extra gratuita. Essa Ação pode ser usada apenas para realizar uma Ação Corpo a Corpo."
+      },
+      "plusOneFreeMoveAction": {
+        "name": "+1 Ação de Movimento gratuita",
+        "description": "O Sobrevivente ganha 1 Ação de Movimento extra gratuita. Essa Ação pode ser usada apenas para realizar uma Ação de Movimento."
+      },
+      "plusOneFreeRangedAction": {
+        "name": "+1 Ação de Longo Alcance gratuita",
+        "description": "O Sobrevivente ganha 1 Ação de Longo Alcance extra gratuita. Essa Ação pode ser usada apenas para realizar uma Ação de Longo Alcance."
+      },
+      "plusOneFreeSearchAction": {
+        "name": "+1 Ação de Procurar gratuita",
+        "description": "O Sobrevivente ganha 1 Ação de Procurar extra gratuita. Essa Ação pode ser usada apenas para realizar uma Ação de Procurar."
+      },
+      "plusOneMaxRange": {
+        "name": "+1 no Alcance máximo",
+        "description": "O Alcance máximo das armas de Longo Alcance do Sobrevivente aumenta em 1."
+      },
+      "plusOneZonePerMove": {
+        "name": "+1 Zona por Movimento",
+        "description": "Quando o Sobrevivente gastar 1 Ação para se Mover, ele pode se Mover 1 ou 2 Zonas, em vez de apenas 1. Entrar em uma Zona com Zumbis ainda encerra a Ação de Movimento do Sobrevivente."
+      },
+      "plusOneDieResultCombat": {
+        "name": "+1 no resultado: Combate",
+        "description": "O Sobrevivente adiciona 1 ao resultado de cada dado rolado em Ações de Combate. O resultado máximo é sempre 6."
       },
       "plusOneDieResultMelee": {
         "name": "+1 no resultado: Corpo a Corpo",
-        "description": "Adicione +1 a cada resultado de dado ao fazer um ataque Corpo a Corpo (resultado máximo de 6)."
+        "description": "O Sobrevivente adiciona 1 ao resultado de cada dado rolado em Ações Corpo a Corpo. O resultado máximo é sempre 6."
       },
       "plusOneDieResultRanged": {
-        "name": "+1 no resultado: à Distância",
-        "description": "Adicione +1 a cada resultado de dado ao fazer um ataque à Distância (resultado máximo de 6)."
+        "name": "+1 no resultado: Longo Alcance",
+        "description": "O Sobrevivente adiciona 1 ao resultado de cada dado rolado em Ações de Longo Alcance. O resultado máximo é sempre 6."
       },
-      "athletic": {
-        "name": "Atlético",
-        "description": "O valor de Movimento do Sobrevivente é aumentado em 1."
+      "damageTwoCombat": {
+        "name": "Combate: Dano 2",
+        "description": "Armas de Combate usadas pelo Sobrevivente com valor de Dano 1 são tratadas como se tivessem valor de Dano 2."
+      },
+      "damageTwoMelee": {
+        "name": "Corpo a Corpo: Dano 2",
+        "description": "Armas Corpo a Corpo usadas pelo Sobrevivente com valor de Dano 1 são tratadas como se tivessem valor de Dano 2."
+      },
+      "damageTwoRanged": {
+        "name": "Longo Alcance: Dano 2",
+        "description": "Armas de Longo Alcance usadas pelo Sobrevivente com valor de Dano 1 são tratadas como se tivessem valor de Dano 2."
+      },
+      "twoCocktailsBetterThanOne": {
+        "name": "2 coquetéis são melhores que 1",
+        "description": "Role um dado cada vez que o Sobrevivente descartar um Molotov para realizar uma Ação de Longo Alcance. Em um resultado 4 ou mais, a carta de Equipamento do Molotov pode ser colocada na Mochila do Sobrevivente gratuitamente. O resultado do dado não pode ser alterado ou rerrolado de forma alguma."
+      },
+      "ambidextrous": {
+        "name": "Ambidestro",
+        "description": "O Sobrevivente trata todas as armas como se elas tivessem o símbolo de Dupla."
+      },
+      "barbarian": {
+        "name": "Bárbaro",
+        "description": "Ao resolver uma Ação Corpo a Corpo, o Sobrevivente pode substituir o número de Dados da(s) arma(s) Corpo a Corpo que estiver usando pelo número de Zumbis em sua Zona. Habilidades que afetam os valores dos dados, como +1 dado: Corpo a Corpo, continuam valendo."
+      },
+      "blitz": {
+        "name": "Blitz",
+        "description": "O Sobrevivente pode usar esta Habilidade uma vez em cada um de seus Turnos. O Sobrevivente gasta 1 Ação: ele se Move até 2 Zonas para uma Zona onde Zumbis estiverem em Alcance de uma de suas armas de Longo Alcance equipadas. Então, ele ganha 1 Ação de Longo Alcance gratuita. As regras convencionais de Movimento se aplicam."
+      },
+      "bloodlustCombat": {
+        "name": "Sede de sangue: Combate",
+        "description": "O Sobrevivente pode usar esta Habilidade uma vez em cada um de seus Turnos. O Sobrevivente gasta 1 Ação: ele se Move até 2 Zonas para uma Zona com pelo menos 1 Zumbi. Em seguida, ele ganha 1 Ação de Combate gratuita. As regras convencionais de Movimento se aplicam."
       },
       "bloodlustMelee": {
-        "name": "Sede de Sangue: Corpo a Corpo",
-        "description": "Cada vez que o Sobrevivente mata um Zumbi com um ataque Corpo a Corpo, ele pode imediatamente fazer 1 ataque Corpo a Corpo gratuito."
+        "name": "Sede de sangue: Corpo a Corpo",
+        "description": "O Sobrevivente pode usar esta Habilidade uma vez em cada um de seus Turnos. O Sobrevivente gasta 1 Ação: ele se Move até 2 Zonas para uma Zona com pelo menos 1 Zumbi. Em seguida, ele ganha 1 Ação Corpo a Corpo gratuita. As regras convencionais de Movimento se aplicam."
+      },
+      "bloodlustRanged": {
+        "name": "Sede de sangue: Longo Alcance",
+        "description": "O Sobrevivente pode usar esta Habilidade uma vez em cada um de seus Turnos. O Sobrevivente gasta 1 Ação: ele se Move até 2 Zonas para uma Zona com pelo menos 1 Zumbi. Em seguida, ele ganha 1 Ação de Longo Alcance gratuita. As regras convencionais de Movimento se aplicam."
       },
       "bornLeader": {
-        "name": "Líder Nato",
-        "description": "Uma vez por ativação, o Sobrevivente pode dar 1 Ação a outro Sobrevivente na mesma Zona."
+        "name": "Líder nato",
+        "description": "No Turno do Sobrevivente, ele pode conceder 1 Ação gratuita para que outro Sobrevivente a use como desejar. Essa Ação gratuita é usada imediatamente. Depois, o Sobrevivente Líder nato continua seu Turno."
       },
-      "bulletproof": {
-        "name": "À Prova de Balas",
-        "description": "O Sobrevivente ignora 1 Ferida de ataques à Distância cada vez que é alvo."
+      "breakIn": {
+        "name": "Invasor",
+        "description": "O Sobrevivente não precisa de Equipamentos para abrir portas. Ele não faz Barulho ao usar essa Habilidade. Além disso, o Sobrevivente ganha uma Ação extra que pode ser usada apenas para abrir portas."
       },
-      "combatTraining": {
-        "name": "Treinamento de Combate",
-        "description": "O Sobrevivente rola 2 dados adicionais em todos os ataques de Combate."
+      "brotherInArms": {
+        "name": "Irmão de Armas",
+        "description": "O Sobrevivente pode usar essa Habilidade sempre que estiver em uma Zona com pelo menos 1 outro Sobrevivente. Enquanto Irmão de armas estiver ativo, cada Sobrevivente na Zona se beneficia da Habilidade ou efeito de jogo indicado. Companheiros não se beneficiam dessa Habilidade."
       },
-      "crossbowExpert": {
-        "name": "Especialista em Besta",
-        "description": "Armas de besta empunhadas por este Sobrevivente não geram Ruído."
+      "canSearchMoreThanOnce": {
+        "name": "Pode Procurar mais de uma vez",
+        "description": "O Sobrevivente pode Procurar mais de uma vez a cada Turno, gastando 1 Ação para cada Ação de Procurar."
       },
-      "duckAndCover": {
-        "name": "Agachar e se Proteger",
-        "description": "O Sobrevivente pode gastar 1 Ação para ignorar todas as Feridas de 1 ataque até sua próxima ativação."
+      "charge": {
+        "name": "Carga",
+        "description": "O Sobrevivente pode usar esta Habilidade uma vez em cada um de seus Turnos gratuitamente. Ele se Move até 2 Zonas para uma Zona com pelo menos 1 Zumbi. As regras convencionais de Movimento se aplicam. Entrar em uma Zona com Zumbis ainda encerra a Ação de Movimento do Sobrevivente."
       },
-      "eagleEyes": {
-        "name": "Olho de Águia",
-        "description": "Todas as armas à Distância empunhadas pelo Sobrevivente ganham +1 em seu Alcance."
+      "combatReflexes": {
+        "name": "Reflexos de combate",
+        "description": "Sempre que um Zumbi aparecer em Alcance 0-1 (e antes de qualquer Investida), o Sobrevivente pode realizar uma Ação de Combate gratuita contra ele imediatamente. O Sobrevivente pode usar essa Habilidade uma vez para cada carta de Zumbi comprada."
       },
-      "fast": {
-        "name": "Rápido",
-        "description": "O valor de Movimento do Sobrevivente é aumentado em 1."
+      "destiny": {
+        "name": "Destino",
+        "description": "O Sobrevivente pode usar esta Habilidade uma vez por Turno ao revelar uma carta de Equipamento que comprou. Ele pode ignorar e descartar essa carta. Depois, compre outra carta de Equipamento do mesmo baralho."
       },
-      "firefighter": {
-        "name": "Bombeiro",
-        "description": "O Sobrevivente é imune a dano de Fogo."
+      "distributor": {
+        "name": "Distribuidor",
+        "description": "Ao resolver o Passo de Entrada durante a Fase dos Zumbis, compre uma quantidade de Cartas de Zumbi igual ao número de Zonas de Entrada ativas. Olhe as Cartas de Zumbi e atribua 1 delas a cada Zona de Entrada ativa, fazendo aparecer Zumbis como o indicado."
       },
-      "fortunate": {
-        "name": "Sortudo",
-        "description": "Uma vez por rodada, o Sobrevivente pode lançar novamente 1 dado de sua escolha."
+      "dreadnought": {
+        "name": "Encouraçado",
+        "description": "O Sobrevivente ignora todos os Ferimentos causados por Zumbis que tenham a palavra-chave indicada em seu nome."
       },
-      "freeSlotAny": {
-        "name": "Slot Livre: Qualquer",
-        "description": "O Sobrevivente ganha 1 slot de equipamento adicional que pode guardar qualquer tipo de equipamento."
+      "dualExpert": {
+        "name": "Especialista Duplo",
+        "description": "O Sobrevivente ganha uma Ação de Combate gratuita desde que esteja equipado com armas Duplas. Essa Ação pode ser usada apenas com as armas Duplas equipadas."
       },
-      "freeSlotHand": {
-        "name": "Slot Livre: Mão",
-        "description": "O Sobrevivente ganha 1 slot de equipamento de Mão adicional."
+      "escalationCombat": {
+        "name": "Reação em cadeia: Combate",
+        "description": "O Sobrevivente ganha 1 dado extra para rolar em Ações de Combate consecutivas. O bônus é cumulativo e se aplica até o final do Turno. Esse bônus acaba se o Sobrevivente realizar outro tipo de Ação."
       },
-      "freeSlotShoulder": {
-        "name": "Slot Livre: Ombro",
-        "description": "O Sobrevivente ganha 1 slot de equipamento de Ombro adicional."
+      "escalationMelee": {
+        "name": "Reação em cadeia: Corpo a Corpo",
+        "description": "O Sobrevivente ganha 1 dado extra para rolar em Ações Corpo a Corpo consecutivas. O bônus é cumulativo e se aplica até o final do Turno. Esse bônus acaba se o Sobrevivente realizar outro tipo de Ação."
+      },
+      "escalationRanged": {
+        "name": "Reação em cadeia: Longo Alcance",
+        "description": "O Sobrevivente ganha 1 dado extra para rolar em Ações de Longo Alcance consecutivas. O bônus é cumulativo e se aplica até o final do Turno. Esse bônus acaba se o Sobrevivente realizar outro tipo de Ação."
+      },
+      "fieldMedic": {
+        "name": "Médico de campo",
+        "description": "O Sobrevivente pode usar esta Habilidade uma vez em cada um de seus Turnos. O Sobrevivente gasta 1 Ação: ele se Move até 2 Zonas para uma Zona com pelo menos 1 Sobrevivente. Então, ele pode curar 1 Ferimento de qualquer Sobrevivente na Zona de destino, incluindo ele mesmo. As regras convencionais de Movimento se aplicam."
+      },
+      "freeReload": {
+        "name": "Recarga gratuita",
+        "description": "O Sobrevivente recarrega suas armas recarregáveis gratuitamente."
+      },
+      "fullAuto": {
+        "name": "Rajada",
+        "description": "Ao resolver uma Ação de Longo Alcance, o Sobrevivente pode substituir o número de Dados da(s) arma(s) de Longo Alcance que estiver usando pelo número de Zumbis na Zona alvejada. Habilidades que afetam o número de Dados, como +1 dado: Longo Alcance, continuam valendo."
       },
       "gunslinger": {
         "name": "Pistoleiro",
-        "description": "O Sobrevivente pode fazer ataques à Distância como parte de uma Ação de Movimento sem nenhuma penalidade."
+        "description": "O Sobrevivente trata todas as armas de Longo Alcance como se tivessem o símbolo de Dupla."
       },
-      "hoarder": {
+      "hitAndRun": {
+        "name": "Bate & corre",
+        "description": "O Sobrevivente pode usar esta Habilidade gratuitamente logo após resolver uma Ação Corpo a Corpo ou de Longo Alcance que tenha resultado na morte de pelo menos 1 Zumbi. Ele pode resolver uma Ação de Movimento gratuita. O Sobrevivente não gasta Ações extras para realizar essa Ação de Movimento se houver Zumbis em sua Zona."
+      },
+      "hoard": {
         "name": "Acumulador",
-        "description": "O Sobrevivente pode carregar 1 item adicional em seus slots de reserva."
+        "description": "O Sobrevivente pode carregar até 2 cartas adicionais de Equipamento. Elas são colocadas perto de seu Painel e são tratadas como se estivessem em sua Mochila."
       },
-      "ironFist": {
-        "name": "Punho de Ferro",
-        "description": "Os ataques Desarmados do Sobrevivente rolam 1 dado adicional e acertam com resultado 3+."
+      "holdYourNose": {
+        "name": "Raspa do tacho",
+        "description": "O Sobrevivente compra uma carta de Equipamento (apenas do baralho de Equipamento do Jogo Base) sempre que o último Zumbi em sua Zona for eliminado. Essa Habilidade funciona em qualquer Zona e pode ser usada múltiplas vezes no mesmo Turno. Isso NÃO é considerado uma Ação de Procurar."
       },
-      "jumpShot": {
-        "name": "Tiro em Salto",
-        "description": "O Sobrevivente pode fazer ataques à Distância durante uma Ação de Movimento sem gastar uma Ação adicional."
+      "homeDefender": {
+        "name": "Proteção doméstica",
+        "description": "O Sobrevivente não está limitado a Alcance 0-1 ao estender seu Campo de Visão por Zonas internas."
       },
-      "loud": {
-        "name": "Barulhento",
-        "description": "Todos os Zumbis na Zona do Sobrevivente são automaticamente ativados e atacam o Sobrevivente."
+      "improvisedWeaponMelee": {
+        "name": "Arma improvisada: Corpo a Corpo",
+        "description": "O Sobrevivente pode usar esta Habilidade uma vez em cada um de seus Turnos. Ele realiza um Ataque Corpo a Corpo gratuito usando estas características. Modificadores Corpo a Corpo são aplicados."
       },
-      "makeshiftWeapon": {
-        "name": "Arma Improvisada",
-        "description": "O Sobrevivente pode usar Armas Improvisadas sem nenhuma penalidade."
+      "improvisedWeaponRanged": {
+        "name": "Arma improvisada: Longo Alcance",
+        "description": "O Sobrevivente pode usar esta Habilidade uma vez em cada um de seus Turnos. Ele realiza um Ataque de Longo Alcance gratuito usando estas características. Modificadores de Longo Alcance são aplicados."
       },
-      "moveAndShoot": {
-        "name": "Mover e Atirar",
-        "description": "O Sobrevivente pode se mover até seu valor total de Movimento e então fazer 1 ataque à Distância como uma única Ação."
+      "isThatAllYouveGot": {
+        "name": "Isso é tudo?",
+        "description": "Esta Habilidade pode ser usada a qualquer momento em que o Sobrevivente for receber algum Ferimento. Ignore 1 Ferimento para cada carta de Equipamento que você descartar do inventário do Sobrevivente."
       },
-      "ninja": {
-        "name": "Ninja",
-        "description": "As ações do Sobrevivente não geram nenhum Ruído."
+      "jump": {
+        "name": "Salto",
+        "description": "O Sobrevivente pode usar esta Habilidade uma vez em cada um de seus Turnos. O Sobrevivente gasta 1 Ação e se move 2 Zonas. Ignore tudo que estiver na Zona intermediária, exceto paredes e portas fechadas."
       },
-      "painkiller": {
-        "name": "Analgésico",
-        "description": "O Sobrevivente ignora a primeira Ferida que receber em cada rodada."
+      "lifesaver": {
+        "name": "Salva-vidas",
+        "description": "O Sobrevivente pode usar esta Habilidade uma vez em cada um de seus Turnos, gratuitamente. Selecione uma Zona com pelo menos 1 Zumbi e 1 Sobrevivente em Alcance 1. Escolha Sobreviventes na Zona selecionada para serem levados para a Zona do seu Sobrevivente sem penalidades. Isso não é considerado uma Ação de Movimento."
       },
-      "rebelYell": {
-        "name": "Grito de Rebeldia",
-        "description": "Quando o Sobrevivente sofre uma Ferida, cada Sobrevivente na mesma Zona ganha +1 dado em todos os ataques até o fim da rodada."
+      "lowProfile": {
+        "name": "Esguio",
+        "description": "O Sobrevivente não é atingido por Fogo Amigo (as regras de Molotov ainda o afetam). Ignore-o ao disparar contra a Zona na qual ele estiver."
+      },
+      "lucky": {
+        "name": "Sorte",
+        "description": "Em cada Ação que o Sobrevivente realiza, você pode escolher rerrolar todos os dados mais uma vez. O novo resultado é o que vale. Essa Habilidade é cumulativa com os efeitos de Equipamento que permitem rerrolagens."
+      },
+      "matchingSet": {
+        "name": "Dupla Letal!",
+        "description": "Quando um Sobrevivente realiza uma Ação de Procurar e compra uma carta de Equipamento com o símbolo de Dupla, ele pode pegar imediatamente uma segunda carta do mesmo tipo do baralho de Equipamento. Embaralhe o baralho em seguida."
+      },
+      "medic": {
+        "name": "Médico",
+        "description": "Esta Habilidade é usada gratuitamente durante cada Fase Final. O Sobrevivente e todos os outros Sobreviventes em sua Zona podem curar 1 Ferimento. O Sobrevivente recebe 1 PA para cada Ferimento curado dessa forma."
+      },
+      "pointBlank": {
+        "name": "À queima-roupa",
+        "description": "O Sobrevivente pode realizar Ações de Longo Alcance em sua Zona desconsiderando o Alcance mínimo. Ao resolver uma Ação de Longo Alcance em Alcance 0, ele escolhe o alvo livremente e pode eliminar qualquer tipo de Zumbi. Suas armas de Longo Alcance ainda precisam causar Dano suficiente para eliminar os alvos. Fogo Amigo é ignorado."
+      },
+      "reaperCombat": {
+        "name": "Ceifador: Combate",
+        "description": "Use esta Habilidade para atribuir acertos durante a resolução de uma Ação de Combate. 1 desses acertos pode eliminar gratuitamente um Zumbi idêntico adicional na mesma Zona. Apenas um Zumbi extra pode ser eliminado por Ação. O Sobrevivente ganha Adrenalina pelo Zumbi extra."
+      },
+      "reaperMelee": {
+        "name": "Ceifador: Corpo a Corpo",
+        "description": "Use esta Habilidade para atribuir acertos durante a resolução de uma Ação Corpo a Corpo. 1 desses acertos pode eliminar gratuitamente um Zumbi idêntico adicional na mesma Zona. Apenas um Zumbi extra pode ser eliminado por Ação. O Sobrevivente ganha Adrenalina pelo Zumbi extra."
+      },
+      "reaperRanged": {
+        "name": "Ceifador: Longo Alcance",
+        "description": "Use esta Habilidade para atribuir acertos durante a resolução de uma Ação de Longo Alcance. 1 desses acertos pode eliminar gratuitamente um Zumbi idêntico adicional na mesma Zona. Apenas um Zumbi extra pode ser eliminado por Ação. O Sobrevivente ganha Adrenalina pelo Zumbi extra."
       },
       "regeneration": {
         "name": "Regeneração",
-        "description": "O Sobrevivente cura 1 Ferida no final de cada rodada."
+        "description": "Durante cada Fase Final, a Vida do Sobrevivente é restaurada totalmente."
+      },
+      "rollSixPlusOneDamageCombat": {
+        "name": "Resultado 6: +1 Dano Combate",
+        "description": "Adicione 1 ao valor de Dano da arma que o Sobrevivente estiver usando para cada 6 rolado em uma Ação de Combate. Efeitos de jogo que permitem rerrolagens devem ser usados antes de determinar o Bônus de Dano."
+      },
+      "rollSixPlusOneDamageMelee": {
+        "name": "Resultado 6: +1 Dano Corpo a Corpo",
+        "description": "Adicione 1 ao valor de Dano da arma que o Sobrevivente estiver usando para cada 6 rolado em uma Ação Corpo a Corpo. Efeitos de jogo que permitem rerrolagens devem ser usados antes de determinar o Bônus de Dano."
+      },
+      "rollSixPlusOneDamageRanged": {
+        "name": "Resultado 6: +1 Dano Longo Alcance",
+        "description": "Adicione 1 ao valor de Dano da arma que o Sobrevivente estiver usando para cada 6 rolado em uma Ação de Longo Alcance. Efeitos de jogo que permitem rerrolagens devem ser usados antes de determinar o Bônus de Dano."
+      },
+      "rollSixPlusOneDieCombat": {
+        "name": "Resultado 6: +1 dado Combate",
+        "description": "Você pode rolar um dado extra para cada 6 rolado em uma Ação de Combate. Enquanto rolar resultados 6, continue rolando dados extras. Efeitos de jogo que permitem rerrolagens devem ser usados antes de rolar os dados extras."
+      },
+      "rollSixPlusOneDieMelee": {
+        "name": "Resultado 6: +1 dado Corpo a Corpo",
+        "description": "Você pode rolar um dado extra para cada 6 rolado em uma Ação Corpo a Corpo. Enquanto rolar resultados 6, continue rolando dados extras. Efeitos de jogo que permitem rerrolagens devem ser usados antes de rolar os dados extras."
+      },
+      "rollSixPlusOneDieRanged": {
+        "name": "Resultado 6: +1 dado Longo Alcance",
+        "description": "Você pode rolar um dado extra para cada 6 rolado em uma Ação de Longo Alcance. Enquanto rolar resultados 6, continue rolando dados extras. Efeitos de jogo que permitem rerrolagens devem ser usados antes de rolar os dados extras."
       },
       "scavenger": {
         "name": "Catador",
-        "description": "O Sobrevivente encontra 1 item adicional sempre que realizar uma Ação de Busca."
+        "description": "O Sobrevivente pode Procurar em qualquer Zona interna ou externa. As regras convencionais de Procurar ainda se aplicam."
+      },
+      "searchTwoCards": {
+        "name": "Procurar: 2 cartas",
+        "description": "Compre 2 cartas ao Procurar com o Sobrevivente."
+      },
+      "shove": {
+        "name": "Empurrão",
+        "description": "O Sobrevivente pode usar esta Habilidade uma vez em cada um de seus Turnos, gratuitamente. Escolha uma Zona a Alcance 1 do seu Sobrevivente. As Zonas devem estar ligadas por um caminho livre. Todos os Zumbis na Zona do Sobrevivente são empurrados para a Zona escolhida. Isso não é considerado um Movimento."
+      },
+      "sidestep": {
+        "name": "Evasão",
+        "description": "Sempre que quaisquer Zumbis aparecerem em Alcance 0-1 (e antes de qualquer Investida), o Sobrevivente pode realizar uma Ação de Movimento imediata e gratuitamente. O Sobrevivente não gasta Ações extras para realizar essa Ação de Movimento se houver Zumbis em sua Zona. O Sobrevivente pode usar essa Habilidade uma vez para cada carta de Zumbi comprada."
       },
       "slippery": {
-        "name": "Escorregadio",
-        "description": "O Sobrevivente pode se mover por Zonas ocupadas por Zumbis sem parar."
+        "name": "Liso",
+        "description": "O Sobrevivente não gasta Ações extras ao realizar uma Ação de Movimento para sair de uma Zona com Zumbis. O Sobrevivente também ignora os Zumbis ao realizar Ações de Movimento."
       },
       "sniper": {
-        "name": "Franco-Atirador",
-        "description": "Os ataques à Distância do Sobrevivente ignoram Cobertura e podem atacar Zonas até 1 Zona além do Alcance normal da arma."
+        "name": "Precisão",
+        "description": "O Sobrevivente pode escolher livremente os alvos de todas as suas Ações de Longo Alcance. Fogo Amigo é ignorado."
       },
       "sprint": {
-        "name": "Arrancada",
-        "description": "O Sobrevivente pode se mover até 3 Zonas ao gastar 1 Ação de Movimento, independentemente de seu valor normal de Movimento."
+        "name": "Corrida",
+        "description": "O Sobrevivente pode usar esta Habilidade uma vez em cada um de seus Turnos. Gaste 1 Ação de Movimento com o Sobrevivente: ele pode se Mover 2 ou 3 Zonas em vez de 1. Entrar em uma Zona com Zumbis ainda encerra a Ação de Movimento do Sobrevivente."
+      },
+      "startsWithHealth": {
+        "name": "Começa com [X] de Vida",
+        "description": "O Sobrevivente começa com o número indicado de Vida. Esse é o nível base dele. Sobreviventes com essa Habilidade não podem ser usados como Companheiros."
+      },
+      "startsWithTwoAP": {
+        "name": "Começa com 2 PA",
+        "description": "O Sobrevivente começa a partida com 2 Pontos de Adrenalina. Sobreviventes com essa Habilidade não podem ser usados como Companheiros."
+      },
+      "startsWithEquipment": {
+        "name": "Começa com um(a) [Equipamento]",
+        "description": "O Sobrevivente começa o jogo com o Equipamento indicado. Ele recebe a carta durante a Preparação. Sobreviventes com essa Habilidade não podem ser usados como Companheiros."
       },
       "steadyHand": {
-        "name": "Mão Firme",
-        "description": "O Sobrevivente pode lançar novamente até 1 dado que errou por ataque à Distância."
+        "name": "Mão firme",
+        "description": "O Sobrevivente ignora outros Sobreviventes à sua escolha ao errar uma Ação de Longo Alcance. Essa Habilidade não se aplica a efeitos de jogo que matam tudo na Zona alvejada."
       },
-      "stoic": {
-        "name": "Estóico",
-        "description": "O Sobrevivente é imune ao Pânico."
+      "superStrength": {
+        "name": "Superforça",
+        "description": "Considere que o Dano das armas Corpo a Corpo usadas pelo Sobrevivente é 3."
+      },
+      "swordmaster": {
+        "name": "Mestre espadachim",
+        "description": "O Sobrevivente trata todas as armas Corpo a Corpo como se tivessem o símbolo de Dupla."
+      },
+      "tactician": {
+        "name": "Estrategista",
+        "description": "O Turno do Sobrevivente pode ser resolvido a qualquer momento durante a Fase dos Jogadores, antes ou depois do Turno de qualquer outro Sobrevivente. Se vários Sobreviventes se beneficiarem dessa Habilidade, os jogadores escolhem a ordem dos Turnos."
       },
       "taunt": {
         "name": "Provocação",
-        "description": "O Sobrevivente pode gastar 1 Ação para forçar todos os Zumbis em sua Zona a atacar apenas eles até o final da rodada."
+        "description": "O Sobrevivente pode usar esta Habilidade uma vez em cada um de seus Turnos, gratuitamente. Escolha uma Zona a até 2 Zonas de distância do Sobrevivente e que tenha um caminho livre até ele. Todos os Zumbis na Zona escolhida ganham uma Ativação extra. Zumbis provocados ignoram todos os outros Sobreviventes e tentam alcançar o Sobrevivente provocador de qualquer maneira."
       },
       "tough": {
-        "name": "Resistente",
-        "description": "A capacidade máxima de Feridas do Sobrevivente é aumentada em 1."
+        "name": "Durão",
+        "description": "O Sobrevivente ignora o primeiro Ferimento recebido durante cada etapa de Passo de Ataque (Fase dos Zumbis) e causado por Fogo Amigo."
       },
-      "train": {
-        "name": "Treinar",
-        "description": "O Sobrevivente pode gastar 1 Ação para permitir que outro Sobrevivente na mesma Zona use 1 Habilidade."
-      },
-      "trickShot": {
-        "name": "Tiro Certeiro",
-        "description": "Os ataques à Distância do Sobrevivente podem acertar alvos em Zonas adjacentes sem a penalidade normal de alcance."
+      "webbing": {
+        "name": "Mãos rápidas",
+        "description": "Todos os Equipamentos no inventário do Sobrevivente são tratados como se estivessem em suas Mãos."
       },
       "zombieLink": {
-        "name": "Elo Zumbi",
-        "description": "Zumbis ignoram o Sobrevivente a menos que o Sobrevivente os ataque ou entre em sua Zona."
+        "name": "Conexão Zumbi",
+        "description": "O Sobrevivente realiza um Turno extra sempre que uma carta de Ativação Extra (NÃO cartas de Investida) for comprada do baralho de Zumbis. Ele joga antes dos Zumbis extra-ativados. Se vários Sobreviventes se beneficiarem dessa Habilidade, os jogadores escolhem a ordem dos Turnos."
       }
     },
     "tags": {

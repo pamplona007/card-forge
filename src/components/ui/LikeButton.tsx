@@ -40,7 +40,7 @@ export default function LikeButton({ project, size = '2' }: LikeButtonProps) {
                 variant="ghost"
             >
                 <Heart
-                    color={isLiked ? 'currentColor' : 'var(--gray-1)'}
+                    color={isLiked ? 'currentColor' : '#ddd'}
                     fill={isLiked ? 'currentColor' : 'none'}
                     size={16}
                     strokeWidth={2}

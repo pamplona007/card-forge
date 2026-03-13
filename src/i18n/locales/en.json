@@ -411,175 +411,347 @@
     "abilities": {
       "plusOneAction": {
         "name": "+1 Action",
-        "description": "The Survivor may perform 1 additional Action during their activation."
+        "description": "The Survivor has an extra Action they may use as they please."
       },
-      "plusOneFreeMove": {
-        "name": "+1 Free Move",
-        "description": "Once per activation, the Survivor may perform 1 Move Action for free (it does not cost an Action)."
+      "plusOneDamageCombat": {
+        "name": "+1 Damage: Combat",
+        "description": "The Survivor gets a +1 Damage bonus with Combat Actions."
       },
-      "plusOneFreeSearch": {
-        "name": "+1 Free Search",
-        "description": "Once per activation, the Survivor may perform 1 Search Action for free (it does not cost an Action)."
+      "plusOneDamageMelee": {
+        "name": "+1 Damage: Melee",
+        "description": "The Survivor gets a +1 Damage bonus with Melee Actions."
+      },
+      "plusOneDamageRanged": {
+        "name": "+1 Damage: Ranged",
+        "description": "The Survivor gets a +1 Damage bonus with Ranged Actions."
+      },
+      "plusOneDieCombat": {
+        "name": "+1 die: Combat",
+        "description": "Each of the Survivor's weapons rolls an extra die with Combat Actions. Dual weapons each gain a die, for a total of +2 dice per Dual Combat Action."
       },
       "plusOneDieMelee": {
-        "name": "+1 Die Melee",
-        "description": "The Survivor rolls 1 additional die on all Melee attacks."
+        "name": "+1 die: Melee",
+        "description": "Each of the Survivor's weapons rolls an extra die with Melee Actions. Dual weapons each gain a die, for a total of +2 dice per Dual Melee Action."
       },
       "plusOneDieRanged": {
-        "name": "+1 Die Ranged",
-        "description": "The Survivor rolls 1 additional die on all Ranged attacks."
+        "name": "+1 die: Ranged",
+        "description": "Each of the Survivor's weapons rolls an extra die with Ranged Actions. Dual weapons each gain a die, for a total of +2 dice per Dual Ranged Action."
+      },
+      "plusOneFreeCombatAction": {
+        "name": "+1 free Combat Action",
+        "description": "The Survivor has 1 extra free Combat Action. This Action may only be used to perform a Combat Action."
+      },
+      "plusOneFreeMeleeAction": {
+        "name": "+1 free Melee Action",
+        "description": "The Survivor has 1 extra free Melee Action. This Action may only be used to perform a Melee Action."
+      },
+      "plusOneFreeMoveAction": {
+        "name": "+1 free Move Action",
+        "description": "The Survivor has 1 extra free Move Action. This Action may only be used to perform a Move Action."
+      },
+      "plusOneFreeRangedAction": {
+        "name": "+1 free Ranged Action",
+        "description": "The Survivor has 1 extra free Ranged Action. This Action may only be used to perform a Ranged Action."
+      },
+      "plusOneFreeSearchAction": {
+        "name": "+1 free Search Action",
+        "description": "The Survivor has 1 extra free Search Action. This Action may only be used to perform a Search Action."
+      },
+      "plusOneMaxRange": {
+        "name": "+1 max Range",
+        "description": "The maximum Range of Ranged weapons the Survivor uses is increased by 1."
+      },
+      "plusOneZonePerMove": {
+        "name": "+1 Zone per Move",
+        "description": "When the Survivor spends 1 Action to Move, they can Move 1 or 2 Zones instead of 1. Entering a Zone containing Zombies still ends the Survivor's Move Action."
+      },
+      "plusOneDieResultCombat": {
+        "name": "+1 to dice roll: Combat",
+        "description": "The Survivor adds 1 to the result of each die they roll with Combat Actions. The maximum result is always 6."
       },
       "plusOneDieResultMelee": {
-        "name": "+1 to die result: Melee",
-        "description": "Add +1 to each die result when making a Melee attack (maximum result of 6)."
+        "name": "+1 to dice roll: Melee",
+        "description": "The Survivor adds 1 to the result of each die they roll with Melee Actions. The maximum result is always 6."
       },
       "plusOneDieResultRanged": {
-        "name": "+1 to die result: Ranged",
-        "description": "Add +1 to each die result when making a Ranged attack (maximum result of 6)."
+        "name": "+1 to dice roll: Ranged",
+        "description": "The Survivor adds 1 to the result of each die they roll with Ranged Actions. The maximum result is always 6."
       },
-      "athletic": {
-        "name": "Athletic",
-        "description": "The Survivor's Move value is increased by 1."
+      "damageTwoCombat": {
+        "name": "Combat: Damage 2",
+        "description": "Combat weapons used by the Survivor with a Damage value of 1 are considered to have a Damage value of 2."
+      },
+      "damageTwoMelee": {
+        "name": "Melee: Damage 2",
+        "description": "Melee weapons used by the Survivor with a Damage value of 1 are considered to have a Damage value of 2."
+      },
+      "damageTwoRanged": {
+        "name": "Ranged: Damage 2",
+        "description": "Ranged weapons used by the Survivor with a Damage value of 1 are considered to have a Damage value of 2."
+      },
+      "twoCocktailsBetterThanOne": {
+        "name": "2 cocktails are better than 1",
+        "description": "Roll a die each time the Survivor discards a Molotov to perform a Ranged Action. On a result of 4 or more, the Molotov Equipment card may be put in the Survivor's Backpack instead, for free. The die result may not be altered or re-rolled in any way."
+      },
+      "ambidextrous": {
+        "name": "Ambidextrous",
+        "description": "The Survivor treats all weapons as if they had the Dual symbol."
+      },
+      "barbarian": {
+        "name": "Barbarian",
+        "description": "When resolving a Melee Action, the Survivor may substitute the Dice number of the Melee weapon(s) they use with the number of Zombies standing in their Zone. Skills affecting the dice value, like +1 die: Melee, still apply."
+      },
+      "blitz": {
+        "name": "Blitz",
+        "description": "Once per Turn, the Survivor spends 1 Action to Move up to 2 Zones to a Zone where Zombies are within Range of one of their equipped Ranged weapons, then gains 1 free Ranged Action. Normal Movement rules apply."
+      },
+      "bloodlustCombat": {
+        "name": "Bloodlust: Combat",
+        "description": "Once per Turn, the Survivor spends 1 Action to Move up to 2 Zones to a Zone containing at least 1 Zombie, then gains 1 free Combat Action. Normal Movement rules apply."
       },
       "bloodlustMelee": {
         "name": "Bloodlust: Melee",
-        "description": "Each time the Survivor kills a Zombie with a Melee attack, they may immediately make 1 free Melee attack."
+        "description": "Once per Turn, the Survivor spends 1 Action to Move up to 2 Zones to a Zone containing at least 1 Zombie, then gains 1 free Melee Action. Normal Movement rules apply."
+      },
+      "bloodlustRanged": {
+        "name": "Bloodlust: Ranged",
+        "description": "Once per Turn, the Survivor spends 1 Action to Move up to 2 Zones to a Zone containing at least 1 Zombie, then gains 1 free Ranged Action. Normal Movement rules apply."
       },
       "bornLeader": {
-        "name": "Born Leader",
-        "description": "Once per activation, the Survivor may give 1 Action to another Survivor in the same Zone."
+        "name": "Born leader",
+        "description": "During the Survivor's Turn, the Survivor may give 1 free Action to another Survivor to use as they please. This Action is used immediately. Then, the Born leader Survivor resumes their Turn."
       },
-      "bulletproof": {
-        "name": "Bulletproof",
-        "description": "The Survivor ignores 1 Wound from Ranged attacks each time they are targeted."
+      "breakIn": {
+        "name": "Break-in",
+        "description": "The Survivor doesn't need any Equipment to open doors and doesn't make Noise while doing so. The Survivor also gains one extra free Action that can only be used to open doors."
       },
-      "combatTraining": {
-        "name": "Combat Training",
-        "description": "The Survivor rolls 2 additional dice on all Combat attacks."
+      "brotherInArms": {
+        "name": "Brother in arms",
+        "description": "While standing in the same Zone as at least 1 other Survivor, each Survivor in the Zone (including the one with this Skill) benefits from the indicated Skill or game effect. Companions do not benefit from this Skill."
       },
-      "crossbowExpert": {
-        "name": "Crossbow Expert",
-        "description": "Crossbow weapons wielded by this Survivor do not generate Noise."
+      "canSearchMoreThanOnce": {
+        "name": "Can Search more than once",
+        "description": "The Survivor can Search multiple times per Turn, spending 1 Action for each Search Action."
       },
-      "duckAndCover": {
-        "name": "Duck and Cover",
-        "description": "The Survivor may spend 1 Action to ignore all Wounds from 1 attack until their next activation."
+      "charge": {
+        "name": "Charge",
+        "description": "Once per Turn, for free, the Survivor moves up to 2 Zones to a Zone containing at least 1 Zombie. Normal Movement rules still apply."
       },
-      "eagleEyes": {
-        "name": "Eagle Eyes",
-        "description": "All Ranged weapons wielded by the Survivor gain +1 to their Range."
+      "combatReflexes": {
+        "name": "Combat reflexes",
+        "description": "Whenever any Zombies spawn within Range 0-1, the Survivor may immediately perform a free Combat Action against them. The Survivor may use this Skill once per Zombie card drawn."
       },
-      "fast": {
-        "name": "Fast",
-        "description": "The Survivor's Move value is increased by 1."
+      "destiny": {
+        "name": "Destiny",
+        "description": "Once per Turn when the Survivor reveals an Equipment card they drew, they can ignore and discard that card, then draw another Equipment card from the same deck."
       },
-      "firefighter": {
-        "name": "Firefighter",
-        "description": "The Survivor is immune to Fire damage."
+      "distributor": {
+        "name": "Distributor",
+        "description": "When resolving the Spawn Step, draw as many Zombie Cards as there are active Spawn Zones. Look at the Zombie Cards, then assign 1 of them to each active Spawn Zone."
       },
-      "fortunate": {
-        "name": "Fortunate",
-        "description": "Once per round, the Survivor may reroll 1 die of their choice."
+      "dreadnought": {
+        "name": "Dreadnought",
+        "description": "The Survivor ignores all Wounds coming from Zombies having the indicated keyword in its name."
       },
-      "freeSlotAny": {
-        "name": "Free Slot: Any",
-        "description": "The Survivor gains 1 additional equipment slot that can hold any type of equipment."
+      "dualExpert": {
+        "name": "Dual expert",
+        "description": "The Survivor has a free Combat Action as long as they have Dual weapons equipped. This Action may only be used with the Dual equipped weapons."
       },
-      "freeSlotHand": {
-        "name": "Free Slot: Hand",
-        "description": "The Survivor gains 1 additional Hand equipment slot."
+      "escalationCombat": {
+        "name": "Escalation: Combat",
+        "description": "The Survivor gains 1 extra die to roll for consecutive Combat Actions. The bonus is cumulative and applies until the end of the Survivor's Turn. The bonus is lost whenever the Survivor performs another kind of Action."
       },
-      "freeSlotShoulder": {
-        "name": "Free Slot: Shoulder",
-        "description": "The Survivor gains 1 additional Shoulder equipment slot."
+      "escalationMelee": {
+        "name": "Escalation: Melee",
+        "description": "The Survivor gains 1 extra die to roll for consecutive Melee Actions. The bonus is cumulative and applies until the end of the Survivor's Turn. The bonus is lost whenever the Survivor performs another kind of Action."
+      },
+      "escalationRanged": {
+        "name": "Escalation: Ranged",
+        "description": "The Survivor gains 1 extra die to roll for consecutive Ranged Actions. The bonus is cumulative and applies until the end of the Survivor's Turn. The bonus is lost whenever the Survivor performs another kind of Action."
+      },
+      "fieldMedic": {
+        "name": "Field medic",
+        "description": "Once per Turn, the Survivor spends 1 Action to Move up to 2 Zones to a Zone containing at least 1 Survivor, then may heal 1 Wound from any Survivor in the destination Zone, including themselves. Normal Movement rules apply."
+      },
+      "freeReload": {
+        "name": "Free reload",
+        "description": "The Survivor reloads reloadable weapons for free."
+      },
+      "fullAuto": {
+        "name": "Full auto",
+        "description": "When resolving a Ranged Action, the Survivor may substitute the Dice number of the Ranged weapon(s) they use with the number of Zombies standing in the targeted Zone. Skills affecting the dice value, like +1 die: Ranged, still apply."
       },
       "gunslinger": {
         "name": "Gunslinger",
-        "description": "The Survivor may make Ranged attacks as part of a Move Action without any penalty."
+        "description": "The Survivor treats all Ranged weapons as if they had the Dual symbol."
       },
-      "hoarder": {
-        "name": "Hoarder",
-        "description": "The Survivor may carry 1 additional item in their reserve slots."
+      "hitAndRun": {
+        "name": "Hit & run",
+        "description": "For free, just after resolving a Melee or Ranged Action that eliminated at least 1 Zombie, the Survivor may make a free Move Action without spending extra Actions even if Zombies are in their Zone."
       },
-      "ironFist": {
-        "name": "Iron Fist",
-        "description": "The Survivor's Unarmed attacks roll 1 additional die and hit on a result of 3+."
+      "hoard": {
+        "name": "Hoard",
+        "description": "The Survivor can carry up to 2 extra Equipment cards in their Backpack."
       },
-      "jumpShot": {
-        "name": "Jump Shot",
-        "description": "The Survivor may make Ranged attacks during a Move Action without spending an additional Action."
+      "holdYourNose": {
+        "name": "Hold your nose",
+        "description": "The Survivor draws an Equipment card (from the Core Equipment deck only) whenever the last Zombie standing in their Zone is eliminated. This is not a Search Action."
       },
-      "loud": {
-        "name": "Loud",
-        "description": "All Zombies in the Survivor's Zone are automatically activated and target the Survivor."
+      "homeDefender": {
+        "name": "Home defender",
+        "description": "The Survivor is not limited to Range 0-1 when tracing Lines of Sight through building Zones."
       },
-      "makeshiftWeapon": {
-        "name": "Makeshift Weapon",
-        "description": "The Survivor may use Improvised Weapons without any penalty."
+      "improvisedWeaponMelee": {
+        "name": "Improvised weapon: Melee",
+        "description": "Once per Turn, the Survivor performs a free Melee Attack using the improvised weapon's characteristics. Melee modifiers still apply."
       },
-      "moveAndShoot": {
-        "name": "Move and Shoot",
-        "description": "The Survivor may move up to their full Move value and then make 1 Ranged attack as a single Action."
+      "improvisedWeaponRanged": {
+        "name": "Improvised weapon: Ranged",
+        "description": "Once per Turn, the Survivor performs a free Ranged Attack using the improvised weapon's characteristics. Ranged modifiers still apply."
       },
-      "ninja": {
-        "name": "Ninja",
-        "description": "The Survivor's actions do not generate any Noise."
+      "isThatAllYouveGot": {
+        "name": "Is That All You've Got?",
+        "description": "This Skill can be used any time the Survivor is about to endure Wounds. Negate 1 Wound for each Equipment card discarded from the Survivor's inventory."
       },
-      "painkiller": {
-        "name": "Painkiller",
-        "description": "The Survivor ignores the first Wound they receive each round."
+      "jump": {
+        "name": "Jump",
+        "description": "Once per Turn, the Survivor spends 1 Action and moves 2 Zones, ignoring everything in the intervening Zone except walls and closed doors."
       },
-      "rebelYell": {
-        "name": "Rebel Yell",
-        "description": "When the Survivor takes a Wound, each Survivor in the same Zone gains +1 die on all attacks until the end of the round."
+      "lifesaver": {
+        "name": "Lifesaver",
+        "description": "Once per Turn, for free, the Survivor may drag chosen Survivors from a Zone at Range 1 containing Zombies to the Survivor's Zone without penalty."
+      },
+      "lowProfile": {
+        "name": "Low profile",
+        "description": "The Survivor can't get hit by Friendly Fire (Molotov rules still apply). Ignore them when shooting at the Zone they stand in."
+      },
+      "lucky": {
+        "name": "Lucky",
+        "description": "For each Action the Survivor takes, the player may choose to re-roll all the dice an additional time. The new result replaces the previous one."
+      },
+      "matchingSet": {
+        "name": "Matching set",
+        "description": "When the Survivor performs a Search Action and draws an Equipment card with the Dual symbol, they can immediately take a second card of the same type from the Equipment deck."
+      },
+      "medic": {
+        "name": "Medic",
+        "description": "During each End Phase, the Survivor and all other Survivors in the same Zone may heal 1 Wound. The Survivor earns 1 AP for each Wound healed this way."
+      },
+      "pointBlank": {
+        "name": "Point-blank",
+        "description": "The Survivor can perform Ranged Actions in their own Zone regardless of minimum Range, freely choosing targets and eliminating any Zombie type. Friendly Fire is ignored."
+      },
+      "reaperCombat": {
+        "name": "Reaper: Combat",
+        "description": "When assigning hits from a Combat Action, 1 hit can freely eliminate an additional identical Zombie in the same Zone. Only 1 additional Zombie can be eliminated per Action. The Survivor gains Adrenaline for the additional Zombie."
+      },
+      "reaperMelee": {
+        "name": "Reaper: Melee",
+        "description": "When assigning hits from a Melee Action, 1 hit can freely eliminate an additional identical Zombie in the same Zone. Only 1 additional Zombie can be eliminated per Action. The Survivor gains Adrenaline for the additional Zombie."
+      },
+      "reaperRanged": {
+        "name": "Reaper: Ranged",
+        "description": "When assigning hits from a Ranged Action, 1 hit can freely eliminate an additional identical Zombie in the same Zone. Only 1 additional Zombie can be eliminated per Action. The Survivor gains Adrenaline for the additional Zombie."
       },
       "regeneration": {
         "name": "Regeneration",
-        "description": "The Survivor heals 1 Wound at the end of each round."
+        "description": "During each End Phase, the Survivor's Health is fully restored to its maximum."
+      },
+      "rollSixPlusOneDamageCombat": {
+        "name": "Roll 6: +1 Damage Combat",
+        "description": "Add 1 to the Damage value of the weapon the Survivor uses for each 6 rolled on a Combat Action. Re-rolls must be used before determining the Damage bonus."
+      },
+      "rollSixPlusOneDamageMelee": {
+        "name": "Roll 6: +1 Damage Melee",
+        "description": "Add 1 to the Damage value of the weapon the Survivor uses for each 6 rolled on a Melee Action. Re-rolls must be used before determining the Damage bonus."
+      },
+      "rollSixPlusOneDamageRanged": {
+        "name": "Roll 6: +1 Damage Ranged",
+        "description": "Add 1 to the Damage value of the weapon the Survivor uses for each 6 rolled on a Ranged Action. Re-rolls must be used before determining the Damage bonus."
+      },
+      "rollSixPlusOneDieCombat": {
+        "name": "Roll 6: +1 die Combat",
+        "description": "An additional die can be rolled for each 6 rolled on a Combat Action. Keep rolling additional dice as long as 6s are rolled. Re-rolls must be used before rolling additional dice."
+      },
+      "rollSixPlusOneDieMelee": {
+        "name": "Roll 6: +1 die Melee",
+        "description": "An additional die can be rolled for each 6 rolled on a Melee Action. Keep rolling additional dice as long as 6s are rolled. Re-rolls must be used before rolling additional dice."
+      },
+      "rollSixPlusOneDieRanged": {
+        "name": "Roll 6: +1 die Ranged",
+        "description": "An additional die can be rolled for each 6 rolled on a Ranged Action. Keep rolling additional dice as long as 6s are rolled. Re-rolls must be used before rolling additional dice."
       },
       "scavenger": {
         "name": "Scavenger",
-        "description": "The Survivor finds 1 additional item whenever they perform a Search Action."
+        "description": "The Survivor may Search in any building or street Zone. Normal Search rules apply."
+      },
+      "searchTwoCards": {
+        "name": "Search: 2 cards",
+        "description": "Draw 2 cards when Searching with the Survivor."
+      },
+      "shove": {
+        "name": "Shove",
+        "description": "Once per Turn, for free, the Survivor pushes all Zombies in their Zone to a selected Zone at Range 1. This is not a Movement."
+      },
+      "sidestep": {
+        "name": "Sidestep",
+        "description": "Whenever any Zombies spawn within Range 0-1, the Survivor may immediately perform a free Move Action without extra cost even if Zombies are in their Zone. The Survivor may use this Skill once per Zombie card drawn."
       },
       "slippery": {
         "name": "Slippery",
-        "description": "The Survivor may move through Zombie-occupied Zones without stopping."
+        "description": "The Survivor does not spend extra Actions when performing a Move Action out of a Zone containing Zombies, and ignores Zombies when performing Move Actions."
       },
       "sniper": {
         "name": "Sniper",
-        "description": "The Survivor's Ranged attacks ignore Cover and can target Zones up to 1 Zone further than the weapon's normal Range."
+        "description": "The Survivor may freely choose the targets of all their Ranged Actions. Friendly Fire is ignored."
       },
       "sprint": {
         "name": "Sprint",
-        "description": "The Survivor may move up to 3 Zones when spending 1 Move Action, regardless of their normal Move value."
+        "description": "Once per Turn, the Survivor spends 1 Move Action to move 2 or 3 Zones instead of 1. Entering a Zone containing Zombies still ends the Move Action."
+      },
+      "startsWithHealth": {
+        "name": "Starts with [X] Health",
+        "description": "The Survivor starts with the indicated amount of Health. This is their base level. Survivors with this Skill cannot be used as Companions."
+      },
+      "startsWithTwoAP": {
+        "name": "Starts with 2 AP",
+        "description": "The Survivor begins the game with 2 Adrenaline Points. Survivors with this Skill cannot be used as Companions."
+      },
+      "startsWithEquipment": {
+        "name": "Starts with a [Equipment]",
+        "description": "The Survivor begins the game with the indicated Equipment. Its card is automatically assigned to them during Setup. Survivors with this Skill cannot be used as Companions."
       },
       "steadyHand": {
-        "name": "Steady Hand",
-        "description": "The Survivor may reroll up to 1 missed die per Ranged attack."
+        "name": "Steady hand",
+        "description": "The Survivor can ignore other Survivors of their choosing when missing with a Ranged Action. This Skill does not apply to game effects killing everything in the targeted Zone."
       },
-      "stoic": {
-        "name": "Stoic",
-        "description": "The Survivor is immune to Panic."
+      "superStrength": {
+        "name": "Super strength",
+        "description": "Consider the Damage value of Melee weapons used by the Survivor to be 3."
+      },
+      "swordmaster": {
+        "name": "Swordmaster",
+        "description": "The Survivor treats all Melee weapons as if they had the Dual symbol."
+      },
+      "tactician": {
+        "name": "Tactician",
+        "description": "The Survivor's Turn can be resolved anytime during the Player Phase, before or after any other Survivor's Turn. If several Survivors have this Skill, players choose their Turn order."
       },
       "taunt": {
         "name": "Taunt",
-        "description": "The Survivor may spend 1 Action to force all Zombies in their Zone to target only them until the end of the round."
+        "description": "Once per Turn, for free, the Survivor forces all Zombies in a Zone up to 2 Zones away (with a clear path) to gain an extra Activation and move toward the Survivor, ignoring all others."
       },
       "tough": {
         "name": "Tough",
-        "description": "The Survivor's maximum Wound capacity is increased by 1."
+        "description": "The Survivor ignores the first Wound they receive during each Attack Step (Zombie Phase) and during Friendly Fire."
       },
-      "train": {
-        "name": "Train",
-        "description": "The Survivor may spend 1 Action to allow another Survivor in the same Zone to use 1 Skill."
-      },
-      "trickShot": {
-        "name": "Trick Shot",
-        "description": "The Survivor's Ranged attacks can hit targets in adjacent Zones without the normal range penalty."
+      "webbing": {
+        "name": "Webbing",
+        "description": "All Equipment in the Survivor's inventory is considered equipped in Hand."
       },
       "zombieLink": {
-        "name": "Zombie Link",
-        "description": "Zombies ignore the Survivor unless the Survivor attacks them or enters their Zone."
+        "name": "Zombie link",
+        "description": "The Survivor plays an extra Turn each time an Extra Activation card (not Rushes) is drawn from the Zombie pile, before the extra-activated Zombies."
       }
     },
     "tags": {

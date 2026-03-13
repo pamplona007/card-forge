@@ -66,9 +66,11 @@ export const CardThumbnail = ({ project }: { project: LikedProject | Project }) 
                     }}
                 />
             ))}
-            <Text color="gray" size="6" style={{ position: 'relative' }}>
-                {project.name.charAt(0).toUpperCase()}
-            </Text>
+            {!project.cards?.length && (
+                <Text color="gray" size="6" style={{ position: 'relative' }}>
+                    {project.name.charAt(0).toUpperCase()}
+                </Text>
+            )}
             <Box style={{ bottom: '0px', position: 'absolute', right: '8px' }}>
                 <LikeButton project={project} size="1" />
             </Box>
