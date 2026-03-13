@@ -1,9 +1,9 @@
-import { Box, Button, Card, Grid, Heading, Text } from '@radix-ui/themes';
+import { Badge, Box, Button, Card, Grid, Heading, Text } from '@radix-ui/themes';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import AppLayout from '../components/ui/AppLayout';
-import { SUPPORTED_GAMES } from '../types/game';
+import { COMING_SOON_GAMES, SUPPORTED_GAMES } from '../types/game';
 
 export default function GameSelectionPage() {
     const navigate = useNavigate();
@@ -75,6 +75,49 @@ export default function GameSelectionPage() {
                                 variant="solid"
                             >
                                 {t('games.button.viewProjects')}
+                            </Button>
+                        </Box>
+                    </Card>
+                ))}
+
+                {COMING_SOON_GAMES.map((name) => (
+                    <Card
+                        key={name}
+                        style={{
+                            opacity: 0.6,
+                            overflow: 'hidden',
+                        }}
+                    >
+                        <Box
+                            style={{
+                                alignItems: 'center',
+                                backgroundColor: 'var(--gray-4)',
+                                display: 'flex',
+                                height: '160px',
+                                justifyContent: 'center',
+                                position: 'relative',
+                            }}
+                        >
+                            <Text color="gray" size="6">
+                                {name.charAt(0)}
+                            </Text>
+                            <Box style={{ position: 'absolute', right: '8px', top: '8px' }}>
+                                <Badge color="gray" variant="soft">
+                                    {t('games.comingSoon')}
+                                </Badge>
+                            </Box>
+                        </Box>
+                        <Box mt={'2'}>
+                            <Heading mb="1" size="5">
+                                {name}
+                            </Heading>
+                            <Button
+                                color="gray"
+                                disabled
+                                style={{ width: '100%' }}
+                                variant="soft"
+                            >
+                                {t('games.comingSoon')}
                             </Button>
                         </Box>
                     </Card>

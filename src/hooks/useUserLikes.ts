@@ -15,6 +15,6 @@ export const useUserLikes = (userId?: string) => {
             }
             return fetchUserLikes(userId);
         },
-        queryKey: ['userLikes', userId],
+        queryKey: ['likes', userId],
     });
 };

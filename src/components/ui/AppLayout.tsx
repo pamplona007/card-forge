@@ -173,11 +173,9 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 </Container>
             </header>
 
-            <Box py="6">
-                <Container p={'4'} size="4">
-                    {children}
-                </Container>
-            </Box>
+            <Container p={'4'} size="4">
+                {children}
+            </Container>
 
             <Dialog.Root onOpenChange={setIsAuthDialogOpen} open={isAuthDialogOpen}>
                 <Dialog.Content style={{ maxWidth: 400 }}>

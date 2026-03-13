@@ -58,6 +58,20 @@ const zombicide2eCardTypes: CardType[] = [
 ];
 
 /**
+ * Games planned for future support
+ */
+export const COMING_SOON_GAMES: string[] = [
+    'Zombicide: Black Plague',
+    'Zombicide: Invader',
+    'Zombicide: Undead or Alive',
+    'Rallyman GT',
+    'Sky Team',
+    'Not Enough Mana',
+    'Munchkin',
+    'Unmatched',
+];
+
+/**
  * Predefined list of supported games
  */
 export const SUPPORTED_GAMES: Game[] = [
