@@ -7,6 +7,7 @@ interface CardListViewProps {
     cards: ZombicideCardData[];
     onCardClick?: (card: ZombicideCardData) => void;
     onDeleteCard?: (index: number) => void;
+    onQuantityChange?: (cardId: string, quantity: number) => void;
 }
 
 const TYPE_BACKGROUNDS: Record<ZombicideCardType, { color: string; image?: string }> = {
@@ -21,6 +22,7 @@ export default function CardListView({
     cards,
     onCardClick,
     onDeleteCard,
+    onQuantityChange,
 }: CardListViewProps) {
     const { t } = useTranslation();
 
@@ -161,6 +163,37 @@ export default function CardListView({
                                 </Flex>
                             )}
                         </Flex>
+                        {onQuantityChange && (
+                            <Flex align="center" gap="1" mt="1">
+                                <Text color="gray" size="1">
+                                    {t('editor.card.quantity')}:
+                                </Text>
+                                <Button
+                                    disabled={0 === (card.defaultQuantity ?? 1)}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onQuantityChange(card.id, Math.max(0, (card.defaultQuantity ?? 1) - 1));
+                                    }}
+                                    size="1"
+                                    variant="soft"
+                                >
+                                    −
+                                </Button>
+                                <Text size="1" style={{ minWidth: '16px', textAlign: 'center' }}>
+                                    {card.defaultQuantity ?? 1}
+                                </Text>
+                                <Button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onQuantityChange(card.id, (card.defaultQuantity ?? 1) + 1);
+                                    }}
+                                    size="1"
+                                    variant="soft"
+                                >
+                                    +
+                                </Button>
+                            </Flex>
+                        )}
                     </Box>
                 ))}
             </Grid>

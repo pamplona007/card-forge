@@ -41,6 +41,14 @@ export interface ExportCard {
      * Defaults to `true`.
      */
     hasBothSides?: boolean;
+    /**
+     * Number of copies to include in the PDF.
+     *
+     * The engine expands each card by this count internally and captures
+     * each unique card only once, reusing the image for every copy.
+     * Defaults to `1`.
+     */
+    quantity?: number;
 }
 
 export interface PDFGeneratorOptions {
@@ -153,12 +161,44 @@ export const generatePDF = async (
         return;
     }
 
+    // Expand each card into a flat slot list honouring its quantity.
+    const slotList: ExportCard[] = [];
+    for (const card of cards) {
+        const qty = card.quantity ?? 1;
+        for (let i = 0; i < qty; i++) {
+            slotList.push(card);
+        }
+    }
+
+    if (0 === slotList.length) {
+        return;
+    }
+
+    // Pre-capture each unique card exactly once so duplicated slots reuse the
+    // same image rather than re-rendering the same canvas multiple times.
+    const uniqueCards = [...new Set(slotList)];
+    const frontCache = new Map<ExportCard, Promise<string | null>>();
+    const backCache = new Map<ExportCard, Promise<string | null>>();
+
+    for (const card of uniqueCards) {
+        frontCache.set(card, card.capture('front').catch((err) => {
+            console.error('Error capturing front:', err);
+            return null;
+        }));
+        if (false !== card.hasBothSides) {
+            backCache.set(card, card.capture('back').catch((err) => {
+                console.error('Error capturing back:', err);
+                return null;
+            }));
+        }
+    }
+
     const { height: pageHeight, width: pageWidth } = PAPER_SIZES[paperSize];
 
     const pdf = new jsPDF({ format: paperSize, orientation: 'portrait', unit: 'mm' });
 
     const groups = new Map<string, ExportCard[]>();
-    for (const card of cards) {
+    for (const card of slotList) {
         const key = `${card.dimensions.totalCanvasWidth}x${card.dimensions.totalCanvasHeight}`;
         const bucket = groups.get(key) ?? [];
         bucket.push(card);
@@ -182,10 +222,7 @@ export const generatePDF = async (
             firstPage = false;
 
             const frontImages = await Promise.all(
-                slice.map((card, i) => card.capture('front').catch((err) => {
-                    console.error(`Error capturing front card ${(pageIdx * perPage) + i}:`, err);
-                    return null;
-                })),
+                slice.map((card) => frontCache.get(card) ?? Promise.resolve(null)),
             );
 
             for (let i = 0; i < slice.length; i++) {
@@ -202,11 +239,8 @@ export const generatePDF = async (
                 pdf.addPage();
 
                 const backImages = await Promise.all(
-                    slice.map((card, i) => false !== card.hasBothSides
-                        ? card.capture('back').catch((err) => {
-                            console.error(`Error capturing back card ${(pageIdx * perPage) + i}:`, err);
-                            return null;
-                        })
+                    slice.map((card) => false !== card.hasBothSides
+                        ? (backCache.get(card) ?? Promise.resolve(null))
                         : Promise.resolve(null)),
                 );
 

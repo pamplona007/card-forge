@@ -1,14 +1,19 @@
-import { Box, Button, Checkbox, Dialog, Flex, RadioCards, Text } from '@radix-ui/themes';
+import type { ZombicideCardData } from 'games/zombicide/editors/ZombicideCardEditor';
+
+import { Box, Button, Checkbox, Dialog, Flex, RadioCards, ScrollArea, Text } from '@radix-ui/themes';
 import { PAPER_SIZES, type PaperSize } from 'games/zombicide/utils/pdfGenerator';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export interface ExportOptions {
+    cardQuantities: Record<string, number>;
     includeBacks: boolean;
     paperSize: PaperSize;
 }
 
 interface ExportOptionsModalProps {
+    cards: ZombicideCardData[];
+    defaultQuantities?: Record<string, number>;
     isExporting: boolean;
     isOpen: boolean;
     onClose: () => void;
@@ -16,6 +21,8 @@ interface ExportOptionsModalProps {
 }
 
 export default function ExportOptionsModal({
+    cards,
+    defaultQuantities,
     isExporting,
     isOpen,
     onClose,
@@ -24,9 +31,20 @@ export default function ExportOptionsModal({
     const { t } = useTranslation();
     const [selectedSize, setSelectedSize] = useState<PaperSize>('a4');
     const [includeBacks, setIncludeBacks] = useState(true);
+    const [cardQuantities, setCardQuantities] = useState<Record<string, number>>(
+        () => Object.fromEntries(cards.map((card) => [card.id, defaultQuantities?.[card.id] ?? 1])),
+    );
+
+    const handleQuantityChange = (cardId: string, delta: number) => {
+        setCardQuantities((prev) => ({
+            ...prev,
+            [cardId]: Math.max(0, (prev[cardId] ?? 1) + delta),
+        }));
+    };
 
     const handleExport = () => {
         onExport({
+            cardQuantities,
             includeBacks,
             paperSize: selectedSize,
         });
@@ -85,6 +103,59 @@ export default function ExportOptionsModal({
                         </Text>
                     </Flex>
                 </Box>
+
+                {0 < cards.length && (
+                    <Box mb="4">
+                        <Text as="p" mb="2" size="2" weight="bold">
+                            {t('editor.exportOptions.cardQuantities')}
+                        </Text>
+                        <ScrollArea style={{ maxHeight: '200px' }}>
+                            <Flex direction="column" gap="2" pr="2">
+                                {cards.map((card) => {
+                                    const qty = cardQuantities[card.id] ?? 1;
+                                    return (
+                                        <Flex align="center" justify="between" key={card.id}>
+                                            <Text
+                                                color={0 === qty ? 'gray' : undefined}
+                                                size="2"
+                                                style={{
+                                                    flex: 1,
+                                                    overflow: 'hidden',
+                                                    textDecoration: 0 === qty ? 'line-through' : undefined,
+                                                    textOverflow: 'ellipsis',
+                                                    whiteSpace: 'nowrap',
+                                                }}
+                                            >
+                                                {card.name || t('editor.label.unnamed')}
+                                            </Text>
+                                            <Flex align="center" gap="2" ml="3" style={{ flexShrink: 0 }}>
+                                                <Button
+                                                    disabled={isExporting || 0 === qty}
+                                                    onClick={() => handleQuantityChange(card.id, -1)}
+                                                    size="1"
+                                                    variant="soft"
+                                                >
+                                                    −
+                                                </Button>
+                                                <Text size="2" style={{ minWidth: '16px', textAlign: 'center' }}>
+                                                    {qty}
+                                                </Text>
+                                                <Button
+                                                    disabled={isExporting}
+                                                    onClick={() => handleQuantityChange(card.id, 1)}
+                                                    size="1"
+                                                    variant="soft"
+                                                >
+                                                    +
+                                                </Button>
+                                            </Flex>
+                                        </Flex>
+                                    );
+                                })}
+                            </Flex>
+                        </ScrollArea>
+                    </Box>
+                )}
 
                 <Flex gap="3" justify="end" mt="5">
                     <Dialog.Close>

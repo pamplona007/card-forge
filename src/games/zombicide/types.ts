@@ -36,6 +36,7 @@ export interface SurvivorAbility {
 }
 
 export interface SurvivorCardData {
+  defaultQuantity?: number;
   abilities: {
     blue?: SurvivorAbility;
     orange1?: SurvivorAbility;
@@ -95,6 +96,7 @@ export const createDefaultSurvivorCard = (): SurvivorCardData => ({
 });
 
 export interface EquipmentCardData {
+  defaultQuantity?: number;
   abilities?: SurvivorAbility[];
   copyright?: string;
   description: string;
@@ -122,6 +124,7 @@ export interface PimpWeaponAbility {
 }
 
 export interface PimpWeaponCardData {
+  defaultQuantity?: number;
   abilities: PimpWeaponAbility[];
   copyright?: string;
   damage: number;
@@ -144,6 +147,7 @@ export const createDefaultPimpWeaponCard = (): PimpWeaponCardData => ({
 });
 
 export interface ZombieSpawnCardData {
+  defaultQuantity?: number;
   abilities?: SurvivorAbility[];
   attack: number;
   copyright?: string;
@@ -170,6 +174,7 @@ export const createDefaultZombieSpawnCard = (): ZombieSpawnCardData => ({
 });
 
 export interface AbominationCardData {
+  defaultQuantity?: number;
   abilities: SurvivorAbility[];
   attack: number;
   copyright?: string;

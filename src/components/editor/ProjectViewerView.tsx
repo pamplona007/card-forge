@@ -8,6 +8,7 @@ import ExportOptionsModal from 'components/editor/ExportOptionsModal';
 import RemixModal from 'components/editor/RemixModal';
 import LikeButton from 'components/ui/LikeButton';
 import { generatePDFFromElements } from 'games/zombicide/utils/pdfGenerator';
+import type { ZombicidePDFOptions } from 'games/zombicide/utils/pdfGenerator';
 import { useFirebase } from 'hooks/useFirebase';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -52,11 +53,13 @@ export default function ProjectViewerView({ project }: ProjectViewerViewProps) {
         setShowExportModal(false);
 
         try {
-            await generatePDFFromElements(project.cards, {
+            const pdfOptions: ZombicidePDFOptions = {
+                cardQuantities: options?.cardQuantities,
                 fileName: `${project.name.replace(/\s+/g, '-').toLowerCase()}-cards.pdf`,
                 includeBacks: options?.includeBacks ?? true,
                 paperSize: options?.paperSize ?? 'a4',
-            });
+            };
+            await generatePDFFromElements(project.cards, pdfOptions);
         } catch (error) {
             setExportError(error instanceof Error ? error.message : t('editor.error.exportFailed'));
         } finally {
@@ -117,6 +120,7 @@ export default function ProjectViewerView({ project }: ProjectViewerViewProps) {
             </Box>
 
             <ExportOptionsModal
+                cards={project.cards}
                 isExporting={isExporting}
                 isOpen={showExportModal}
                 onClose={() => setShowExportModal(false)}

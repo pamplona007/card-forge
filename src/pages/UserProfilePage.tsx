@@ -2,7 +2,7 @@ import { Avatar, Badge, Box, Button, Card, Flex, Grid, Heading, Select, Spinner,
 import { ArrowDownAZ, ArrowUpAZ, Clock } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 import type { LikedProject, Project } from '../firebase/context';
 
@@ -49,8 +49,9 @@ export default function UserProfilePage() {
     const { user } = useFirebase();
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
 
-    const [createdGameFilter, setCreatedGameFilter] = useState(ALL_GAMES);
+    const [createdGameFilter, setCreatedGameFilter] = useState(() => searchParams.get('game') ?? ALL_GAMES);
     const [createdSortField, setCreatedSortField] = useState<CreatedSortField>('updatedAt');
     const [createdSortDir, setCreatedSortDir] = useState<SortDir>('desc');
 

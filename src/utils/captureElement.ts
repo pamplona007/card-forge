@@ -36,7 +36,9 @@ const waitForCanvasContent = (
             .getImageData(0, 0, canvas.width, canvas.height)
             .data.some((byte) => 0 !== byte);
 
-        if (hasContent) {
+        const hasLoaded = 'false' === canvas.dataset.loading;
+
+        if (hasContent && hasLoaded) {
             resolve(canvas);
             return;
         }

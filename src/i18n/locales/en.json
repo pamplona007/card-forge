@@ -65,6 +65,7 @@
       "description": "Select paper size and export settings",
       "paperSize": "Paper Size",
       "includeBacks": "Include Card Backs",
+      "cardQuantities": "Card Quantities",
       "withBacks": "With Backs",
       "frontsOnly": "Fronts Only"
     },
@@ -124,6 +125,7 @@
       "addBlueAbility": "+ Add Blue Ability",
       "addYellowAbility": "+ Add Yellow Ability"
     },
+    "card": { "quantity": "Qty" },
     "alt": { "cardPreview": "Card preview" },
     "status": {
       "uploading": "Uploading...",
@@ -218,7 +220,8 @@
     },
     "section": {
       "myProjects": "My Projects",
-      "publicProjects": "Projects"
+      "publicProjects": "Projects",
+      "seeAllMyProjects": "See all my projects"
     },
     "empty": {
       "noPublicProjects": "No Projects Yet",

@@ -109,6 +109,7 @@ export interface CardCanvasProps {
      * across all mounted components.
      */
     fonts?: FontSpec[];
+    loading: boolean;
     onMouseDown?: CardCanvasMouseHandler;
     onMouseMove?: CardCanvasMouseHandler;
     onMouseUp?: CardCanvasMouseHandler;
@@ -141,6 +142,7 @@ const CardCanvas: React.FC<CardCanvasProps> = ({
     draw,
     exportMode = false,
     fonts,
+    loading,
     onMouseDown,
     onMouseMove,
     onMouseUp,
@@ -251,6 +253,7 @@ const CardCanvas: React.FC<CardCanvasProps> = ({
             }}
         >
             <canvas
+                data-loading={loading}
                 height={dimensions.height}
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}

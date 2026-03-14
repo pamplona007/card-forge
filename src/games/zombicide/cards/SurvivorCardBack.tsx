@@ -492,6 +492,7 @@ const SurvivorCardBack: React.FC<SurvivorCardProps> = ({ bleed, card, exportMode
             draw={draw}
             exportMode={exportMode}
             fonts={ZOMBICIDE_FONTS}
+            loading={!loadedImages}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}

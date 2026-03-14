@@ -65,6 +65,7 @@
       "description": "Selecione o tamanho do papel e configurações de exportação",
       "paperSize": "Tamanho do Papel",
       "includeBacks": "Incluir Verso das Cartas",
+      "cardQuantities": "Quantidades de Cartas",
       "withBacks": "Com Verso",
       "frontsOnly": "Apenas Frente"
     },
@@ -123,6 +124,7 @@
       "addBlueAbility": "+ Adicionar Habilidade Azul",
       "addYellowAbility": "+ Adicionar Habilidade Amarela"
     },
+    "card": { "quantity": "Qtd" },
     "alt": { "cardPreview": "Pré-visualização da carta" },
     "status": {
       "uploading": "Enviando...",
@@ -217,7 +219,8 @@
     },
     "section": {
       "myProjects": "Meus Projetos",
-      "publicProjects": "Projetos"
+      "publicProjects": "Projetos",
+      "seeAllMyProjects": "Ver todos os meus projetos"
     },
     "empty": {
       "noPublicProjects": "Nenhum Projeto Ainda",

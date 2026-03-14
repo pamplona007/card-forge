@@ -233,11 +233,22 @@ export default function GameProjectsPage() {
 
                     {user && 0 < userProjects.length && (
                         <Box mb="7">
-                            <Heading mb="4" size="5">
-                                {t('projects.section.myProjects')}
-                            </Heading>
+                            <Flex align="center" justify="between" mb="4">
+                                <Heading size="5">
+                                    {t('projects.section.myProjects')}
+                                </Heading>
+                                {4 < userProjects.length && (
+                                    <Button
+                                        color="gray"
+                                        onClick={() => navigate(`/user/${user.uid}?game=${gameId}`)}
+                                        variant="ghost"
+                                    >
+                                        {t('projects.section.seeAllMyProjects')}
+                                    </Button>
+                                )}
+                            </Flex>
                             <Grid columns={{ initial: '2', lg: '4', md: '3' }} gap="4">
-                                {userProjects.map((project) => (
+                                {userProjects.slice(0, 4).map((project) => (
                                     <ProjectCard
                                         isOwner={true}
                                         key={project.id}

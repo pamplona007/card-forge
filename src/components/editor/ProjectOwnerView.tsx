@@ -19,6 +19,7 @@ import {
     createDefaultZombieSpawnCard,
 } from 'games/zombicide/types';
 import { generatePDFFromElements } from 'games/zombicide/utils/pdfGenerator';
+import type { ZombicidePDFOptions } from 'games/zombicide/utils/pdfGenerator';
 import { useDeleteProject } from 'hooks/useDeleteProject';
 import { useFirebase } from 'hooks/useFirebase';
 import { useUpdateCard } from 'hooks/useUpdateCard';
@@ -68,10 +69,11 @@ export default function ProjectOwnerView({ initialProject, projectId }: ProjectO
     const [lastSaved, setLastSaved] = useState<Date | null>(
         initialProject.updatedAt ? new Date(initialProject.updatedAt) : null,
     );
-    const saveTimeoutRef = useRef<null | ReturnType<typeof setTimeout>>(null);
+    const saveTimeoutsRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
     const [isExporting, setIsExporting] = useState(false);
     const [exportError, setExportError] = useState<null | string>(null);
     const [showExportModal, setShowExportModal] = useState(false);
+    const [exportModalKey, setExportModalKey] = useState(0);
     const [showSettingsModal, setShowSettingsModal] = useState(false);
 
     const game = getGameById(project.gameId);
@@ -109,10 +111,12 @@ export default function ProjectOwnerView({ initialProject, projectId }: ProjectO
         }));
         setCurrentCard(updatedCard);
 
-        if (saveTimeoutRef.current) {
-            clearTimeout(saveTimeoutRef.current);
+        const existing = saveTimeoutsRef.current.get(updatedCard.id);
+        if (existing) {
+            clearTimeout(existing);
         }
-        saveTimeoutRef.current = setTimeout(() => {
+        saveTimeoutsRef.current.set(updatedCard.id, setTimeout(() => {
+            saveTimeoutsRef.current.delete(updatedCard.id);
             if (!user) {
                 return;
             }
@@ -127,7 +131,7 @@ export default function ProjectOwnerView({ initialProject, projectId }: ProjectO
                     setLastSaved(new Date());
                 },
             });
-        }, 1000);
+        }, 1000));
     }, [user, projectId, updateCardMutation]);
 
     const handleImageUpload = useCallback(async (file: File): Promise<string> => {
@@ -148,11 +152,13 @@ export default function ProjectOwnerView({ initialProject, projectId }: ProjectO
         setShowExportModal(false);
 
         try {
-            await generatePDFFromElements(project.cards, {
+            const pdfOptions: ZombicidePDFOptions = {
+                cardQuantities: options?.cardQuantities,
                 fileName: `${project.name.replace(/\s+/g, '-').toLowerCase()}-cards.pdf`,
                 includeBacks: options?.includeBacks ?? true,
                 paperSize: options?.paperSize || 'a4',
-            });
+            };
+            await generatePDFFromElements(project.cards, pdfOptions);
         } catch (error) {
             setExportError(error instanceof Error ? error.message : t('editor.error.exportFailed'));
         } finally {
@@ -205,6 +211,39 @@ export default function ProjectOwnerView({ initialProject, projectId }: ProjectO
         setShowCreateModal(false);
     }, [project, user, updateProjectMutation, t]);
 
+    const handleQuantityChange = useCallback((cardId: string, quantity: number) => {
+        setProject((prev) => {
+            const updatedCards = prev.cards.map((card) => card.id === cardId ? { ...card, defaultQuantity: quantity } : card);
+            return { ...prev, cards: updatedCards };
+        });
+
+        const existing = saveTimeoutsRef.current.get(cardId);
+        if (existing) {
+            clearTimeout(existing);
+        }
+        saveTimeoutsRef.current.set(cardId, setTimeout(() => {
+            saveTimeoutsRef.current.delete(cardId);
+            if (!user) {
+                return;
+            }
+            setIsSaving(true);
+            const updatedCard = project.cards.find((c) => c.id === cardId);
+            if (!updatedCard) {
+                return;
+            }
+            updateCardMutation.mutate({ card: { ...updatedCard, defaultQuantity: quantity }, projectId }, {
+                onError: (error) => {
+                    console.error('Error auto-saving card quantity:', error);
+                    setIsSaving(false);
+                },
+                onSuccess: () => {
+                    setIsSaving(false);
+                    setLastSaved(new Date());
+                },
+            });
+        }, 1000));
+    }, [user, projectId, project.cards, updateCardMutation]);
+
     const handleBackToList = useCallback(() => {
         setViewMode('list');
     }, []);
@@ -239,7 +278,7 @@ export default function ProjectOwnerView({ initialProject, projectId }: ProjectO
                     <Button
                         color="cyan"
                         disabled={isExporting || 0 === project.cards.length}
-                        onClick={() => setShowExportModal(true)}
+                        onClick={() => { setExportModalKey((k) => k + 1); setShowExportModal(true); }}
                         variant="soft"
                     >
                         {isExporting ? t('editor.button.exporting') : t('editor.button.exportPdf')}
@@ -290,8 +329,13 @@ export default function ProjectOwnerView({ initialProject, projectId }: ProjectO
             />
 
             <ExportOptionsModal
+                cards={project.cards}
+                defaultQuantities={Object.fromEntries(
+                    project.cards.map((card) => [card.id, card.defaultQuantity ?? 1]),
+                )}
                 isExporting={isExporting}
                 isOpen={showExportModal}
+                key={exportModalKey}
                 onClose={() => setShowExportModal(false)}
                 onExport={handleExportToPDF}
             />
@@ -339,6 +383,7 @@ export default function ProjectOwnerView({ initialProject, projectId }: ProjectO
                         cards={project.cards}
                         onCardClick={handleSelectCard}
                         onDeleteCard={handleRemoveFromProject}
+                        onQuantityChange={handleQuantityChange}
                     />
                 </>
             )}

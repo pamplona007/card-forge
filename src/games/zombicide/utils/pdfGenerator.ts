@@ -19,20 +19,29 @@ import { toExportCard } from './captureCard';
 export type { PaperSize, PDFGeneratorOptions } from 'utils/pdfGenerator';
 export { generatePDF, PAPER_SIZES } from 'utils/pdfGenerator';
 
+export interface ZombicidePDFOptions extends PDFGeneratorOptions {
+    /** Per-card copy counts forwarded to the generic PDF engine as `quantity`. */
+    cardQuantities?: Record<string, number>;
+}
+
 /**
  * Convenience wrapper that accepts raw Zombicide card data and generates a PDF.
  *
- * Internally converts each card to an {@link ExportCard} (via {@link toExportCard})
- * and delegates to the generic {@link generatePDF} engine.
+ * Internally converts each card to an {@link ExportCard} (via {@link toExportCard}),
+ * attaches the requested quantity, and delegates to the generic engine which
+ * captures each unique card only once regardless of how many copies are requested.
  */
 export async function generatePDFFromElements(
     cards: ZombicideCardData[],
-    options: PDFGeneratorOptions = {},
+    options: ZombicidePDFOptions = {},
 ): Promise<void> {
+    const { cardQuantities, ...pdfOptions } = options;
     const exportCards = cards
         .map((card) => {
             try {
-                return toExportCard(card);
+                const exportCard = toExportCard(card);
+                exportCard.quantity = cardQuantities ? (cardQuantities[card.id] ?? 1) : 1;
+                return exportCard;
             } catch {
                 console.warn(`Skipping unsupported card type: ${card.type}`);
                 return null;
@@ -42,6 +51,6 @@ export async function generatePDFFromElements(
 
     return _generatePDF(exportCards, {
         fileName: 'zombicide-cards.pdf',
-        ...options,
+        ...pdfOptions,
     });
 }
