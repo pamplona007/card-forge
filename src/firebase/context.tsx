@@ -14,6 +14,7 @@ import {
     getDoc,
     getDocs,
     increment,
+    orderBy,
     query,
     serverTimestamp,
     updateDoc,
@@ -25,6 +26,17 @@ import { createContext, type ReactNode, useCallback, useEffect, useState } from 
 import type { ZombicideCardData } from '../games/zombicide/editors/ZombicideCardEditor';
 
 import { auth, db } from './config';
+
+export type FetchProjectsOptions = {
+  gameId?: string;
+  isPublic?: boolean;
+  orderBy?: { direction?: 'asc' | 'desc'; field: 'createdAt' | 'likesCount' | 'name' | 'updatedAt' };
+  userId?: string;
+};
+
+export type FetchUserLikesOptions = {
+  orderBy?: { direction?: 'asc' | 'desc'; field: 'likedAt' | 'name' | 'updatedAt' };
+};
 
 export type LikedProject = {
   cards: ZombicideCardData[];
@@ -58,10 +70,8 @@ type FirebaseContextType = {
   deleteProject: (projectId: string) => Promise<void>;
   fetchPopularProjectsByGame: (gameId: string, days: number) => Promise<Project[]>;
   fetchProjectById: (projectId: string) => Promise<null | Project>;
-  fetchProjectsByUser: (userId: string) => Promise<Project[]>;
-  fetchPublicProjectsByGame: (gameId: string) => Promise<Project[]>;
-  fetchUserLikes: (userId: string) => Promise<LikedProject[]>;
-  fetchUserProjectsByGame: (gameId: string) => Promise<Project[]>;
+  fetchProjects: (options: FetchProjectsOptions) => Promise<Project[]>;
+  fetchUserLikes: (userId: string, options?: FetchUserLikesOptions) => Promise<LikedProject[]>;
   likeProject: (project: LikedProject | Project) => Promise<void>;
   loading: boolean;
   logOut: () => Promise<void>;
@@ -78,10 +88,8 @@ export const FirebaseContext = createContext<FirebaseContextType>({
     deleteProject: async () => {},
     fetchPopularProjectsByGame: async () => [],
     fetchProjectById: async () => null,
-    fetchProjectsByUser: async () => [],
-    fetchPublicProjectsByGame: async () => [],
+    fetchProjects: async () => [],
     fetchUserLikes: async () => [],
-    fetchUserProjectsByGame: async () => [],
     likeProject: async () => {},
     loading: true,
     logOut: async () => {},
@@ -311,73 +319,15 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
-    const fetchPublicProjectsByGame = async (gameId: string): Promise<Project[]> => {
+    const fetchProjects = async ({ gameId, isPublic, orderBy: order, userId }: FetchProjectsOptions): Promise<Project[]> => {
         try {
-            const projectsRef = collection(db, 'projects');
-            const q = query(projectsRef, where('gameId', '==', gameId), where('isPublic', '==', true));
-            const querySnapshot = await getDocs(q);
-            const projectsData: Project[] = await Promise.all(querySnapshot.docs.map(async (doc) => {
-                const data = doc.data();
-                const cardsSnap = await getDocs(collection(db, 'projects', doc.id, 'cards'));
-                const cards = cardsSnap.docs.slice(0, 5).map((d) => d.data() as ZombicideCardData);
-                return {
-                    cards,
-                    createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(),
-                    description: data.description,
-                    gameId: data.gameId || gameId,
-                    id: doc.id,
-                    isPublic: data.isPublic ?? true,
-                    likesCount: data.likesCount ?? 0,
-                    name: data.name,
-                    updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(),
-                    userId: data.userId || '',
-                };
-            }));
-            return projectsData;
-        } catch (error) {
-            console.error('Error fetching public projects:', error);
-            return [];
-        }
-    };
-
-    const fetchUserProjectsByGame = async (gameId: string): Promise<Project[]> => {
-        if (!user) {
-            return [];
-        }
-
-        try {
-            const projectsRef = collection(db, 'projects');
-            const q = query(projectsRef, where('gameId', '==', gameId), where('userId', '==', user.uid));
-            const querySnapshot = await getDocs(q);
-            const projectsData: Project[] = await Promise.all(querySnapshot.docs.map(async (doc) => {
-                const data = doc.data();
-                const cardsSnap = await getDocs(collection(db, 'projects', doc.id, 'cards'));
-                const cards = cardsSnap.docs.slice(0, 5).map((d) => d.data() as ZombicideCardData);
-                return {
-                    cards: cards,
-                    createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(),
-                    description: data.description,
-                    gameId: data.gameId || gameId,
-                    id: doc.id,
-                    isPublic: data.isPublic ?? false,
-                    likesCount: data.likesCount ?? 0,
-                    name: data.name,
-                    updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(),
-                    userId: user.uid,
-                };
-            }));
-            return projectsData;
-        } catch (error) {
-            console.error('Error fetching user projects:', error);
-            return [];
-        }
-    };
-
-    const fetchProjectsByUser = async (userId: string): Promise<Project[]> => {
-        try {
-            const projectsRef = collection(db, 'projects');
-            const q = query(projectsRef, where('userId', '==', userId));
-            const querySnapshot = await getDocs(q);
+            const constraints = [
+                ...(gameId ? [where('gameId', '==', gameId)] : []),
+                ...(isPublic !== undefined ? [where('isPublic', '==', isPublic)] : []),
+                ...(userId ? [where('userId', '==', userId)] : []),
+                ...(order ? [orderBy(order.field, order.direction ?? 'asc')] : []),
+            ];
+            const querySnapshot = await getDocs(query(collection(db, 'projects'), ...constraints));
             return Promise.all(querySnapshot.docs.map(async (d) => {
                 const data = d.data();
                 const cardsSnap = await getDocs(collection(db, 'projects', d.id, 'cards'));
@@ -386,24 +336,26 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
                     cards,
                     createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(),
                     description: data.description,
-                    gameId: data.gameId || '',
+                    gameId: data.gameId || gameId || '',
                     id: d.id,
                     isPublic: data.isPublic ?? false,
                     likesCount: data.likesCount ?? 0,
                     name: data.name,
                     updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(),
-                    userId: data.userId || '',
+                    userId: data.userId || userId || '',
                 };
             }));
         } catch (error) {
-            console.error('Error fetching projects by user:', error);
+            console.error('Error fetching projects:', error);
             return [];
         }
     };
 
-    const fetchUserLikes = async (userId: string): Promise<LikedProject[]> => {
+    const fetchUserLikes = async (userId: string, { orderBy: order }: FetchUserLikesOptions = {}): Promise<LikedProject[]> => {
         try {
-            const snap = await getDocs(collection(db, 'users', userId, 'likes'));
+            const likesRef = collection(db, 'users', userId, 'likes');
+            const q = order ? query(likesRef, orderBy(order.field, order.direction ?? 'asc')) : likesRef;
+            const snap = await getDocs(q);
             return Promise.all(snap.docs.map(async (d) => {
                 const data = d.data();
                 const cardsSnap = await getDocs(collection(db, 'projects', d.id, 'cards'));
@@ -525,10 +477,8 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
         deleteProject,
         fetchPopularProjectsByGame,
         fetchProjectById,
-        fetchProjectsByUser,
-        fetchPublicProjectsByGame,
+        fetchProjects,
         fetchUserLikes,
-        fetchUserProjectsByGame,
         likeProject,
         loading,
         logOut,

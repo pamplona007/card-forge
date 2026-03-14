@@ -15,7 +15,6 @@ export default function GameProjectsPage() {
     const { gameId } = useParams<{ gameId: string }>();
     const navigate = useNavigate();
     const { user } = useFirebase();
-    const { data: projectsData, isLoading } = useProjects(gameId);
     const createProjectMutation = useCreateProject();
     const { t } = useTranslation();
 
@@ -26,26 +25,28 @@ export default function GameProjectsPage() {
     const [newProjectIsPublic, setNewProjectIsPublic] = useState(false);
     const [sortBy, setSortBy] = useState<'likes' | 'month' | 'recent' | 'week'>('recent');
 
-    const { data: popularWeek, isLoading: isLoadingWeek } = usePopularProjects(gameId, 7, 'week' === sortBy);
-    const { data: popularMonth, isLoading: isLoadingMonth } = usePopularProjects(gameId, 30, 'month' === sortBy);
+    const publicOrderBy = 'likes' === sortBy
+        ? { direction: 'desc', field: 'likesCount' } as const
+        : { direction: 'desc', field: 'updatedAt' } as const;
 
-    const userProjects = projectsData?.userProjects || [];
-    const rawPublicProjects = projectsData?.publicProjects || [];
+    const { data: publicProjects = [], isLoading } = useProjects(
+        { gameId, isPublic: true, orderBy: publicOrderBy },
+        !!gameId && 'week' !== sortBy && 'month' !== sortBy,
+    );
+    const { data: userProjects = [] } = useProjects(
+        { gameId, orderBy: { direction: 'desc', field: 'updatedAt' }, userId: user?.uid },
+        !!gameId && !!user,
+    );
+    const popularDays = 'week' === sortBy ? 7 : 30;
+    const { data: popularProjects, isLoading: isLoadingPopular } = usePopularProjects(
+        gameId,
+        popularDays,
+        'week' === sortBy || 'month' === sortBy,
+    );
 
-    const publicProjects = (() => {
-        if ('week' === sortBy) {
-            return popularWeek ?? [];
-        }
-        if ('month' === sortBy) {
-            return popularMonth ?? [];
-        }
-        if ('likes' === sortBy) {
-            return [...rawPublicProjects].sort((a, b) => (b.likesCount ?? 0) - (a.likesCount ?? 0));
-        }
-        return [...rawPublicProjects].sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
-    })();
+    const displayedPublicProjects = ('week' === sortBy || 'month' === sortBy) ? (popularProjects ?? []) : publicProjects;
 
-    const isLoadingPublic = isLoading || ('week' === sortBy && isLoadingWeek) || ('month' === sortBy && isLoadingMonth);
+    const isLoadingPublic = isLoading || (('week' === sortBy || 'month' === sortBy) && isLoadingPopular);
 
     const handleCreateProject = async () => {
         if (!newProjectName.trim() || !user || !gameId) {
@@ -248,7 +249,7 @@ export default function GameProjectsPage() {
                         </Box>
                     )}
 
-                    {(0 < publicProjects.length || 0 < rawPublicProjects.length) && (
+                    {0 < displayedPublicProjects.length && (
                         <Box mb="7">
                             <Flex align="center" justify="between" mb="4">
                                 <Heading size="5">
@@ -271,7 +272,7 @@ export default function GameProjectsPage() {
                                 </Flex>
                             )}
                             <Grid columns={{ initial: '2', lg: '4', md: '3' }} gap="4">
-                                {publicProjects.map((project) => (
+                                {displayedPublicProjects.map((project) => (
                                     <ProjectCard
                                         isOwner={project.userId === user?.uid}
                                         key={project.id}
@@ -283,7 +284,7 @@ export default function GameProjectsPage() {
                         </Box>
                     )}
 
-                    {!user && 0 === publicProjects.length && (
+                    {!user && 0 === displayedPublicProjects.length && (
                         <Box
                             style={{
                                 backgroundColor: 'white',
@@ -302,7 +303,7 @@ export default function GameProjectsPage() {
                         </Box>
                     )}
 
-                    {user && 0 === userProjects.length && 0 === publicProjects.length && (
+                    {user && 0 === userProjects.length && 0 === displayedPublicProjects.length && (
                         <Box
                             style={{
                                 backgroundColor: 'white',

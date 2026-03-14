@@ -1,10 +1,10 @@
-import type { LikedProject } from 'firebase/context';
-
 import { useQuery } from '@tanstack/react-query';
+
+import type { FetchUserLikesOptions, LikedProject } from '../firebase/context';
 
 import { useFirebase } from './useFirebase';
 
-export const useUserLikes = (userId?: string) => {
+export const useUserLikes = (userId?: string, options?: FetchUserLikesOptions) => {
     const { fetchUserLikes } = useFirebase();
 
     return useQuery<LikedProject[]>({
@@ -13,8 +13,8 @@ export const useUserLikes = (userId?: string) => {
             if (!userId) {
                 return [];
             }
-            return fetchUserLikes(userId);
+            return fetchUserLikes(userId, options);
         },
-        queryKey: ['likes', userId],
+        queryKey: ['likes', userId, options],
     });
 };

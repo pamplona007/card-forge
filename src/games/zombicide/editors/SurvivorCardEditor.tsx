@@ -1,6 +1,5 @@
-import { Box, Button, Card, Checkbox, Flex, Grid, Slider, Text, TextArea, TextField } from '@radix-ui/themes';
-import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
-import ReactDOM from 'react-dom';
+import { Box, Button, Card, Checkbox, Flex, Grid, Popover, Slider, Text, TextArea, TextField } from '@radix-ui/themes';
+import React, { useId, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { resizeToDataUrl } from 'utils/imageUtils';
 
@@ -43,9 +42,6 @@ const AbilityAutocomplete: React.FC<AbilityAutocompleteProps> = ({
     const listboxId = useId();
     const [open, setOpen] = useState(false);
     const [activeIndex, setActiveIndex] = useState(-1);
-    const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);
-    const containerRef = useRef<HTMLDivElement>(null);
-    const listboxRef = useRef<HTMLDivElement>(null);
 
     const suggestions = useMemo(() => {
         if (!value.trim()) {
@@ -57,39 +53,6 @@ const AbilityAutocomplete: React.FC<AbilityAutocompleteProps> = ({
                 .includes(q))
             .slice(0, 8);
     }, [value, t]);
-
-    const updateAnchorRect = useCallback(() => {
-        if (containerRef.current) {
-            setAnchorRect(containerRef.current.getBoundingClientRect());
-        }
-    }, []);
-
-    useEffect(() => {
-        if (!open) {
-            return;
-        }
-        updateAnchorRect();
-        window.addEventListener('scroll', updateAnchorRect, true);
-        window.addEventListener('resize', updateAnchorRect);
-        return () => {
-            window.removeEventListener('scroll', updateAnchorRect, true);
-            window.removeEventListener('resize', updateAnchorRect);
-        };
-    }, [open, updateAnchorRect]);
-
-    useEffect(() => {
-        const handler = (e: MouseEvent) => {
-            if (
-                containerRef.current?.contains(e.target as Node) ||
-                listboxRef.current?.contains(e.target as Node)
-            ) {
-                return;
-            }
-            setOpen(false);
-        };
-        document.addEventListener('mousedown', handler);
-        return () => document.removeEventListener('mousedown', handler);
-    }, []);
 
     const handleSelect = (nameKey: string, descriptionKey?: string) => {
         const name = t(nameKey);
@@ -130,88 +93,76 @@ const AbilityAutocomplete: React.FC<AbilityAutocompleteProps> = ({
         }
     };
 
-    const dropdown = open && 0 < suggestions.length && anchorRect
-        ? ReactDOM.createPortal(
-            <Box
-                aria-label={placeholder}
-                id={listboxId}
-                ref={listboxRef}
-                role="listbox"
-                style={{
-                    background: 'var(--gray-1)',
-                    border: '1px solid var(--gray-6)',
-                    borderRadius: 'var(--radius-2)',
-                    boxShadow: 'var(--shadow-4)',
-                    left: anchorRect.left,
-                    maxHeight: '220px',
-                    overflowY: 'auto',
-                    position: 'fixed',
-                    top: anchorRect.bottom + 4,
-                    width: anchorRect.width,
-                    zIndex: 9999,
-                }}
-            >
-                {suggestions.map((ability, index) => (
-                    <Box
-                        aria-selected={index === activeIndex}
-                        id={`${listboxId}-option-${index}`}
-                        key={ability.nameKey}
-                        onMouseDown={(e) => {
-                            e.preventDefault();
-                            handleSelect(ability.nameKey, ability.descriptionKey);
-                        }}
-                        onMouseEnter={() => setActiveIndex(index)}
-                        onMouseLeave={() => setActiveIndex(-1)}
-                        role="option"
-                        style={{
-                            background: index === activeIndex ? 'var(--gray-3)' : '',
-                            cursor: 'pointer',
-                            padding: '6px 10px',
-                        }}
-                    >
-                        <Text size="2">{t(ability.nameKey)}</Text>
-                        {ability.descriptionKey && (
-                            <Text
-                                as="p"
-                                size="1"
-                                style={{ color: 'var(--gray-10)', marginTop: '1px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
-                            >
-                                {t(ability.descriptionKey)}
-                            </Text>
-                        )}
-                    </Box>
-                ))}
-            </Box>,
-            document.body,
-        )
-        : null;
-
     return (
-        <div ref={containerRef}>
-            <TextField.Root
-                aria-activedescendant={0 <= activeIndex ? `${listboxId}-option-${activeIndex}` : undefined}
-                aria-autocomplete="list"
-                aria-controls={open ? listboxId : undefined}
-                aria-expanded={open}
-                aria-haspopup="listbox"
-                onChange={(e) => {
-                    onChange(e.target.value);
-                    setActiveIndex(-1);
-                    setOpen(true);
-                }}
-                onFocus={() => {
-                    if (value.trim()) {
-                        setOpen(true);
-                    }
-                }}
-                onKeyDown={handleKeyDown}
-                placeholder={placeholder}
-                role="combobox"
-                style={style}
-                value={value}
-            />
-            {dropdown}
-        </div>
+        <>
+            <Popover.Root onOpenChange={setOpen} open={open && 0 < suggestions.length}>
+                <Popover.Trigger>
+                    <TextField.Root
+                        aria-activedescendant={0 <= activeIndex ? `${listboxId}-option-${activeIndex}` : undefined}
+                        aria-autocomplete="list"
+                        aria-controls={open ? listboxId : undefined}
+                        aria-expanded={open}
+                        aria-haspopup="listbox"
+                        onChange={(e) => {
+                            onChange(e.target.value);
+                            setActiveIndex(-1);
+                            setOpen(true);
+                        }}
+                        onFocus={() => {
+                            if (value.trim()) {
+                                setOpen(true);
+                            }
+                        }}
+                        onKeyDown={handleKeyDown}
+                        placeholder={placeholder}
+                        role="combobox"
+                        style={style}
+                        type='text'
+                        value={value}
+                    />
+                </Popover.Trigger>
+                <Popover.Content
+                    align="start"
+                    aria-label={placeholder}
+                    id={listboxId}
+                    onOpenAutoFocus={(e) => e.preventDefault()}
+                    role="listbox"
+                    side="bottom"
+                    style={{ maxHeight: '220px', overflowY: 'auto', padding: 0 }}
+                >
+                    {suggestions.map((ability, index) => (
+                        <Box
+                            aria-selected={index === activeIndex}
+                            id={`${listboxId}-option-${index}`}
+                            key={ability.nameKey}
+                            onMouseDown={(e) => {
+                                e.preventDefault();
+                                handleSelect(ability.nameKey, ability.descriptionKey);
+                            }}
+                            onMouseEnter={() => setActiveIndex(index)}
+                            onMouseLeave={() => setActiveIndex(-1)}
+                            role="option"
+                            style={{
+                                background: index === activeIndex ? 'var(--gray-3)' : '',
+                                cursor: 'pointer',
+                                padding: '6px 10px',
+                            }}
+                        >
+                            <Text size="2">{t(ability.nameKey)}</Text>
+                            {ability.descriptionKey && (
+                                <Text
+                                    as="p"
+                                    size="1"
+                                    style={{ color: 'var(--gray-10)', marginTop: '1px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                                >
+                                    {t(ability.descriptionKey)}
+                                </Text>
+                            )}
+                        </Box>
+                    ))}
+                </Popover.Content>
+            </Popover.Root>
+        </>
     );
 };
 

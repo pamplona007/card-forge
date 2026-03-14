@@ -9,8 +9,8 @@ import type { LikedProject, Project } from '../firebase/context';
 import AppLayout from '../components/ui/AppLayout';
 import ProjectCard, { CardThumbnail } from '../components/ui/ProjectCard';
 import { useFirebase } from '../hooks/useFirebase';
+import { useProjects } from '../hooks/useProjects';
 import { useUserLikes } from '../hooks/useUserLikes';
-import { useUserProjects } from '../hooks/useUserProjects';
 import { SUPPORTED_GAMES } from '../types/game';
 
 type CreatedSortField = 'createdAt' | 'name' | 'updatedAt';
@@ -50,9 +50,6 @@ export default function UserProfilePage() {
     const { t } = useTranslation();
     const navigate = useNavigate();
 
-    const { data: projects, isLoading: projectsLoading } = useUserProjects(userId);
-    const { data: likes, isLoading: likesLoading } = useUserLikes(userId);
-
     const [createdGameFilter, setCreatedGameFilter] = useState(ALL_GAMES);
     const [createdSortField, setCreatedSortField] = useState<CreatedSortField>('updatedAt');
     const [createdSortDir, setCreatedSortDir] = useState<SortDir>('desc');
@@ -61,37 +58,24 @@ export default function UserProfilePage() {
     const [likedSortField, setLikedSortField] = useState<LikedSortField>('likedAt');
     const [likedSortDir, setLikedSortDir] = useState<SortDir>('desc');
 
+    const { data: projects, isLoading: projectsLoading } = useProjects(
+        { orderBy: { direction: createdSortDir, field: createdSortField }, userId },
+        !!userId,
+    );
+    const { data: likes, isLoading: likesLoading } = useUserLikes(
+        userId,
+        { orderBy: { direction: likedSortDir, field: likedSortField } },
+    );
+
     const filteredCreated = useMemo<Project[]>(() => {
         const list = projects ?? [];
-        const byGame = ALL_GAMES === createdGameFilter ? list : list.filter((p) => p.gameId === createdGameFilter);
-        return [...byGame].sort((a, b) => {
-            let cmp = 0;
-            if ('name' === createdSortField) {
-                cmp = a.name.localeCompare(b.name);
-            } else if ('createdAt' === createdSortField) {
-                cmp = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-            } else {
-                cmp = new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime();
-            }
-            return 'asc' === createdSortDir ? cmp : -cmp;
-        });
-    }, [createdGameFilter, createdSortDir, createdSortField, projects]);
+        return ALL_GAMES === createdGameFilter ? list : list.filter((p: Project) => p.gameId === createdGameFilter);
+    }, [createdGameFilter, projects]);
 
     const filteredLiked = useMemo<LikedProject[]>(() => {
         const list = likes ?? [];
-        const byGame = ALL_GAMES === likedGameFilter ? list : list.filter((p) => p.gameId === likedGameFilter);
-        return [...byGame].sort((a, b) => {
-            let cmp = 0;
-            if ('name' === likedSortField) {
-                cmp = a.name.localeCompare(b.name);
-            } else if ('likedAt' === likedSortField) {
-                cmp = new Date(a.likedAt).getTime() - new Date(b.likedAt).getTime();
-            } else {
-                cmp = new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime();
-            }
-            return 'asc' === likedSortDir ? cmp : -cmp;
-        });
-    }, [likedGameFilter, likedSortDir, likedSortField, likes]);
+        return ALL_GAMES === likedGameFilter ? list : list.filter((p) => p.gameId === likedGameFilter);
+    }, [likedGameFilter, likes]);
 
     const isOwnProfile = user?.uid === userId;
     const isLoading = projectsLoading || likesLoading;
