@@ -36,7 +36,6 @@ export interface SurvivorAbility {
 }
 
 export interface SurvivorCardData {
-  defaultQuantity?: number;
   abilities: {
     blue?: SurvivorAbility;
     orange1?: SurvivorAbility;
@@ -51,6 +50,7 @@ export interface SurvivorCardData {
     headline: string;
   }[];
   color: string;
+  defaultQuantity?: number;
   descriptions: {
     text: string;
     title: string;
@@ -69,7 +69,7 @@ export interface SurvivorCardData {
   tag: SurvivorTag;
 }
 
-export type SurvivorTag = 'holiday' | 'kids' | 'park' | 'police' | 'supes' | 'zombvivor' | null;
+export type SurvivorTag = 'kids' | 'supes' | null;
 
 export type ZoneType = 'blue' | 'orange' | 'red' | 'yellow';
 
@@ -96,9 +96,9 @@ export const createDefaultSurvivorCard = (): SurvivorCardData => ({
 });
 
 export interface EquipmentCardData {
-  defaultQuantity?: number;
   abilities?: SurvivorAbility[];
   copyright?: string;
+  defaultQuantity?: number;
   description: string;
   flavorText?: string;
   id: string;
@@ -124,11 +124,11 @@ export interface PimpWeaponAbility {
 }
 
 export interface PimpWeaponCardData {
-  defaultQuantity?: number;
   abilities: PimpWeaponAbility[];
   copyright?: string;
   damage: number;
   damageType: DamageType;
+  defaultQuantity?: number;
   flavorText?: string;
   id: string;
   image?: string;
@@ -147,10 +147,10 @@ export const createDefaultPimpWeaponCard = (): PimpWeaponCardData => ({
 });
 
 export interface ZombieSpawnCardData {
-  defaultQuantity?: number;
   abilities?: SurvivorAbility[];
   attack: number;
   copyright?: string;
+  defaultQuantity?: number;
   defense: number;
   flavorText?: string;
   id: string;
@@ -174,10 +174,10 @@ export const createDefaultZombieSpawnCard = (): ZombieSpawnCardData => ({
 });
 
 export interface AbominationCardData {
-  defaultQuantity?: number;
   abilities: SurvivorAbility[];
   attack: number;
   copyright?: string;
+  defaultQuantity?: number;
   defense: number;
   flavorText?: string;
   health: number;
@@ -214,12 +214,8 @@ export const ABILITY_COLORS: Record<AbilityColor, string> = {
 };
 
 export const SURVIVOR_TAGS: Record<Exclude<SurvivorTag, null>, string> = {
-    holiday: '/zombicide-2nd/survivor/holiday-icon.png',
-    kids: '/zombicide-2nd/survivor/kids-icon.png',
-    park: '/zombicide-2nd/survivor/park-icon.png',
-    police: '/zombicide-2nd/survivor/police-icon.png',
+    kids: '/zombicide-2nd/survivor/kid.svg',
     supes: '/zombicide-2nd/survivor/supes-icon.png',
-    zombvivor: '/zombicide-2nd/survivor/zombvivor-icon.png',
 };
 
 export const RARITY_COLORS: Record<number, string> = {

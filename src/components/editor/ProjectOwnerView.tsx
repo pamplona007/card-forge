@@ -1,4 +1,5 @@
 import type { Project } from 'firebase/context';
+import type { ZombicidePDFOptions } from 'games/zombicide/utils/pdfGenerator';
 
 import { Box, Button, Flex, Heading, Text } from '@radix-ui/themes';
 import CardListView from 'components/editor/CardListView';
@@ -19,7 +20,6 @@ import {
     createDefaultZombieSpawnCard,
 } from 'games/zombicide/types';
 import { generatePDFFromElements } from 'games/zombicide/utils/pdfGenerator';
-import type { ZombicidePDFOptions } from 'games/zombicide/utils/pdfGenerator';
 import { useDeleteProject } from 'hooks/useDeleteProject';
 import { useFirebase } from 'hooks/useFirebase';
 import { useUpdateCard } from 'hooks/useUpdateCard';
@@ -278,7 +278,10 @@ export default function ProjectOwnerView({ initialProject, projectId }: ProjectO
                     <Button
                         color="cyan"
                         disabled={isExporting || 0 === project.cards.length}
-                        onClick={() => { setExportModalKey((k) => k + 1); setShowExportModal(true); }}
+                        onClick={() => {
+                            setExportModalKey((k) => k + 1);
+                            setShowExportModal(true);
+                        }}
                         variant="soft"
                     >
                         {isExporting ? t('editor.button.exporting') : t('editor.button.exportPdf')}

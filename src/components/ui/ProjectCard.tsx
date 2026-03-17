@@ -14,7 +14,7 @@ interface ProjectCardProps {
 }
 
 const TYPE_BACKGROUNDS: Record<string, { color: string; image?: string }> = {
-    'zombicide-2e': { color: '#1a2e1a', image: '/zombicide-2nd/survivor/card-background.png' },
+    'zombicide-2e': { color: '#1a2e1a', image: '/zombicide-2nd/survivor/bg-front.svg' },
 };
 
 export const CardThumbnail = ({ project }: { project: LikedProject | Project }) => {

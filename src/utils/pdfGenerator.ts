@@ -177,8 +177,8 @@ export const generatePDF = async (
     // Pre-capture each unique card exactly once so duplicated slots reuse the
     // same image rather than re-rendering the same canvas multiple times.
     const uniqueCards = [...new Set(slotList)];
-    const frontCache = new Map<ExportCard, Promise<string | null>>();
-    const backCache = new Map<ExportCard, Promise<string | null>>();
+    const frontCache = new Map<ExportCard, Promise<null | string>>();
+    const backCache = new Map<ExportCard, Promise<null | string>>();
 
     for (const card of uniqueCards) {
         frontCache.set(card, card.capture('front').catch((err) => {

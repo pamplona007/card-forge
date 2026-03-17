@@ -1,6 +1,7 @@
 import type { ExportOptions } from 'components/editor/ExportOptionsModal';
 import type { Project } from 'firebase/context';
 import type { ZombicideCardData, ZombicideCardType } from 'games/zombicide/editors/ZombicideCardEditor';
+import type { ZombicidePDFOptions } from 'games/zombicide/utils/pdfGenerator';
 
 import { Badge, Box, Button, Flex, Grid, Heading, Text } from '@radix-ui/themes';
 import CardPreview from 'components/editor/CardPreview';
@@ -8,7 +9,6 @@ import ExportOptionsModal from 'components/editor/ExportOptionsModal';
 import RemixModal from 'components/editor/RemixModal';
 import LikeButton from 'components/ui/LikeButton';
 import { generatePDFFromElements } from 'games/zombicide/utils/pdfGenerator';
-import type { ZombicidePDFOptions } from 'games/zombicide/utils/pdfGenerator';
 import { useFirebase } from 'hooks/useFirebase';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -22,7 +22,7 @@ const TYPE_BACKGROUNDS: Record<ZombicideCardType, { color: string; image?: strin
     'abomination': { color: '#7c2d12' },
     'equipment': { color: '#1e3a5f' },
     'pimp-weapon': { color: '#3b1f5e' },
-    'survivor': { color: '#1a2e1a', image: '/zombicide-2nd/survivor/card-background.png' },
+    'survivor': { color: '#1a2e1a', image: '/zombicide-2nd/survivor/bg-front.svg' },
     'zombie-spawn': { color: '#1f2d1a' },
 };
 

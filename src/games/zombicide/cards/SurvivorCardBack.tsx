@@ -341,12 +341,8 @@ const SurvivorCardBack: React.FC<SurvivorCardProps> = ({ bleed, card, exportMode
         character: card.image || '',
         foreground: '/zombicide-2nd/survivor/card-back-foreground.png',
         hint: '/zombicide-2nd/survivor/card-back-hint.png',
-        iconHoliday: '/zombicide-2nd/survivor/holiday-icon.png',
-        iconKids: '/zombicide-2nd/survivor/kids-icon.png',
-        iconPark: '/zombicide-2nd/survivor/park-icon.png',
-        iconPolice: '/zombicide-2nd/survivor/police-icon.png',
+        iconKids: '/zombicide-2nd/survivor/kid.svg',
         iconSupes: '/zombicide-2nd/survivor/supes-icon.png',
-        iconZombvivor: '/zombicide-2nd/survivor/zombvivor-icon.png',
     }), [card.image]);
 
     const { images, loaded: loadedImages } = useImages(imageUrls);

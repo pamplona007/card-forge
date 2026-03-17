@@ -14,7 +14,7 @@ const TYPE_BACKGROUNDS: Record<ZombicideCardType, { color: string; image?: strin
     'abomination': { color: '#7c2d12' },
     'equipment': { color: '#1e3a5f' },
     'pimp-weapon': { color: '#3b1f5e' },
-    'survivor': { color: '#1a2e1a', image: '/zombicide-2nd/survivor/card-background.png' },
+    'survivor': { color: '#1a2e1a', image: '/zombicide-2nd/survivor/bg-front.svg' },
     'zombie-spawn': { color: '#1f2d1a' },
 };
 

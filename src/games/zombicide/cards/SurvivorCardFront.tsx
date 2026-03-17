@@ -16,9 +16,9 @@ interface SurvivorCardProps extends CardProps {
 }
 
 function drawBackgroundName(scale: number, ctx: CanvasRenderingContext2D, card: SurvivorCardData) {
-    const fontSize = 19 * scale;
+    const fontSize = 20 * scale;
     const x = 8 * scale;
-    const y = 24.5 * scale;
+    const y = 25.3 * scale;
     const rotation = -0.086;
     const stretch = 1.1;
     const topOffset = 0;
@@ -56,7 +56,7 @@ function drawForegroundName(scale: number, ctx: CanvasRenderingContext2D, card: 
 }
 
 const calculateTrackX = (trackWidth: number, scale: number, abilityName: string, ctx: CanvasRenderingContext2D) => {
-    const baseX = (16.5 * scale) - trackWidth;
+    const baseX = (15.5 * scale) - trackWidth;
     const padding = 1.8 * scale;
     const textMetrics = ctx.measureText(abilityName.toLocaleUpperCase());
     return baseX + textMetrics.width + padding;
@@ -67,9 +67,9 @@ const SurvivorCardFront: React.FC<SurvivorCardProps> = ({ bleed, card, exportMod
     const [dragStart, setDragStart] = useState<null | { x: number; y: number }>(null);
 
     const imageUrls = useMemo(() => ({
-        arrows: '/zombicide-2nd/survivor/arrows.png',
-        background: '/zombicide-2nd/survivor/card-background.png',
-        blue: '/zombicide-2nd/survivor/track-blue.png',
+        arrows: '/zombicide-2nd/survivor/arrows.svg',
+        background: '/zombicide-2nd/survivor/bg-front.svg',
+        backgroundName: '/zombicide-2nd/survivor/bg-name.svg',
         character: card.image || '',
         hp1: '/zombicide-2nd/survivor/hp-1.png',
         hp2: '/zombicide-2nd/survivor/hp-2.png',
@@ -77,31 +77,28 @@ const SurvivorCardFront: React.FC<SurvivorCardProps> = ({ bleed, card, exportMod
         hp4: '/zombicide-2nd/survivor/hp-4.png',
         hp5: '/zombicide-2nd/survivor/hp-5.png',
         hp6: '/zombicide-2nd/survivor/hp-6.png',
-        iconHoliday: '/zombicide-2nd/survivor/holiday-icon.png',
-        iconKids: '/zombicide-2nd/survivor/kids-icon.png',
-        iconPark: '/zombicide-2nd/survivor/park-icon.png',
-        iconPolice: '/zombicide-2nd/survivor/police-icon.png',
+        iconKids: '/zombicide-2nd/survivor/kid.svg',
         iconSupes: '/zombicide-2nd/survivor/supes-icon.png',
-        iconZombvivor: '/zombicide-2nd/survivor/zombvivor-icon.png',
-        o1: '/zombicide-2nd/survivor/track-orange-1.png',
-        o2: '/zombicide-2nd/survivor/track-orange-2.png',
-        r1: '/zombicide-2nd/survivor/track-red-1.png',
-        r2: '/zombicide-2nd/survivor/track-red-2.png',
-        r3: '/zombicide-2nd/survivor/track-red-3.png',
-        yellow: '/zombicide-2nd/survivor/track-yellow.png',
+        track1: '/zombicide-2nd/survivor/track-1.svg',
+        track2: '/zombicide-2nd/survivor/track-2.svg',
+        track3: '/zombicide-2nd/survivor/track-3.svg',
+        track4: '/zombicide-2nd/survivor/track-4.svg',
+        track5: '/zombicide-2nd/survivor/track-5.svg',
+        track6: '/zombicide-2nd/survivor/track-6.svg',
+        track7: '/zombicide-2nd/survivor/track-7.svg',
     }), [card.image]);
 
     const { images, loaded: loadedImages } = useImages(imageUrls);
 
-    const draw = useCallback(({ canvasWidth, ctx, drawableHeight, padding, scale }: DrawParams) => {
+    const draw = useCallback(({ canvasWidth, ctx, drawableHeight, drawableWidth, padding, scale }: DrawParams) => {
         if (!loadedImages) {
             return;
         }
 
-        ctx.drawImage(images.background, 0, 0, canvasWidth, images.background.height * (canvasWidth / images.background.width));
+        ctx.drawImage(images.background, padding, padding, drawableWidth, images.background.height * (drawableWidth / images.background.width));
+        ctx.drawImage(images.backgroundName, padding, padding, drawableWidth, images.backgroundName.height * (drawableWidth / images.backgroundName.width));
 
         drawBackgroundName(scale, ctx, card);
-        drawForegroundName(scale, ctx, card);
 
         if (images.character) {
             const characterAspectRatio = images.character.width / images.character.height;
@@ -113,15 +110,17 @@ const SurvivorCardFront: React.FC<SurvivorCardProps> = ({ bleed, card, exportMod
             ctx.drawImage(images.character, characterX, characterY, characterWidth, characterHeight);
         }
 
+        drawForegroundName(scale, ctx, card);
+
         const trackHeight = 5.7 * scale;
         const trackGap = 2.08 * scale;
-        const blueTrackWidth = images.blue.width * (trackHeight / images.blue.height);
-        const yellowTrackWidth = images.yellow.width * (trackHeight / images.yellow.height);
-        const o1TrackWidth = images.o1.width * (trackHeight / images.o1.height);
-        const o2TrackWidth = images.o2.width * (trackHeight / images.o2.height);
-        const r1TrackWidth = images.r1.width * (trackHeight / images.r1.height);
-        const r2TrackWidth = images.r2.width * (trackHeight / images.r2.height);
-        const r3TrackWidth = images.r3.width * (trackHeight / images.r3.height);
+        const blueTrackWidth = images.track1.width * (trackHeight / images.track1.height);
+        const yellowTrackWidth = images.track2.width * (trackHeight / images.track2.height);
+        const o1TrackWidth = images.track3.width * (trackHeight / images.track3.height);
+        const o2TrackWidth = images.track4.width * (trackHeight / images.track4.height);
+        const r1TrackWidth = images.track5.width * (trackHeight / images.track5.height);
+        const r2TrackWidth = images.track6.width * (trackHeight / images.track6.height);
+        const r3TrackWidth = images.track7.width * (trackHeight / images.track7.height);
 
         const arrowsTop = 29 * scale;
         const yellowY = arrowsTop + trackHeight + trackGap;
@@ -131,16 +130,16 @@ const SurvivorCardFront: React.FC<SurvivorCardProps> = ({ bleed, card, exportMod
         const r2Y = r1Y + trackHeight + trackGap;
         const r3Y = r2Y + trackHeight + trackGap;
 
-        const abilitiesTextX = 16.5 * scale;
+        const abilitiesTextX = 15.5 * scale;
 
         const abilityTracks = [
-            { image: images.blue, name: card.abilities.blue?.name || '', width: blueTrackWidth, y: arrowsTop },
-            { image: images.yellow, name: card.abilities.yellow?.name || '', width: yellowTrackWidth, y: yellowY },
-            { image: images.o1, name: card.abilities.orange1?.name || '', width: o1TrackWidth, y: o1Y },
-            { image: images.o2, name: card.abilities.orange2?.name || '', width: o2TrackWidth, y: o2Y },
-            { image: images.r1, name: card.abilities.red1?.name || '', width: r1TrackWidth, y: r1Y },
-            { image: images.r2, name: card.abilities.red2?.name || '', width: r2TrackWidth, y: r2Y },
-            { image: images.r3, name: card.abilities.red3?.name || '', width: r3TrackWidth, y: r3Y },
+            { image: images.track1, name: card.abilities.blue?.name || '', width: blueTrackWidth, y: arrowsTop },
+            { image: images.track2, name: card.abilities.yellow?.name || '', width: yellowTrackWidth, y: yellowY },
+            { image: images.track3, name: card.abilities.orange1?.name || '', width: o1TrackWidth, y: o1Y },
+            { image: images.track4, name: card.abilities.orange2?.name || '', width: o2TrackWidth, y: o2Y },
+            { image: images.track5, name: card.abilities.red1?.name || '', width: r1TrackWidth, y: r1Y },
+            { image: images.track6, name: card.abilities.red2?.name || '', width: r2TrackWidth, y: r2Y },
+            { image: images.track7, name: card.abilities.red3?.name || '', width: r3TrackWidth, y: r3Y },
         ];
 
         const maxFontSize = 3.2 * scale;
@@ -169,8 +168,8 @@ const SurvivorCardFront: React.FC<SurvivorCardProps> = ({ bleed, card, exportMod
             ctx.fillText(track.name.toLocaleUpperCase(), abilitiesTextX, track.y + ((trackHeight - (1 * scale)) / 2) + (fontSize / 2));
         });
 
-        const arrowsWidth = 13 * scale;
-        const arrowsLeft = 2.5 * scale;
+        const arrowsWidth = 12.17 * scale;
+        const arrowsLeft = 2 * scale;
         ctx.drawImage(images.arrows, arrowsLeft, arrowsTop, arrowsWidth, images.arrows.height * (arrowsWidth / images.arrows.width));
 
         const hpWidth = 16 * scale;
