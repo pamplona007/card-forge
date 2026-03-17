@@ -88,6 +88,13 @@
       "flavorText": "Texto de Sabor",
       "copyright": "Direitos Autorais",
       "equipmentDescription": "Descrição",
+      "dualWield": "Arma Dupla",
+      "weapon": "Arma",
+      "opensDoors": "Abre Portas",
+      "primaryWeaponProfile": "Perfil Primário da Arma",
+      "secondaryWeaponProfile": "Perfil Secundário da Arma",
+      "weaponDice": "Dados",
+      "weaponDiceResults": "Acerto Em",
       "slot": "Slot",
       "rarity": "Raridade",
       "damage": "Dano",
@@ -111,7 +118,18 @@
       "abominationName": "Nome da abominação",
       "survivorName": "Nome do sobrevivente",
       "abilityName": "Nome da habilidade",
-      "description": "Descrição"
+      "description": "Descrição",
+      "optionalNumber": "Opcional"
+    },
+    "option": {
+      "none": "Nenhum",
+      "silent": "Silenciosa",
+      "loud": "Barulhenta",
+      "both": "Ambas",
+      "equipmentTypeStarter": "Inicial",
+      "equipmentTypeEquipment": "Equipamento",
+      "equipmentTypeCompanion": "Companheiro",
+      "equipmentTypePimp": "Pimp"
     },
     "checkbox": {
       "uniqueItem": "Item Único",

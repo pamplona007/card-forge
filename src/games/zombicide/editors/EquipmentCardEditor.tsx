@@ -1,158 +1,19 @@
-import { Box, Button, Flex, Select, Text, TextArea, TextField } from '@radix-ui/themes';
+import { Box, Checkbox, Flex, Grid, Select, Slider, Text, TextArea, TextField } from '@radix-ui/themes';
+import ImageUploader from 'components/editor/ImageUploader';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type {
     EquipmentCardData,
-    EquipmentSlot,
-    SurvivorAbility,
 } from '../types';
 
 import EquipmentCard from '../cards/EquipmentCard';
-import { ABILITY_COLORS } from '../types';
 
 interface EquipmentCardEditorProps {
-  card: EquipmentCardData;
-  onChange: (card: EquipmentCardData) => void;
-  onImageUpload?: (file: File) => Promise<string>;
+    card: EquipmentCardData;
+    onChange: (card: EquipmentCardData) => void;
+    onImageUpload?: (file: File) => Promise<string>;
 }
-
-const ImageUploader: React.FC<{
-  onUpload: (url: string) => void;
-  onUploadClick: () => void;
-  uploading?: boolean;
-  value?: string;
-}> = ({ onUpload, onUploadClick, uploading, value }) => {
-    const { t } = useTranslation();
-    return (
-        <Box>
-            <Text as="p" mb="2" size="2" style={{ color: 'var(--gray-11)' }}>
-                {t('editor.label.cardImage')}
-            </Text>
-            {value
-                ? (
-                    <Flex direction="column" gap="2">
-                        <Box
-                            style={{
-                                aspectRatio: '63.5/88.9',
-                                border: '1px solid var(--gray-6)',
-                                borderRadius: 'var(--radius-2)',
-                                maxWidth: '200px',
-                                overflow: 'hidden',
-                                width: '100%',
-                            }}
-                        >
-                            <img
-                                alt={t('editor.alt.cardPreview')}
-                                src={value}
-                                style={{ height: '100%', objectFit: 'cover', width: '100%' }}
-                            />
-                        </Box>
-                        <Button color="red" onClick={() => onUpload('')} size="1" variant="soft">
-                            {t('editor.buttonRemove.removeImage')}
-                        </Button>
-                    </Flex>
-                )
-                : (
-                    <Button disabled={uploading} onClick={onUploadClick} variant="soft">
-                        {uploading ? t('editor.status.uploading') : t('editor.buttonUpload.uploadImage')}
-                    </Button>
-                )}
-        </Box>
-    );
-};
-
-const AbilityEditor: React.FC<{
-  abilities: SurvivorAbility[];
-  label?: string;
-  onChange: (abilities: SurvivorAbility[]) => void;
-}> = ({ abilities, label, onChange }) => {
-    const { t } = useTranslation();
-    const translatedLabel = label || t('editor.label.abilities');
-    const addAbility = () => {
-        const newAbility: SurvivorAbility = {
-            color: 'blue',
-            id: crypto.randomUUID(),
-            name: '',
-        };
-        onChange([...abilities, newAbility]);
-    };
-
-    const updateAbility = (id: string, updates: Partial<SurvivorAbility>) => {
-        onChange(abilities.map((a) => a.id === id ? { ...a, ...updates } : a));
-    };
-
-    const removeAbility = (id: string) => {
-        onChange(abilities.filter((a) => a.id !== id));
-    };
-
-    return (
-        <Box>
-            <Flex align="center" justify="between" mb="2">
-                <Text as="p" size="2" style={{ color: 'var(--gray-11)' }}>
-                    {translatedLabel}
-                </Text>
-                <Button onClick={addAbility} size="1" variant="soft">
-                    {t('editor.buttonAdd.addAbility')}
-                </Button>
-            </Flex>
-            {abilities.map((ability) => (
-                <Box
-                    key={ability.id}
-                    mb="2"
-                    p="2"
-                    style={{
-                        backgroundColor: 'var(--gray-3)',
-                        borderLeft: `3px solid ${ABILITY_COLORS[ability.color]}`,
-                        borderRadius: 'var(--radius-2)',
-                    }}
-                >
-                    <Flex direction="column" gap="2">
-                        <Flex gap="2">
-                            <TextField.Root
-                                onChange={(e) => updateAbility(ability.id, { name: e.target.value })}
-                                placeholder={t('editor.placeholder.abilityName')}
-                                style={{ flex: 1 }}
-                                value={ability.name}
-                            />
-                            <Select.Root
-                                onValueChange={(value) => updateAbility(ability.id, { color: value as SurvivorAbility['color'] })}
-                                value={ability.color}
-                            >
-                                <Select.Trigger style={{ width: '80px' }} />
-                                <Select.Content>
-                                    <Select.Item value="blue">{t('color.blue')}</Select.Item>
-                                    <Select.Item value="yellow">{t('color.yellow')}</Select.Item>
-                                    <Select.Item value="orange">{t('color.orange')}</Select.Item>
-                                    <Select.Item value="red">{t('color.red')}</Select.Item>
-                                </Select.Content>
-                            </Select.Root>
-                            <Button color="red" onClick={() => removeAbility(ability.id)} size="1" variant="soft">
-                ×
-                            </Button>
-                        </Flex>
-                    </Flex>
-                </Box>
-            ))}
-        </Box>
-    );
-};
-
-const CheckboxField: React.FC<{
-  checked: boolean;
-  label: string;
-  onChange: (checked: boolean) => void;
-}> = ({ checked, label, onChange }) => (
-    <label style={{ alignItems: 'center', cursor: 'pointer', display: 'flex', gap: '8px' }}>
-        <input
-            checked={checked}
-            onChange={(e) => onChange(e.target.checked)}
-            style={{ cursor: 'pointer', height: '16px', width: '16px' }}
-            type="checkbox"
-        />
-        <Text size="2">{label}</Text>
-    </label>
-);
 
 const EquipmentCardEditor: React.FC<EquipmentCardEditorProps> = ({
     card,
@@ -160,6 +21,24 @@ const EquipmentCardEditor: React.FC<EquipmentCardEditorProps> = ({
     onImageUpload,
 }) => {
     const { t } = useTranslation();
+
+    const parseOptionalNumber = (value: string) => {
+        const parsedValue = Number(value);
+
+        if (!value.trim() || Number.isNaN(parsedValue)) {
+            return undefined;
+        }
+
+        return parsedValue;
+    };
+
+    const updateOptionalNumberField = (field: keyof EquipmentCardData, value: string) => {
+        onChange({
+            ...card,
+            [field]: parseOptionalNumber(value),
+        });
+    };
+
     const handleImageUploadClick = () => {
         const input = document.createElement('input');
         input.type = 'file';
@@ -175,7 +54,13 @@ const EquipmentCardEditor: React.FC<EquipmentCardEditorProps> = ({
     };
 
     return (
-        <Flex direction="column" gap="4">
+        <Grid
+            columns={{
+                md: '400px 1fr',
+                sm: '1fr',
+            }}
+            gap="4"
+        >
             <Box p="4" style={{ backgroundColor: 'white', borderRadius: 'var(--radius-2)' }}>
                 <Flex direction="column" gap="4">
                     <Box>
@@ -187,11 +72,14 @@ const EquipmentCardEditor: React.FC<EquipmentCardEditorProps> = ({
                         />
                     </Box>
 
-                    <ImageUploader
-                        onUpload={(url) => onChange({ ...card, image: url })}
-                        onUploadClick={handleImageUploadClick}
-                        value={card.image}
-                    />
+                    <Box>
+                        <Text as="p" mb="2" size="2" style={{ color: 'var(--gray-11)' }}>{t('editor.label.flavorText')}</Text>
+                        <TextField.Root
+                            onChange={(e) => onChange({ ...card, flavorText: e.target.value || undefined })}
+                            placeholder={t('editor.placeholder.flavorTextOptional')}
+                            value={card.flavorText || ''}
+                        />
+                    </Box>
 
                     <Box>
                         <Text as="p" mb="2" size="2" style={{ color: 'var(--gray-11)' }}>{t('editor.label.equipmentDescription')}</Text>
@@ -204,97 +92,194 @@ const EquipmentCardEditor: React.FC<EquipmentCardEditorProps> = ({
                     </Box>
 
                     <Box>
-                        <Text as="p" mb="2" size="2" style={{ color: 'var(--gray-11)' }}>{t('editor.label.slot')}</Text>
+                        <Text as="p" mb="2" size="2" style={{ color: 'var(--gray-11)' }}>{t('editor.label.type')}</Text>
                         <Select.Root
-                            onValueChange={(value) => onChange({ ...card, slot: value as EquipmentSlot })}
-                            value={card.slot}
+                            onValueChange={(value) => onChange({ ...card, equipmentType: value as EquipmentCardData['equipmentType'] })}
+                            value={card.equipmentType}
                         >
                             <Select.Trigger />
                             <Select.Content>
-                                <Select.Item value="hand">{t('slot.hand')}</Select.Item>
-                                <Select.Item value="body">{t('slot.body')}</Select.Item>
-                                <Select.Item value="small">{t('slot.small')}</Select.Item>
-                                <Select.Item value="big">{t('slot.big')}</Select.Item>
-                                <Select.Item value="any">{t('slot.any')}</Select.Item>
+                                <Select.Item value="starter">{t('editor.option.equipmentTypeStarter')}</Select.Item>
+                                <Select.Item value="equipment">{t('editor.option.equipmentTypeEquipment')}</Select.Item>
+                                <Select.Item value="companion">{t('editor.option.equipmentTypeCompanion')}</Select.Item>
+                                <Select.Item value="pimp">{t('editor.option.equipmentTypePimp')}</Select.Item>
                             </Select.Content>
                         </Select.Root>
                     </Box>
 
-                    <Box>
-                        <Text as="p" mb="2" size="2" style={{ color: 'var(--gray-11)' }}>{t('editor.label.rarity')}</Text>
-                        <Select.Root
-                            onValueChange={(value) => onChange({ ...card, rarity: parseInt(value) })}
-                            value={card.rarity.toString()}
-                        >
-                            <Select.Trigger />
-                            <Select.Content>
-                                <Select.Item value="1">{t('rarity.common')}</Select.Item>
-                                <Select.Item value="2">{t('rarity.uncommon')}</Select.Item>
-                                <Select.Item value="3">{t('rarity.rare')}</Select.Item>
-                                <Select.Item value="4">{t('rarity.epic')}</Select.Item>
-                                <Select.Item value="5">{t('rarity.legendary')}</Select.Item>
-                            </Select.Content>
-                        </Select.Root>
-                    </Box>
-
-                    <CheckboxField
-                        checked={card.isUnique || false}
-                        label={t('editor.checkbox.uniqueItem')}
-                        onChange={(checked) => onChange({ ...card, isUnique: checked })}
+                    <ImageUploader
+                        onUpload={(url) => onChange({ ...card, image: url })}
+                        onUploadClick={handleImageUploadClick}
+                        value={card.image}
                     />
 
-                    <AbilityEditor
-                        abilities={card.abilities || []}
-                        label={t('editor.specialAbilities')}
-                        onChange={(abilities) => onChange({ ...card, abilities })}
-                    />
+                    {card.image && (
+                        <>
+                            <Box>
+                                <Text as="p" mb="2" size="2" style={{ color: 'var(--gray-11)' }}>{t('editor.label.imageScale')}</Text>
+                                <Flex align="center" gap="2">
+                                    <TextField.Root
+                                        max="200"
+                                        min="50"
+                                        onChange={(e) => {
+                                            const value = Math.max(50, Math.min(parseInt(e.target.value, 10) || 100, 200));
+                                            onChange({ ...card, imageScale: value });
+                                        }}
+                                        step="1"
+                                        style={{ width: '80px' }}
+                                        type="number"
+                                        value={card.imageScale || 100}
+                                    />
+                                    <Slider
+                                        max={200}
+                                        min={50}
+                                        onValueChange={([value]) => onChange({ ...card, imageScale: value })}
+                                        step={1}
+                                        value={[card.imageScale || 100]}
+                                    />
+                                </Flex>
+                            </Box>
+                        </>
+                    )}
+
+                    <label style={{ alignItems: 'center', cursor: 'pointer', display: 'flex', gap: '8px' }}>
+                        <Checkbox
+                            checked={card.dualWield}
+                            onCheckedChange={(checked) => onChange({ ...card, dualWield: Boolean(checked) })}
+                        />
+                        <Text size="2">{t('editor.label.dualWield')}</Text>
+                    </label>
+
+                    <Grid columns="1fr 1fr" gap="2">
+                        <Box>
+                            <Text as="p" mb="2" size="2" style={{ color: 'var(--gray-11)' }}>{t('editor.label.weapon')}</Text>
+                            <Select.Root
+                                onValueChange={(value) => onChange({ ...card, weapon: 'none' === value ? null : value as EquipmentCardData['weapon'] })}
+                                value={card.weapon || 'none'}
+                            >
+                                <Select.Trigger />
+                                <Select.Content>
+                                    <Select.Item value="none">{t('editor.option.none')}</Select.Item>
+                                    <Select.Item value="silent">{t('editor.option.silent')}</Select.Item>
+                                    <Select.Item value="loud">{t('editor.option.loud')}</Select.Item>
+                                    <Select.Item value="both">{t('editor.option.both')}</Select.Item>
+                                </Select.Content>
+                            </Select.Root>
+                        </Box>
+                        <Box>
+                            <Text as="p" mb="2" size="2" style={{ color: 'var(--gray-11)' }}>{t('editor.label.opensDoors')}</Text>
+                            <Select.Root
+                                onValueChange={(value) => onChange({ ...card, opensDoors: 'none' === value ? null : value as EquipmentCardData['opensDoors'] })}
+                                value={card.opensDoors || 'none'}
+                            >
+                                <Select.Trigger />
+                                <Select.Content>
+                                    <Select.Item value="none">{t('editor.option.none')}</Select.Item>
+                                    <Select.Item value="silent">{t('editor.option.silent')}</Select.Item>
+                                    <Select.Item value="loud">{t('editor.option.loud')}</Select.Item>
+                                </Select.Content>
+                            </Select.Root>
+                        </Box>
+                    </Grid>
 
                     <Box>
-                        <Text as="p" mb="2" size="2" style={{ color: 'var(--gray-11)' }}>{t('editor.label.flavorText')}</Text>
-                        <TextField.Root
-                            onChange={(e) => onChange({ ...card, flavorText: e.target.value })}
-                            placeholder={t('editor.placeholder.flavorTextOptional')}
-                            value={card.flavorText || ''}
-                        />
+                        <Grid columns="1fr 1fr" gap="2">
+                            <Box>
+                                <Text as="p" mb="1" size="1" style={{ color: 'var(--gray-11)' }}>{t('editor.label.damage')}</Text>
+                                <TextField.Root
+                                    onChange={(e) => updateOptionalNumberField('weaponDamage', e.target.value)}
+                                    placeholder={t('editor.placeholder.optionalNumber')}
+                                    type="number"
+                                    value={card.weaponDamage ?? ''}
+                                />
+                            </Box>
+                            <Box>
+                                <Text as="p" mb="1" size="1" style={{ color: 'var(--gray-11)' }}>{t('editor.label.range')}</Text>
+                                <TextField.Root
+                                    onChange={(e) => updateOptionalNumberField('weaponRange', e.target.value)}
+                                    placeholder={t('editor.placeholder.optionalNumber')}
+                                    type="number"
+                                    value={card.weaponRange ?? ''}
+                                />
+                            </Box>
+                            <Box>
+                                <Text as="p" mb="1" size="1" style={{ color: 'var(--gray-11)' }}>{t('editor.label.weaponDice')}</Text>
+                                <TextField.Root
+                                    onChange={(e) => updateOptionalNumberField('weaponDice', e.target.value)}
+                                    placeholder={t('editor.placeholder.optionalNumber')}
+                                    type="number"
+                                    value={card.weaponDice ?? ''}
+                                />
+                            </Box>
+                            <Box>
+                                <Text as="p" mb="1" size="1" style={{ color: 'var(--gray-11)' }}>{t('editor.label.weaponDiceResults')}</Text>
+                                <TextField.Root
+                                    onChange={(e) => updateOptionalNumberField('weaponDiceResults', e.target.value)}
+                                    placeholder={t('editor.placeholder.optionalNumber')}
+                                    type="number"
+                                    value={card.weaponDiceResults ?? ''}
+                                />
+                            </Box>
+                        </Grid>
                     </Box>
 
-                    <Box>
-                        <Text as="p" mb="2" size="2" style={{ color: 'var(--gray-11)' }}>{t('editor.label.copyright')}</Text>
-                        <TextField.Root
-                            onChange={(e) => onChange({ ...card, copyright: e.target.value })}
-                            placeholder={t('editor.placeholder.copyright')}
-                            value={card.copyright || ''}
-                        />
-                    </Box>
+                    {'both' === card.weapon && (
+                        <Box>
+                            <Text as="p" mb="2" size="2" style={{ color: 'var(--gray-11)' }}>{t('editor.label.secondaryWeaponProfile')}</Text>
+                            <Grid columns="1fr 1fr" gap="2">
+                                <Box>
+                                    <Text as="p" mb="1" size="1" style={{ color: 'var(--gray-11)' }}>{t('editor.label.damage')}</Text>
+                                    <TextField.Root
+                                        onChange={(e) => updateOptionalNumberField('weaponDamageAlt', e.target.value)}
+                                        placeholder={t('editor.placeholder.optionalNumber')}
+                                        type="number"
+                                        value={card.weaponDamageAlt ?? ''}
+                                    />
+                                </Box>
+                                <Box>
+                                    <Text as="p" mb="1" size="1" style={{ color: 'var(--gray-11)' }}>{t('editor.label.range')}</Text>
+                                    <TextField.Root
+                                        onChange={(e) => updateOptionalNumberField('weaponRangeAlt', e.target.value)}
+                                        placeholder={t('editor.placeholder.optionalNumber')}
+                                        type="number"
+                                        value={card.weaponRangeAlt ?? ''}
+                                    />
+                                </Box>
+                                <Box>
+                                    <Text as="p" mb="1" size="1" style={{ color: 'var(--gray-11)' }}>{t('editor.label.weaponDice')}</Text>
+                                    <TextField.Root
+                                        onChange={(e) => updateOptionalNumberField('weaponDiceAlt', e.target.value)}
+                                        placeholder={t('editor.placeholder.optionalNumber')}
+                                        type="number"
+                                        value={card.weaponDiceAlt ?? ''}
+                                    />
+                                </Box>
+                                <Box>
+                                    <Text as="p" mb="1" size="1" style={{ color: 'var(--gray-11)' }}>{t('editor.label.weaponDiceResults')}</Text>
+                                    <TextField.Root
+                                        onChange={(e) => updateOptionalNumberField('weaponDiceResultsAlt', e.target.value)}
+                                        placeholder={t('editor.placeholder.optionalNumber')}
+                                        type="number"
+                                        value={card.weaponDiceResultsAlt ?? ''}
+                                    />
+                                </Box>
+                            </Grid>
+                        </Box>
+                    )}
                 </Flex>
             </Box>
 
             <Box>
-                <Text as="p" mb="2" size="2" style={{ color: 'var(--gray-11)' }}>
-                    {t('editor.preview.title')}
-                </Text>
-                <Box
-                    style={{
-                        alignItems: 'center',
-                        backgroundColor: 'var(--gray-3)',
-                        borderRadius: 'var(--radius-4)',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        minHeight: '300px',
-                        padding: '24px',
-                    }}
-                >
-                    <Box
-                        style={{
-                            transform: 'scale(1.5)',
-                            transformOrigin: 'center center',
-                        }}
-                    >
-                        <EquipmentCard card={card} />
-                    </Box>
-                </Box>
+                <EquipmentCard
+                    card={card}
+                    onChangeImagePosition={(offsetX, offsetY) => onChange({
+                        ...card,
+                        imageOffsetX: offsetX,
+                        imageOffsetY: offsetY,
+                    })}
+                />
             </Box>
-        </Flex>
+        </Grid>
     );
 };
 

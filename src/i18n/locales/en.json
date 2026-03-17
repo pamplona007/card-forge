@@ -89,6 +89,13 @@
       "flavorText": "Flavor Text",
       "copyright": "Copyright",
       "equipmentDescription": "Description",
+      "dualWield": "Dual Wield",
+      "weapon": "Weapon",
+      "opensDoors": "Opens Doors",
+      "primaryWeaponProfile": "Primary Weapon Profile",
+      "secondaryWeaponProfile": "Secondary Weapon Profile",
+      "weaponDice": "Dice",
+      "weaponDiceResults": "Hit On",
       "slot": "Slot",
       "rarity": "Rarity",
       "damage": "Damage",
@@ -112,7 +119,18 @@
       "abominationName": "Abomination name",
       "survivorName": "Survivor name",
       "abilityName": "Ability name",
-      "description": "Description"
+      "description": "Description",
+      "optionalNumber": "Optional"
+    },
+    "option": {
+      "none": "None",
+      "silent": "Silent",
+      "loud": "Loud",
+      "both": "Both",
+      "equipmentTypeStarter": "Starter",
+      "equipmentTypeEquipment": "Equipment",
+      "equipmentTypeCompanion": "Companion",
+      "equipmentTypePimp": "Pimp"
     },
     "checkbox": {
       "uniqueItem": "Unique Item",

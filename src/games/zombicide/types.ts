@@ -14,8 +14,9 @@ export const SURVIVOR_CARD_DIMENSIONS = new CardDimensions({
 });
 export const MINI_USA_CARD_DIMENSIONS = new CardDimensions({
     bleed: 3,
-    height: 63.5,
-    width: 44.45,
+    borderRadius: 2,
+    height: 63,
+    width: 41,
 });
 
 export type AbilityColor = 'blue' | 'orange' | 'red' | 'yellow';
@@ -24,10 +25,6 @@ export interface CardProps {
   exportMode?: boolean;
   showBleed?: boolean;
 }
-
-export type DamageType = 'explosive' | 'fire' | 'melee' | 'ranged';
-
-export type EquipmentSlot = 'any' | 'big' | 'body' | 'hand' | 'small';
 
 export interface SurvivorAbility {
   color: AbilityColor;
@@ -96,25 +93,39 @@ export const createDefaultSurvivorCard = (): SurvivorCardData => ({
 });
 
 export interface EquipmentCardData {
-  abilities?: SurvivorAbility[];
-  copyright?: string;
+  ammoType: 'red' | 'yellow' | null;
   defaultQuantity?: number;
   description: string;
+  dualWield: boolean;
+  equipmentType: 'companion' | 'equipment' | 'pimp' | 'starter';
   flavorText?: string;
   id: string;
   image?: string;
-  isUnique?: boolean;
+  imageOffsetX?: number;
+  imageOffsetY?: number;
+  imageScale?: number;
   name: string;
-  rarity: number;
-  slot: EquipmentSlot;
+  opensDoors: 'loud' | 'silent' | null;
+  weapon: 'both' | 'loud' | 'silent' | null;
+  weaponDamage?: number;
+  weaponDamageAlt?: number;
+  weaponDice?: number;
+  weaponDiceAlt?: number;
+  weaponDiceResults?: number;
+  weaponDiceResultsAlt?: number;
+  weaponRange?: number;
+  weaponRangeAlt?: number;
 }
 
 export const createDefaultEquipmentCard = (): EquipmentCardData => ({
+    ammoType: null,
     description: '',
+    dualWield: false,
+    equipmentType: 'starter',
     id: crypto.randomUUID(),
     name: 'New Equipment',
-    rarity: 1,
-    slot: 'hand',
+    opensDoors: null,
+    weapon: null,
 });
 
 export interface ZombieSpawnCardData {
