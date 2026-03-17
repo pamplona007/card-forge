@@ -11,7 +11,6 @@ Currently supports **Zombicide 2nd Edition** (Guillotine Games).
 - **Card editor** — Create and edit custom cards with a live preview. Supported types for Zombicide 2nd Edition:
   - Survivor (front + back)
   - Equipment
-  - Pimp Weapon
   - Zombie Spawn
   - Abomination
 - **PDF export** — Export your cards to A4 or Letter-size PDF, with or without card backs, ready to print and cut

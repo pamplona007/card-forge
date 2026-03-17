@@ -1,7 +1,6 @@
 import type {
     AbominationCardData,
     EquipmentCardData,
-    PimpWeaponCardData,
     SurvivorCardData,
     ZombieSpawnCardData,
 } from '../types';
@@ -13,11 +12,10 @@ export interface ZombicideCardBase {
 export type ZombicideCardData = (
   | AbominationCardData
   | EquipmentCardData
-  | PimpWeaponCardData
   | SurvivorCardData
   | ZombieSpawnCardData
 ) & ZombicideCardBase;
 
-export type ZombicideCardType = 'abomination' | 'equipment' | 'pimp-weapon' | 'survivor' | 'zombie-spawn';
+export type ZombicideCardType = 'abomination' | 'equipment' | 'survivor' | 'zombie-spawn';
 
-export type { AbominationCardData, EquipmentCardData, PimpWeaponCardData, SurvivorCardData, ZombieSpawnCardData };
+export type { AbominationCardData, EquipmentCardData, SurvivorCardData, ZombieSpawnCardData };

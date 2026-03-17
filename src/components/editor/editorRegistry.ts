@@ -3,7 +3,6 @@ import type React from 'react';
 
 import AbominationCardEditor from 'games/zombicide/editors/AbominationCardEditor';
 import EquipmentCardEditor from 'games/zombicide/editors/EquipmentCardEditor';
-import PimpWeaponCardEditor from 'games/zombicide/editors/PimpWeaponCardEditor';
 import SurvivorCardEditor from 'games/zombicide/editors/SurvivorCardEditor';
 import ZombieSpawnCardEditor from 'games/zombicide/editors/ZombieSpawnCardEditor';
 
@@ -21,7 +20,6 @@ const EDITOR_REGISTRY: Record<string, Record<string, React.ComponentType<any>>> 
     'zombicide-2e': {
         'abomination': AbominationCardEditor,
         'equipment': EquipmentCardEditor,
-        'pimp-weapon': PimpWeaponCardEditor,
         'survivor': SurvivorCardEditor,
         'zombie-spawn': ZombieSpawnCardEditor,
     },

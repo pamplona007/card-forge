@@ -1,6 +1,6 @@
 import type { ExportOptions } from 'components/editor/ExportOptionsModal';
 import type { Project } from 'firebase/context';
-import type { ZombicideCardData, ZombicideCardType } from 'games/zombicide/editors/ZombicideCardEditor';
+import type { ZombicideCardData } from 'games/zombicide/editors/ZombicideCardEditor';
 import type { ZombicidePDFOptions } from 'games/zombicide/utils/pdfGenerator';
 
 import { Badge, Box, Button, Flex, Grid, Heading, Text } from '@radix-ui/themes';
@@ -12,19 +12,11 @@ import { generatePDFFromElements } from 'games/zombicide/utils/pdfGenerator';
 import { useFirebase } from 'hooks/useFirebase';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getGameById } from 'types/game';
+import { getCardType, getGameById } from 'types/game';
 
 interface ProjectViewerViewProps {
     project: Project;
 }
-
-const TYPE_BACKGROUNDS: Record<ZombicideCardType, { color: string; image?: string }> = {
-    'abomination': { color: '#7c2d12' },
-    'equipment': { color: '#1e3a5f' },
-    'pimp-weapon': { color: '#3b1f5e' },
-    'survivor': { color: '#1a2e1a', image: '/zombicide-2nd/survivor/bg-front.svg' },
-    'zombie-spawn': { color: '#1f2d1a' },
-};
 
 export default function ProjectViewerView({ project }: ProjectViewerViewProps) {
     const { t } = useTranslation();
@@ -163,7 +155,9 @@ export default function ProjectViewerView({ project }: ProjectViewerViewProps) {
                         <Box gridArea={'galery'}>
                             <Grid columns="2" gap="2">
                                 {project.cards.map((card) => {
-                                    const bg = TYPE_BACKGROUNDS[card.type];
+                                    const cardType = getCardType(project.gameId, card.type);
+                                    const bg = cardType?.background ?? { color: 'var(--gray-5)' };
+                                    const { height, width } = cardType?.dimensions ?? { height: 88.9, width: 63.5 };
                                     const isSelected = selectedCard?.id === card.id;
                                     return (
                                         <Box
@@ -173,7 +167,7 @@ export default function ProjectViewerView({ project }: ProjectViewerViewProps) {
                                         >
                                             <Box
                                                 style={{
-                                                    aspectRatio: 'survivor' === card.type ? '88/76' : '63.5/88.9',
+                                                    aspectRatio: `${width}/${height}`,
                                                     backgroundColor: bg.color,
                                                     border: isSelected
                                                         ? '2px solid var(--accent-9)'

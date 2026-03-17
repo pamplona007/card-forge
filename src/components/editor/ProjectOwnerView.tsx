@@ -15,7 +15,6 @@ import {
 import {
     createDefaultAbominationCard,
     createDefaultEquipmentCard,
-    createDefaultPimpWeaponCard,
     createDefaultSurvivorCard,
     createDefaultZombieSpawnCard,
 } from 'games/zombicide/types';
@@ -37,8 +36,6 @@ const createCard = (type: ZombicideCardType): ZombicideCardData => {
             return { ...createDefaultAbominationCard(), type: 'abomination' };
         case 'equipment':
             return { ...createDefaultEquipmentCard(), type: 'equipment' };
-        case 'pimp-weapon':
-            return { ...createDefaultPimpWeaponCard(), type: 'pimp-weapon' };
         case 'survivor':
             return { ...createDefaultSurvivorCard(), type: 'survivor' };
         case 'zombie-spawn':
@@ -367,7 +364,7 @@ export default function ProjectOwnerView({ initialProject, projectId }: ProjectO
                                 <EditorComponent
                                     card={currentCard}
                                     onChange={handleCardChange}
-                                    {...('equipment' === currentCard.type || 'pimp-weapon' === currentCard.type || 'zombie-spawn' === currentCard.type || 'abomination' === currentCard.type
+                                    {...('equipment' === currentCard.type || 'zombie-spawn' === currentCard.type || 'abomination' === currentCard.type
                                         ? { onImageUpload: handleImageUpload }
                                         : {})}
                                 />
@@ -384,6 +381,7 @@ export default function ProjectOwnerView({ initialProject, projectId }: ProjectO
                     {renderListToolbar()}
                     <CardListView
                         cards={project.cards}
+                        gameId={project.gameId}
                         onCardClick={handleSelectCard}
                         onDeleteCard={handleRemoveFromProject}
                         onQuantityChange={handleQuantityChange}

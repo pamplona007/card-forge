@@ -387,7 +387,6 @@
       "type": {
         "survivor": "Survivor",
         "equipment": "Equipment",
-        "pimpWeapon": "Pimp Weapon",
         "zombieSpawn": "Zombie Spawn",
         "abomination": "Abomination"
       }
@@ -395,7 +394,6 @@
     "cardTypeDescription": {
       "survivor": "Survivor cards represent player characters with abilities and equipment slots.",
       "equipment": "Equipment cards are items that survivors can equip and use.",
-      "pimpWeapon": "Pimp Weapon cards are powerful unique weapons with special abilities.",
       "zombieSpawn": "Zombie Spawn cards determine which zombies appear during the game.",
       "abomination": "Abomination cards are powerful boss zombies with high health and special abilities."
     },

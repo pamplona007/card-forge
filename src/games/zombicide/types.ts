@@ -117,35 +117,6 @@ export const createDefaultEquipmentCard = (): EquipmentCardData => ({
     slot: 'hand',
 });
 
-export interface PimpWeaponAbility {
-  description: string;
-  id: string;
-  name: string;
-}
-
-export interface PimpWeaponCardData {
-  abilities: PimpWeaponAbility[];
-  copyright?: string;
-  damage: number;
-  damageType: DamageType;
-  defaultQuantity?: number;
-  flavorText?: string;
-  id: string;
-  image?: string;
-  isTwoHanded?: boolean;
-  name: string;
-  range: number;
-}
-
-export const createDefaultPimpWeaponCard = (): PimpWeaponCardData => ({
-    abilities: [],
-    damage: 1,
-    damageType: 'melee',
-    id: crypto.randomUUID(),
-    name: 'New Weapon',
-    range: 1,
-});
-
 export interface ZombieSpawnCardData {
   abilities?: SurvivorAbility[];
   attack: number;

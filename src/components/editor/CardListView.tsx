@@ -1,41 +1,25 @@
-import type { ZombicideCardData, ZombicideCardType } from 'games/zombicide/editors/ZombicideCardEditor';
+import type { ZombicideCardData } from 'games/zombicide/editors/ZombicideCardEditor';
 
 import { Box, Button, Flex, Grid, Text } from '@radix-ui/themes';
 import { useTranslation } from 'react-i18next';
+import { getCardType } from 'types/game';
 
 interface CardListViewProps {
     cards: ZombicideCardData[];
+    gameId: string;
     onCardClick?: (card: ZombicideCardData) => void;
     onDeleteCard?: (index: number) => void;
     onQuantityChange?: (cardId: string, quantity: number) => void;
 }
 
-const TYPE_BACKGROUNDS: Record<ZombicideCardType, { color: string; image?: string }> = {
-    'abomination': { color: '#7c2d12' },
-    'equipment': { color: '#1e3a5f' },
-    'pimp-weapon': { color: '#3b1f5e' },
-    'survivor': { color: '#1a2e1a', image: '/zombicide-2nd/survivor/bg-front.svg' },
-    'zombie-spawn': { color: '#1f2d1a' },
-};
-
 export default function CardListView({
     cards,
+    gameId,
     onCardClick,
     onDeleteCard,
     onQuantityChange,
 }: CardListViewProps) {
     const { t } = useTranslation();
-
-    const getCardTypeName = (type: ZombicideCardType) => {
-        const keyMap: Record<ZombicideCardType, string> = {
-            'abomination': 'zombicide.card.type.abomination',
-            'equipment': 'zombicide.card.type.equipment',
-            'pimp-weapon': 'zombicide.card.type.pimpWeapon',
-            'survivor': 'zombicide.card.type.survivor',
-            'zombie-spawn': 'zombicide.card.type.zombieSpawn',
-        };
-        return t(keyMap[type]);
-    };
 
     if (0 === cards.length) {
         return (
@@ -63,139 +47,144 @@ export default function CardListView({
             </Box>
 
             <Grid columns={{ initial: '2', lg: '5', md: '4', sm: '3' }} gap="3">
-                {cards.map((card, index) => (
-                    <Box
-                        key={card.id || index}
-                        onClick={() => onCardClick?.(card)}
-                        style={{
-                            cursor: onCardClick ? 'pointer' : 'default',
-                        }}
-                    >
+                {cards.map((card, index) => {
+                    const cardType = getCardType(gameId, card.type);
+                    const bg = cardType?.background ?? { color: 'var(--gray-5)' };
+
+                    return (
                         <Box
+                            key={card.id || index}
+                            onClick={() => onCardClick?.(card)}
                             style={{
-                                aspectRatio: '1',
-                                backgroundColor: TYPE_BACKGROUNDS[card.type].color,
-                                border: '1px solid var(--gray-5)',
-                                borderRadius: 'var(--radius-4)',
-                                overflow: 'hidden',
-                                position: 'relative',
+                                cursor: onCardClick ? 'pointer' : 'default',
                             }}
                         >
-                            {TYPE_BACKGROUNDS[card.type].image && (
-                                <img
-                                    alt=""
-                                    src={TYPE_BACKGROUNDS[card.type].image}
-                                    style={{
-                                        height: '100%',
-                                        left: 0,
-                                        objectFit: 'cover',
-                                        objectPosition: 'center',
-                                        position: 'absolute',
-                                        scale: '1.2',
-                                        top: 0,
-                                        width: '100%',
-                                    }}
-                                />
-                            )}
-                            {'image' in card && card.image
-                                ? (
+                            <Box
+                                style={{
+                                    aspectRatio: '1',
+                                    backgroundColor: bg.color,
+                                    border: '1px solid var(--gray-5)',
+                                    borderRadius: 'var(--radius-4)',
+                                    overflow: 'hidden',
+                                    position: 'relative',
+                                }}
+                            >
+                                {bg.image && (
                                     <img
-                                        alt={card.name || t('editor.label.unnamed')}
-                                        src={card.image}
+                                        alt=""
+                                        src={bg.image}
                                         style={{
                                             height: '100%',
+                                            left: 0,
                                             objectFit: 'cover',
-                                            objectPosition: 'top center',
-                                            position: 'relative',
+                                            objectPosition: 'center',
+                                            position: 'absolute',
+                                            scale: '1.2',
+                                            top: 0,
                                             width: '100%',
                                         }}
                                     />
-                                )
-                                : (
-                                    <Flex
-                                        align="center"
-                                        direction="column"
-                                        justify="center"
-                                        style={{ height: '100%', padding: 'var(--space-2)', position: 'relative' }}
-                                    >
-                                        <Text
-                                            size="2"
+                                )}
+                                {'image' in card && card.image
+                                    ? (
+                                        <img
+                                            alt={card.name || t('editor.label.unnamed')}
+                                            src={card.image}
                                             style={{
-                                                color: 'white',
-                                                display: 'block',
-                                                overflow: 'hidden',
-                                                textAlign: 'center',
-                                                textOverflow: 'ellipsis',
-                                                textShadow: '0 1px 3px rgba(0,0,0,0.8)',
-                                                whiteSpace: 'nowrap',
+                                                height: '100%',
+                                                objectFit: 'cover',
+                                                objectPosition: 'top center',
+                                                position: 'relative',
                                                 width: '100%',
                                             }}
-                                            weight="bold"
+                                        />
+                                    )
+                                    : (
+                                        <Flex
+                                            align="center"
+                                            direction="column"
+                                            justify="center"
+                                            style={{ height: '100%', padding: 'var(--space-2)', position: 'relative' }}
                                         >
-                                            {card.name || t('editor.label.unnamed')}
-                                        </Text>
-                                        <Text
+                                            <Text
+                                                size="2"
+                                                style={{
+                                                    color: 'white',
+                                                    display: 'block',
+                                                    overflow: 'hidden',
+                                                    textAlign: 'center',
+                                                    textOverflow: 'ellipsis',
+                                                    textShadow: '0 1px 3px rgba(0,0,0,0.8)',
+                                                    whiteSpace: 'nowrap',
+                                                    width: '100%',
+                                                }}
+                                                weight="bold"
+                                            >
+                                                {card.name || t('editor.label.unnamed')}
+                                            </Text>
+                                            <Text
+                                                size="1"
+                                                style={{ color: 'rgba(255,255,255,0.7)', textShadow: '0 1px 3px rgba(0,0,0,0.8)' }}
+                                            >
+                                                {cardType?.nameKey ? t(cardType.nameKey) : card.type}
+                                            </Text>
+                                        </Flex>
+                                    )}
+                            </Box>
+                            <Flex align="center" justify="between" mt="2">
+                                <Text color="gray" size="1">
+                                    {card.name || t('editor.label.unnamed')}
+                                </Text>
+                                {onDeleteCard && (
+                                    <Flex gap="1">
+                                        <Button
+                                            color="red"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                onDeleteCard(index);
+                                            }}
                                             size="1"
-                                            style={{ color: 'rgba(255,255,255,0.7)', textShadow: '0 1px 3px rgba(0,0,0,0.8)' }}
+                                            variant="soft"
                                         >
-                                            {getCardTypeName(card.type)}
-                                        </Text>
+                                            {t('projects.buttonRemove.remove')}
+                                        </Button>
                                     </Flex>
                                 )}
-                        </Box>
-                        <Flex align="center" justify="between" mt="2">
-                            <Text color="gray" size="1">
-                                {card.name || t('editor.label.unnamed')}
-                            </Text>
-                            {onDeleteCard && (
-                                <Flex gap="1">
+                            </Flex>
+                            {onQuantityChange && (
+                                <Flex align="center" gap="1" mt="1">
+                                    <Text color="gray" size="1">
+                                        {t('editor.card.quantity')}:
+                                    </Text>
                                     <Button
-                                        color="red"
+                                        disabled={0 === (card.defaultQuantity ?? 1)}
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            onDeleteCard(index);
+                                            onQuantityChange(card.id, Math.max(0, (card.defaultQuantity ?? 1) - 1));
                                         }}
                                         size="1"
                                         variant="soft"
                                     >
-                                        {t('projects.buttonRemove.remove')}
+                                        −
+                                    </Button>
+                                    <Text size="1" style={{ minWidth: '16px', textAlign: 'center' }}>
+                                        {card.defaultQuantity ?? 1}
+                                    </Text>
+                                    <Button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onQuantityChange(card.id, (card.defaultQuantity ?? 1) + 1);
+                                        }}
+                                        size="1"
+                                        variant="soft"
+                                    >
+                                        +
                                     </Button>
                                 </Flex>
                             )}
-                        </Flex>
-                        {onQuantityChange && (
-                            <Flex align="center" gap="1" mt="1">
-                                <Text color="gray" size="1">
-                                    {t('editor.card.quantity')}:
-                                </Text>
-                                <Button
-                                    disabled={0 === (card.defaultQuantity ?? 1)}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onQuantityChange(card.id, Math.max(0, (card.defaultQuantity ?? 1) - 1));
-                                    }}
-                                    size="1"
-                                    variant="soft"
-                                >
-                                    −
-                                </Button>
-                                <Text size="1" style={{ minWidth: '16px', textAlign: 'center' }}>
-                                    {card.defaultQuantity ?? 1}
-                                </Text>
-                                <Button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onQuantityChange(card.id, (card.defaultQuantity ?? 1) + 1);
-                                    }}
-                                    size="1"
-                                    variant="soft"
-                                >
-                                    +
-                                </Button>
-                            </Flex>
-                        )}
-                    </Box>
-                ))}
+                        </Box>
+                    );
+                })}
             </Grid>
         </>
     );

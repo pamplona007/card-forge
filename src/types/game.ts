@@ -12,9 +12,12 @@ export interface CardDimensions {
  * Defines a type of card used in a game
  */
 export interface CardType {
+  background: { color: string; image?: string };
+  descriptionKey?: string;
   dimensions: CardDimensions;
   id: string;
   name: string;
+  nameKey?: string;
 }
 
 /**
@@ -31,29 +34,36 @@ export interface Game {
 
 const zombicide2eCardTypes: CardType[] = [
     {
+        background: { color: '#1a2e1a', image: '/zombicide-2nd/survivor/bg-front.svg' },
+        descriptionKey: 'zombicide.cardTypeDescription.survivor',
         dimensions: SURVIVOR_CARD_DIMENSIONS,
         id: 'survivor',
         name: 'Survivor',
+        nameKey: 'zombicide.card.type.survivor',
     },
     {
+        background: { color: '#1e3a5f' },
+        descriptionKey: 'zombicide.cardTypeDescription.equipment',
         dimensions: POKER_CARD_DIMENSIONS,
         id: 'equipment',
         name: 'Equipment',
+        nameKey: 'zombicide.card.type.equipment',
     },
     {
-        dimensions: POKER_CARD_DIMENSIONS,
-        id: 'pimp-weapon',
-        name: 'Pimp Weapon',
-    },
-    {
+        background: { color: '#1f2d1a' },
+        descriptionKey: 'zombicide.cardTypeDescription.zombieSpawn',
         dimensions: POKER_CARD_DIMENSIONS,
         id: 'zombie-spawn',
         name: 'Zombie Spawn',
+        nameKey: 'zombicide.card.type.zombieSpawn',
     },
     {
+        background: { color: '#7c2d12' },
+        descriptionKey: 'zombicide.cardTypeDescription.abomination',
         dimensions: POKER_CARD_DIMENSIONS,
         id: 'abomination',
         name: 'Abomination',
+        nameKey: 'zombicide.card.type.abomination',
     },
 ];
 
@@ -90,6 +100,10 @@ export const SUPPORTED_GAMES: Game[] = [
  * @param gameId - The game ID
  * @returns Array of card types for the game
  */
+export function getCardType(gameId: string, cardTypeId: string): CardType | undefined {
+    return getCardTypesForGame(gameId).find((ct) => ct.id === cardTypeId);
+}
+
 export function getCardTypesForGame(gameId: string): CardType[] {
     const game = getGameById(gameId);
     return game?.cardTypes ?? [];
